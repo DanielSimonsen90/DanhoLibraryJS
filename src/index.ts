@@ -1,8 +1,50 @@
+//https://gist.github.com/mudge/5830382 
+
+//#region 
+type EventHandler = (...args: any[]) => any;
+//#endregion
+
 //#region Interfaces
 interface ElementOptions<K extends keyof HTMLElementTagNameMap> {
     classes?: string[],
     attributes?: [string, string][],
     children?: HTMLElementTagNameMap[K][]
+}
+interface SimpleEvent {
+    name: string,
+    handler: EventHandler
+}
+interface IEventCollection {
+    [eventName: string]: EventHandler[];
+    listeners: Array<EventHandler>;
+}
+//#endregion
+
+//#region Classes
+class EventCollection implements IEventCollection {
+    constructor(...events: SimpleEvent[]) {
+        this.events = [...events];
+    }
+
+    [eventName: string]: {
+        
+    }
+    listeners: EventHandler[];
+
+    private events: SimpleEvent[];
+}
+
+class EventEmitter {
+    constructor() {
+
+    }
+
+    public events: IEventCollection = { listeners: new Array<EventHandler>() };
+    
+    public on(event: string, listener: EventHandler) {
+        if (!this.events[event]) this.events[event] = new Array<EventHandler>();
+        this.events[event].push(listener);
+    }
 }
 //#endregion
 
