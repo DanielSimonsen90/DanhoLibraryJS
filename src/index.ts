@@ -14,6 +14,7 @@ interface SimpleEvent {
     name: string,
     handler: EventHandler
 }
+
 //#endregion
 
 //#region Classes
@@ -34,8 +35,9 @@ class EventCollection {
     public add(name: string, handler: EventHandler) { return this.setEvent(name, handler); }
     public clear(name: string = 'all', handler?: EventHandler) {
         if (name.toLowerCase() == 'all' && handler == null) return this.events.clear();
-        else if (handler == null) this.events.delete(name);
-        else if (name.toLowerCase() != 'all' && handler) this.events.map((v, k) => v.includes(handler) && k)
+        else if (name.toLowerCase() != "all" && handler == null) this.events.delete(name);
+        else if (name.toLowerCase() != 'all' && handler) this.events = this.events
+
     }
 }
 
@@ -52,6 +54,16 @@ class EventEmitter {
     public removeListener(event: string, listener: EventHandler) {
         this.events.clear()
     }
+}
+
+class KeyValuePair<K, V> {
+    constructor(key: K, value: V) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public key: K;
+    public value: V;
 }
 //#endregion
 
@@ -115,10 +127,21 @@ HTMLCollection.prototype.array = function() {
     }
     return result;
 }
-Map.prototype.array = function<K, V>() {
-    
+Map.prototype.array = function<K, V>(): KeyValuePair<K, V>[] {
+    let result = new Array<KeyValuePair<K, V>>();
+    for (const [value, key] of this) {
+        result.push(new KeyValuePair<K, V>(key, value));
+    }
+    return result;
 }
-Map.prototype.map = function<K, V, EndType>(callback: (value: V, key?: K, map?: Map<K, V>) => EndType) {
-    return this.toArray().map(callback);
+Map.prototype.map = function<K, V, EndTypeKey, EndTypeValue>(callback: (value: V, key?: K, map?: Map<K, V>) => KeyValuePair<EndTypeKey, EndTypeValue>): Map<EndTypeKey, EndTypeValue> {
+    return toMap(this.array().map(callback));
+}
+Map.prototype.filter = function<K, V, T>(callback: (entry: T) => boolean): Map<K, V> {
+    return toMap(this.array().filter(callback));
+}
+
+function toMap<K, V>(arr: KeyValuePair<K, V>[]) {
+    return arr.reduce((result, { key, value }) => result.set(key, value), new Map<K, V>());
 }
 //#endregion
