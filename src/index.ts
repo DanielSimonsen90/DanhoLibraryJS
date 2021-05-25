@@ -1,8 +1,138 @@
+//#region Extensions
+Document.prototype.createProperElement = function<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions<K>) {
+    let baseElement = document.createElement(tagName);
+    if (!options) return baseElement;
+
+    if (options.classes) {
+        baseElement.classList.add(...options.classes);
+    }
+    
+    if (options.attributes) {
+        options.attributes.forEach(([attribute, value]) => baseElement.setAttribute(attribute, value));
+    }
+
+    if (options.children) {
+        baseElement.append(...options.children);
+    }
+
+    return baseElement;
+}
+HTMLCollection.prototype.array = function() {
+    let result = new Array<Element>();
+
+    for (let i = 0; i < this.length; i++) {
+        result.push(this.item(i));
+    }
+    return result;
+}
+Map.prototype.array = function<K, V>(): KeyValuePair<K, V>[] {
+    let result = new Array<KeyValuePair<K, V>>();
+    for (const [value, key] of this) {
+        result.push(new KeyValuePair<K, V>(key, value));
+    }
+    return result;
+}
+Map.prototype.map = function<K, V, EndTypeKey, EndTypeValue>(
+    callback: (value: V, key?: K, map?: Map<K, V>) => 
+    KeyValuePair<EndTypeKey, EndTypeValue>): Map<EndTypeKey, EndTypeValue> {
+    return toMap(this.array().map(callback));
+}
+Map.prototype.filter = function<K, V>(callback: (value: V, key: K, map: Map<K, V>) => boolean): Map<K, V> {
+    return toMap(this.array().filter(callback));
+}
+function toMap<K, V>(arr: KeyValuePair<K, V>[]) {
+    return arr.reduce((result, { key, value }) => result.set(key, value), new Map<K, V>());
+}
+//#endregion
+
 //#region Interfaces
 interface ElementOptions<K extends keyof HTMLElementTagNameMap> {
     classes?: string[],
     attributes?: [string, string][],
     children?: HTMLElementTagNameMap[K][]
+}
+//#endregion
+
+//#region Types
+type EventHandler = (...args: any[]) => any;
+//#endregion
+
+//#region Classes
+class EventCollection {
+    constructor(...events: ((name: string, ...handlers: EventHandler[]) => any[])[]) {
+        this.events = new Map<string, EventHandler[]>();
+        events.forEach(callback => {
+            let args = callback.arguments as any[];
+            let name = args.shift();
+            this.setEvent(name, ...args);
+        });
+    }
+
+    private events: Map<string, EventHandler[]>;
+    private setEvent(name: string, ...handlers: EventHandler[]) {
+        this.events.set(name, [...(this.events.has(name) ? this.events.get(name) : []), ...handlers])
+        return this;
+    }
+    
+    public has(event: string) { return this.events.has(event); }
+    public get(event: string) { return this.events.get(event); }
+    public add(name: string, handler: EventHandler) { return this.setEvent(name, handler); }
+    public clear(name: string | "all" = 'all', handler?: EventHandler) {
+        if (name.toLowerCase() == 'all' && handler == null) return this.events.clear();                                             //clear(): Clears all events
+        else if (name.toLowerCase() == 'all' && handler) this.events = (() => {                                                     //clear("all", myEventHandler): Removes the "myEventHandler" handler from all events
+            let events = this.events.array().map(({ key, value }) => value.includes(handler) && key);
+            this.events.forEach((v, k) => 
+                events.includes(k) && 
+                this.events.set(k, this.events
+                    .get(k)
+                    .filter(_v => !v.includes(_v))
+            ));
+
+            return this.events;
+        })();
+        else if (name.toLowerCase() != "all" && handler == null) this.events.delete(name);                                          //clear("myEvent"): Clears All handlers tied to "myEvent"
+        else if (name.toLowerCase() != 'all' && handler) this.events.set(name, this.events.get(name).filter(h => h != handler));    //clear("myEvent", myEventHandler): Removes the "myEventsHandler" handler from "myEvent"
+    }
+}
+
+class EventEmitter {
+    constructor(...events: ((name: string, ...handlers: EventHandler[]) => any)[]) {
+        this.events = new EventCollection(...events);
+    }
+
+    private events: EventCollection;
+    
+    public on(event: string, listener: EventHandler) {
+        this.events.add(event, listener);
+        return this;
+    }
+    public once(event: string, listener: EventHandler) {
+        let callback = () => {
+            listener(listener.arguments);
+            this.remove(event, listener);
+        };
+
+        this.events.add(event, callback as EventHandler);
+        return this;
+    }
+
+    public remove(event: string = "all", listener?: EventHandler) {
+        this.events.clear(event, listener);
+        return this;
+    }
+    public emit(event: string, ...args: any[]) {
+        return this.events.get(event).map(listener => listener(...args));
+    }
+}
+
+class KeyValuePair<K, V> {
+    constructor(key: K, value: V) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public key: K;
+    public value: V;
 }
 //#endregion
 
@@ -36,34 +166,5 @@ function SetNavigationSelected(currentPageClass: string) {
     })
     
 
-}
-//#endregion
-
-//#region Extensions
-Document.prototype.createProperElement = function<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions<K>) {
-    let baseElement = document.createElement(tagName);
-    if (!options) return baseElement;
-
-    if (options.classes) {
-        baseElement.classList.add(...options.classes);
-    }
-    
-    if (options.attributes) {
-        options.attributes.forEach(([attribute, value]) => baseElement.setAttribute(attribute, value));
-    }
-
-    if (options.children) {
-        baseElement.append(...options.children);
-    }
-
-    return baseElement;
-}
-HTMLCollection.prototype.array = function() {
-    let result = new Array<Element>();
-
-    for (let i = 0; i < this.length; i++) {
-        result.push(this.item(i));
-    }
-    return result;
 }
 //#endregion
