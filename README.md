@@ -1,10 +1,12 @@
 # DanhoLibraryJS
 
-To use:
+### To use:
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/DanielSimonsen90/DanhoLibraryJS@latest/dist/index.js"></script>
 ```
+
+### Documentation
 
 ```ts
 //#region Extensions
@@ -62,8 +64,6 @@ type EventHandler = (...args: any[]) => any;
 
 class EventCollection {
     constructor();
-    private events;
-    private setEvent;
     /**Returns true if event is in collection
      * @param event Event name
      * @returns true if event is in collection*/
