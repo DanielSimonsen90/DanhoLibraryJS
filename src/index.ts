@@ -46,39 +46,84 @@ function toMap<K, V>(arr: KeyValuePair<K, V>[]) {
 //#endregion
 
 //#region Interfaces
+/**
+ * Options for creating a proper HTML element
+ */
 interface ElementOptions<K extends keyof HTMLElementTagNameMap> {
+    /**
+     * css classes to give the element
+     */
     classes?: string[],
+    /**
+     * attributes to give the element
+     */
     attributes?: [string, string][],
+    /**
+     * Children of the element
+     */
     children?: HTMLElementTagNameMap[K][]
 }
 //#endregion
 
 //#region Types
+/**
+ * Callback function for EventHandler
+ */
 type EventHandler = (...args: any[]) => any;
 //#endregion
 
 //#region Classes
+/**
+ * Collection of Events from EventEmitter
+ */
 class EventCollection {
-    constructor(...events: ((name: string, ...handlers: EventHandler[]) => any[])[]) {
+    constructor() {
         this.events = new Map<string, EventHandler[]>();
-        events.forEach(callback => {
-            let args = callback.arguments as any[];
-            let name = args.shift();
-            this.setEvent(name, ...args);
-        });
     }
 
     private events: Map<string, EventHandler[]>;
-    private setEvent(name: string, ...handlers: EventHandler[]) {
+    private setEvent(name: string, ...handlers: EventHandler[]): this {
         this.events.set(name, [...(this.events.has(name) ? this.events.get(name) : []), ...handlers])
         return this;
     }
     
-    public has(event: string) { return this.events.has(event); }
-    public get(event: string) { return this.events.get(event); }
-    public add(name: string, handler: EventHandler) { return this.setEvent(name, handler); }
-    public clear(name: string | "all" = 'all', handler?: EventHandler) {
-        if (name.toLowerCase() == 'all' && handler == null) return this.events.clear();                                             //clear(): Clears all events
+    /**
+     * Returns true if event is in collection
+     * @param event Event name
+     * @returns true if event is in collection
+     */
+    public has(event: string): boolean { 
+        return this.events.has(event); 
+    }
+    /**
+     * Returns all event handlers for event name
+     * @param event Event name
+     * @returns All event handlers for event name
+     */
+    public get(event: string): EventHandler[] { 
+        return this.events.get(event); 
+    }
+    /**
+     * Adds handler to event collection with name as key
+     * @param name Event name
+     * @param handler Handler for event
+     * @returns this
+     */
+    public add(name: string, handler: EventHandler): this { 
+        return this.setEvent(name, handler); 
+    }
+    /**
+     * @summary clear(): Clears all events
+     * @summary clear("all", myEventHandler): Removes myEventHandler from all events that have it
+     * @summary clear("myEvent"): Clears all handlers tied to "myEvent"
+     * @summary clear("myEvent", myEventHandler): Removes myEventHandler from "myEvent"
+     * 
+     * @param name Event name | "all"
+     * @param handler Specific handler to remove. If left blank, all handlers in name will be removed
+     * @returns this
+     */
+    public clear(name: string | "all" = 'all', handler?: EventHandler): this {
+        if (name.toLowerCase() == 'all' && handler == null) this.events.clear();                                             //clear(): Clears all events
         else if (name.toLowerCase() == 'all' && handler) this.events = (() => {                                                     //clear("all", myEventHandler): Removes the "myEventHandler" handler from all events
             let events = this.events.array().map(({ key, value }) => value.includes(handler) && key);
             this.events.forEach((v, k) => 
@@ -92,21 +137,37 @@ class EventCollection {
         })();
         else if (name.toLowerCase() != "all" && handler == null) this.events.delete(name);                                          //clear("myEvent"): Clears All handlers tied to "myEvent"
         else if (name.toLowerCase() != 'all' && handler) this.events.set(name, this.events.get(name).filter(h => h != handler));    //clear("myEvent", myEventHandler): Removes the "myEventsHandler" handler from "myEvent"
+        return this;
     }
 }
 
+/**
+ * Traditional Node.js EventEmitter in vanilla JavaScript
+ */
 class EventEmitter {
-    constructor(...events: ((name: string, ...handlers: EventHandler[]) => any)[]) {
-        this.events = new EventCollection(...events);
+    constructor() {
+        this.events = new EventCollection();
     }
 
     private events: EventCollection;
     
-    public on(event: string, listener: EventHandler) {
+    /**
+     * Adds listener to event collection, and runs listener when event is emitted
+     * @param event Event to handle
+     * @param listener Callback function to run, when event occurs
+     * @returns this
+     */
+    public on(event: string, listener: EventHandler): this {
         this.events.add(event, listener);
         return this;
     }
-    public once(event: string, listener: EventHandler) {
+    /**
+     * Adds listener to event collection, and runs listener once when event is emitted
+     * @param event Event to handle
+     * @param listener Callback function to run, when event occurs
+     * @returns this
+     */
+    public once(event: string, listener: EventHandler): this {
         let callback = () => {
             listener(listener.arguments);
             this.remove(event, listener);
@@ -115,16 +176,32 @@ class EventEmitter {
         this.events.add(event, callback as EventHandler);
         return this;
     }
-
-    public remove(event: string = "all", listener?: EventHandler) {
+    /**
+     * Removes listener(s) from event
+     * @param event Event to get collection of listeners | "all"
+     * @param listener If left null, removes all listeners tied to event, else only removes listener from event
+     * @returns this
+     */
+    public remove(event: string = "all", listener?: EventHandler): this {
         this.events.clear(event, listener);
         return this;
     }
-    public emit(event: string, ...args: any[]) {
+    /**
+     * Emits event and runs all listeners tied to event
+     * @param event Event to emit
+     * @param args Arguments for the event
+     * @returns Array of listeners' reponses
+     */
+    public emit(event: string, ...args: any[]): any[] {
         return this.events.get(event).map(listener => listener(...args));
     }
 }
 
+/**
+ * Simple KeyValuePair from C# to JavaScript: Only has .key and .value typed after K and V
+ * @typedef K KeyType
+ * @typedef V ValueType  
+ */
 class KeyValuePair<K, V> {
     constructor(key: K, value: V) {
         this.key = key;
@@ -137,6 +214,12 @@ class KeyValuePair<K, V> {
 //#endregion
 
 //#region Global Functions
+/**
+ * Copies value onto the clipboard 
+ * @param input Input as type="text"
+ * @param value value to copy ontp clipboard
+ * @param response Additional response to alert
+ */
 function CopyToClipboard(input: HTMLTextAreaElement, value: string, response?: string) {
     //Give the website body the new input variable
     document.body.appendChild(input);
@@ -155,14 +238,18 @@ function CopyToClipboard(input: HTMLTextAreaElement, value: string, response?: s
 
     if (response) alert(response);
 }
-function SetNavigationSelected(currentPageClass: string) {
+/**
+ * Appends classes to header's "a" elements, when navigation to "a"'s page is selected
+ * @param currentPageClasses Class(es) to append header's "a" elements
+ */
+function SetNavigationSelected(...currentPageClasses: string[]) {
     let header = document.querySelector('header');
     let children = header.children.array().filter(c => c.tagName === 'a') as HTMLAnchorElement[];
     let currentPage = document.location.href;
 
     children.forEach(gc => {
-        if (gc.href != currentPage) gc.classList.remove(currentPageClass);
-        else gc.classList.add(currentPageClass);
+        if (gc.href != currentPage) gc.classList.remove(...currentPageClasses);
+        else gc.classList.add(...currentPageClasses);
     })
     
 
