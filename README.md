@@ -21,6 +21,10 @@ class HTMLCollection {
     array(): Element[];
 }
 
+class Array<T> {
+    remove(item: T): Array<T>
+}
+
 class Map<K, V> {
     /**Converts Map<K, V> to KeyValuePair<K, V>[]*/
     array(): KeyValuePair<K, V>[];

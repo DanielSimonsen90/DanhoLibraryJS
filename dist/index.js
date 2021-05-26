@@ -21,6 +21,14 @@ HTMLCollection.prototype.array = function () {
     }
     return result;
 };
+Array.prototype.remove = function (item) {
+    let itemInArray = this.includes(item) ? item : this.find(i => i == item);
+    if (!itemInArray)
+        throw new Error(`item is not in array!`);
+    let itemIndex = this.indexOf(itemInArray);
+    this.splice(itemIndex, 1);
+    return this;
+};
 Map.prototype.array = function () {
     let result = new Array();
     for (const [value, key] of this) {

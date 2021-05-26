@@ -25,6 +25,14 @@ HTMLCollection.prototype.array = function() {
     }
     return result;
 }
+Array.prototype.remove = function<T>(item: T): Array<T> {
+    let itemInArray = this.includes(item) ? item : this.find(i => i == item);
+    if (!itemInArray) throw new Error(`item is not in array!`);
+    
+    let itemIndex = this.indexOf(itemInArray);
+    this.splice(itemIndex, 1);
+    return this;
+}
 Map.prototype.array = function<K, V>(): KeyValuePair<K, V>[] {
     let result = new Array<KeyValuePair<K, V>>();
     for (const [value, key] of this) {
@@ -37,7 +45,7 @@ Map.prototype.map = function<K, V, EndTypeKey, EndTypeValue>(
     KeyValuePair<EndTypeKey, EndTypeValue>): Map<EndTypeKey, EndTypeValue> {
     return toMap(this.array().map(callback));
 }
-Map.prototype.filter = function<K, V>(callback: (value: V, key: K, map: Map<K, V>) => boolean): Map<K, V> {
+Map.prototype.filter = function<K, V>(callback: (value: V, key?: K, map?: Map<K, V>) => boolean): Map<K, V> {
     return toMap(this.array().filter(callback));
 }
 function toMap<K, V>(arr: KeyValuePair<K, V>[]) {
