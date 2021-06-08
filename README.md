@@ -1,10 +1,18 @@
 # DanhoLibraryJS
 
-### To use:
+### To use (vanilla):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/DanielSimonsen90/DanhoLibraryJS@latest/dist/index.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/DanielSimonsen90/DanhoLibraryJS@latest/vanilla/dist/index.js"></script>
 ```
+
+### To use (node):
+Download the [node folder](https://github.com/DanielSimonsen90/DanhoLibraryJS/tree/main/node) and put it in your project's **node_modules** folder
+
+```js
+import { ... } from 'DanhoLibraryJS';
+```
+
 
 ### Documentation
 

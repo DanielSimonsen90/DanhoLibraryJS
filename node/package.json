@@ -1,0 +1,9 @@
+{
+  "name": "danholibraryjs",
+  "version": "1.0.0",
+  "description": "Library for node",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Daniel Simonsen",
+  "license": "ISC"
+}
