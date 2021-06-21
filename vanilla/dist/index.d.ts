@@ -24,7 +24,7 @@ declare type EventHandler = (...args: any[]) => any;
  * Collection of Events from EventEmitter
  */
 declare class EventCollection {
-    constructor();
+    constructor(events?: Map<string, EventHandler[]>);
     private events;
     private setEvent;
     /**
@@ -62,7 +62,7 @@ declare class EventCollection {
  * Traditional Node.js EventEmitter in vanilla JavaScript
  */
 declare class EventEmitter {
-    constructor();
+    constructor(events?: Map<string, EventHandler[]>);
     private events;
     /**
      * Adds listener to event collection, and runs listener when event is emitted

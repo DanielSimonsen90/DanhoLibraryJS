@@ -30,8 +30,8 @@ export type EventHandler = (...args: any[]) => any;
  * Collection of Events from EventEmitter
  */
 export class EventCollection {
-    constructor() {
-        this.events = new Map<string, EventHandler[]>();
+    constructor(events?: Map<string, EventHandler[]>) {
+        this.events = events || new Map<string, EventHandler[]>();
     }
 
     private events: Map<string, EventHandler[]>;
@@ -98,8 +98,8 @@ export class EventCollection {
  * Traditional Node.js EventEmitter in vanilla JavaScript
  */
 export class EventEmitter {
-    constructor() {
-        this.events = new EventCollection();
+    constructor(events?: Map<string, EventHandler[]>) {
+        this.events = new EventCollection(events);
     }
 
     private events: EventCollection;

@@ -7,8 +7,8 @@ exports.toMap = exports.SetNavigationSelected = exports.CopyToClipboard = export
  * Collection of Events from EventEmitter
  */
 class EventCollection {
-    constructor() {
-        this.events = new Map();
+    constructor(events) {
+        this.events = events || new Map();
     }
     setEvent(name, ...handlers) {
         this.events.set(name, [...(this.events.has(name) ? this.events.get(name) : []), ...handlers]);
@@ -73,8 +73,8 @@ exports.EventCollection = EventCollection;
  * Traditional Node.js EventEmitter in vanilla JavaScript
  */
 class EventEmitter {
-    constructor() {
-        this.events = new EventCollection();
+    constructor(events) {
+        this.events = new EventCollection(events);
     }
     /**
      * Adds listener to event collection, and runs listener when event is emitted
