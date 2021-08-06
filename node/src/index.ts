@@ -123,7 +123,7 @@ export class EventEmitter {
     public once(event: string, listener: EventHandler): this {
         let callback = () => {
             listener(listener.arguments);
-            this.remove(event, listener);
+            this.off(event, listener);
         };
 
         this.events.add(event, callback as EventHandler);
@@ -135,7 +135,7 @@ export class EventEmitter {
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    public remove(event: string = "all", listener?: EventHandler): this {
+    public off(event: string = "all", listener?: EventHandler): this {
         this.events.clear(event, listener);
         return this;
     }
@@ -210,7 +210,7 @@ export function SetNavigationSelected(...currentPageClasses: string[]) {
 //#endregion
 
 //#region Extensions
-HTMLCollection.prototype.array = function() {
+HTMLCollection.prototype.array = function(this: HTMLCollection) {
     let result = new Array<Element>();
 
     for (let i = 0; i < this.length; i++) {
@@ -218,7 +218,7 @@ HTMLCollection.prototype.array = function() {
     }
     return result;
 }
-Array.prototype.remove = function<T>(item: T): Array<T> {
+Array.prototype.remove = function<T>(this: Array<T>, item: T): Array<T> {
     let itemInArray = this.includes(item) ? item : this.find(i => i == item);
     if (!itemInArray) throw new Error(`item is not in array!`);
     
@@ -226,31 +226,31 @@ Array.prototype.remove = function<T>(item: T): Array<T> {
     this.splice(itemIndex, 1);
     return this;
 }
-Map.prototype.array = function<K, V>(): KeyValuePair<K, V>[] {
+Map.prototype.array = function<K, V>(this: Map<K, V>): KeyValuePair<K, V>[] {
     let result = new Array<KeyValuePair<K, V>>();
-    for (const [value, key] of this) {
+    for (const [key, value] of this) {
         result.push(new KeyValuePair<K, V>(key, value));
     }
     return result;
 }
-Map.prototype.map = function<K, V, EndTypeKey, EndTypeValue>(
+Map.prototype.map = function<K, V, EndTypeKey, EndTypeValue>(this: Map<K, V>,
     callback: (value: V, key?: K, map?: Map<K, V>) => 
     KeyValuePair<EndTypeKey, EndTypeValue>): Map<EndTypeKey, EndTypeValue> {
     return toMap(this.array().map(callback));
 }
-Map.prototype.filter = function<K, V>(callback: (value: V, key?: K, map?: Map<K, V>) => boolean): Map<K, V> {
+Map.prototype.filter = function<K, V>(this: Map<K, V>, callback: (value: V, key?: K, map?: Map<K, V>) => boolean): Map<K, V> {
     return toMap(this.array().filter(callback));
 }
-Map.prototype.keyArr = function<K>(): K[] {
+Map.prototype.keyArr = function<K, V>(this: Map<K, V>): K[] {
     return this.array().map(kvp => kvp.key);
 }
-Map.prototype.valueArr = function<V>(): V[] {
+Map.prototype.valueArr = function<K, V>(this: Map<K, V>): V[] {
     return this.array().map(kvp => kvp.value);
 }
-Map.prototype.find = function<K, V>(callback: (kvp: KeyValuePair<K, V>) => boolean) {
+Map.prototype.find = function<K, V>(this: Map<K, V>, callback: (kvp: KeyValuePair<K, V>) => boolean) {
     return this.array().find(callback);
 }
-Map.prototype.includes = function<K, V>(callback: (item: V) => boolean) {
+Map.prototype.includes = function<K, V>(this: Map<K, V>, callback: (item: V) => boolean) {
     return this.valuesArr().includes(callback);
 }
 export function toMap<K, V>(arr: KeyValuePair<K, V>[]) {

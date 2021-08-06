@@ -95,7 +95,7 @@ class EventEmitter {
     once(event, listener) {
         let callback = () => {
             listener(listener.arguments);
-            this.remove(event, listener);
+            this.off(event, listener);
         };
         this.events.add(event, callback);
         return this;
@@ -106,7 +106,7 @@ class EventEmitter {
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    remove(event = "all", listener) {
+    off(event = "all", listener) {
         this.events.clear(event, listener);
         return this;
     }
@@ -191,7 +191,7 @@ Array.prototype.remove = function (item) {
 };
 Map.prototype.array = function () {
     let result = new Array();
-    for (const [value, key] of this) {
+    for (const [key, value] of this) {
         result.push(new KeyValuePair(key, value));
     }
     return result;

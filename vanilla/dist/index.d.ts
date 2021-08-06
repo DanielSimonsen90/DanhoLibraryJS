@@ -84,7 +84,7 @@ declare class EventEmitter {
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    remove(event?: string, listener?: EventHandler): this;
+    off(event?: string, listener?: EventHandler): this;
     /**
      * Emits event and runs all listeners tied to event
      * @param event Event to emit
