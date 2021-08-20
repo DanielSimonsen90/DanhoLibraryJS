@@ -16,7 +16,7 @@ import { ... } from 'DanhoLibraryJS';
 ```
 
 ### Documentation
-## Extensions
+#### Extensions
 ```ts
 class Document {
     /**Creates a simple element with the additions of ElementOptions*/
@@ -29,43 +29,48 @@ class HTMLCollection {
 }
 
 class Array<T> {
+    /**Removes provided item from the array*/
     remove(item: T): this
 }
 
 interface Map<K, V> {
+    /**Converts map into array*/
     array(): [K, V][]
+    /**Maps values into new map*/
     map<EK, EV>(callback: (value: V, key?: K, index?: number, map?: this) => [EK, EV]): Map<EK, EV>
+    /**Filters map after provided callback*/
     filter(callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => boolean): Map<K, V>
+    /**Converts map into array of keys*/
     keyArr(): Array<K>
+    /**Converts map into array of values*/
     valueArr(): Array<V>
+    /**Find specific item in map*/
     find(callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => boolean): [K, V]
+    /**True if map includes key (Value version of Map#has)*/
     includes(value: V, fromIndex?: number): boolean;
 }
 ```
 
-## Interfaces
-```ts
-/**Options for creating a proper HTML element*/
-interface ElementOptions<K extends keyof HTMLElementTagNameMap> {
-    /**css classes to give the element*/
-    classes?: string[];
-    /**attributes to give the element*/
-    attributes?: [string, string][];
-    /**Children of the element*/
-    children?: HTMLElementTagNameMap[K][];
-}
-```
-
-## Types
+#### Functions
 ```ts
 /**
- * Eventhandler type for:
- * @see EventCollection
+ * Copies value to clipboard and alerts a response, if response is defined
+ * @param value Value to clipboard
+ * @param response Alerts if response is given
  */
-type EventHandler = (...args: any[]) => any;
+async function CopyToClipboard(value: string, response?: string): Promise<void>;
+
+/**
+ * Appends classes to header's "a" elements, when navigation to "a"'s page is selected
+ * @param query The query selector for Document.querySelector
+ * @param currentPageClasses Class(es) to append header's "a" elements
+ * 
+ * @borrows Document.querySelector
+ */
+function SetNavigationSelected(query: string, ...currentPageClasses: string[]): void;
 ```
 
-## Classes
+#### Classes
 ```ts
 class EventCollection {
     /**
@@ -142,21 +147,24 @@ class EventEmitter {
 }
 ```
 
-## Functions
+#### Interfaces
+```ts
+/**Options for creating a proper HTML element*/
+interface ElementOptions<K extends keyof HTMLElementTagNameMap> {
+    /**css classes to give the element*/
+    classes?: string[];
+    /**attributes to give the element*/
+    attributes?: [string, string][];
+    /**Children of the element*/
+    children?: HTMLElementTagNameMap[K][];
+}
+```
+
+#### Types
 ```ts
 /**
- * Copies value to clipboard and alerts a response, if response is defined
- * @param value Value to clipboard
- * @param response Alerts if response is given
+ * Eventhandler type for:
+ * @see EventCollection
  */
-async function CopyToClipboard(value: string, response?: string): Promise<void>;
-
-/**
- * Appends classes to header's "a" elements, when navigation to "a"'s page is selected
- * @param query The query selector for Document.querySelector
- * @param currentPageClasses Class(es) to append header's "a" elements
- * 
- * @borrows Document.querySelector
- */
-function SetNavigationSelected(query: string, ...currentPageClasses: string[]): void;
+type EventHandler = (...args: any[]) => any;
 ```
