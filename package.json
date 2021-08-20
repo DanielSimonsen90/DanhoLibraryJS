@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/DanielSimonsen90/DanhoLibraryJS.git"
   },
-  "keywords": [],
+  "keywords": ["library", "javascript"],
   "author": "DanielSimonsen90 | Danhosaur | Daniel Simonsen",
   "license": "ISC",
   "bugs": {
