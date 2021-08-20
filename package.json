@@ -1,0 +1,20 @@
+{
+  "name": "danholibraryjs",
+  "version": "1.0.0",
+  "description": "Library for Javascript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielSimonsen90/DanhoLibraryJS.git"
+  },
+  "keywords": [],
+  "author": "DanielSimonsen90 | Danhosaur | Daniel Simonsen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DanielSimonsen90/DanhoLibraryJS/issues"
+  },
+  "homepage": "https://github.com/DanielSimonsen90/DanhoLibraryJS#readme"
+}
