@@ -14,7 +14,7 @@ export class EventEmitter {
      * Internal event collection
      * @private
      */
-    private events: EventCollection;
+    private events = new EventCollection();
     
     /**
      * Adds listener to event collection, and runs listener when event is emitted

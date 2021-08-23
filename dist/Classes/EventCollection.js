@@ -14,7 +14,7 @@ class EventCollection {
      * Internal event collection
      * @private
      */
-    _events;
+    _events = new Map();
     /**
      * Binds provided handlers to provided event name.
      * @private

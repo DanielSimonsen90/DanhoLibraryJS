@@ -14,7 +14,7 @@ class EventEmitter {
      * Internal event collection
      * @private
      */
-    events;
+    events = new EventCollection_1.default();
     /**
      * Adds listener to event collection, and runs listener when event is emitted
      * @param event Event to handle

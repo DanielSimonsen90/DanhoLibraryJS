@@ -1,7 +1,7 @@
 import ElementOptions from "./Interfaces/ElementOptions";
 declare global {
     interface Document {
-        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions<K>): HTMLElementTagNameMap[K];
+        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions): HTMLElementTagNameMap[K];
     }
     interface HTMLCollection {
         array(): Element[];

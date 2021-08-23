@@ -14,7 +14,7 @@ import EventHandler from "../Types/EventHandler";
      * Internal event collection
      * @private
      */
-    private _events: Map<string, EventHandler[]>;
+    private _events = new Map<string, EventHandler[]>();
     /**
      * Binds provided handlers to provided event name.
      * @private

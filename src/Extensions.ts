@@ -2,7 +2,7 @@ import ElementOptions from "./Interfaces/ElementOptions";
 
 declare global {
     interface Document {
-        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions<K>): HTMLElementTagNameMap[K]
+        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions): HTMLElementTagNameMap[K]
     }
     interface HTMLCollection {
         array(): Element[]
@@ -21,7 +21,7 @@ declare global {
     }
 }
 
-Document.prototype.createProperElement = function<K extends keyof HTMLElementTagNameMap>(this: Document, tagName: K, options?: ElementOptions<K>) {
+Document.prototype.createProperElement = function<K extends keyof HTMLElementTagNameMap>(this: Document, tagName: K, options?: ElementOptions) {
     let baseElement = document.createElement(tagName);
     if (!options) return baseElement;
 
