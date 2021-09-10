@@ -5,32 +5,29 @@ import EventHandler from "../Types/EventHandler";
 export declare class EventEmitter {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
     constructor(events?: Map<string, EventHandler[]>);
-    /**
-     * Internal event collection
-     * @private
-     */
-    private events;
+    /**@private Internal event collection*/
+    private _events;
     /**
      * Adds listener to event collection, and runs listener when event is emitted
      * @param event Event to handle
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    on(event: string, listener: EventHandler): this;
+    on<ReturnType = any>(event: string, listener: EventHandler<ReturnType>): this;
     /**
      * Adds listener to event collection, and runs listener once when event is emitted
      * @param event Event to handle
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    once(event: string, listener: EventHandler): this;
+    once<ReturnType = any>(event: string, listener: EventHandler<ReturnType>): this;
     /**
      * Removes listener(s) from event
      * @param event Event to get collection of listeners | "all"
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    off(event?: string, listener?: EventHandler): this;
+    off<ReturnType = any>(event?: string, listener?: EventHandler<ReturnType>): this;
     /**
      * Emits event and runs all listeners tied to event
      * @param event Event to emit
@@ -38,6 +35,12 @@ export declare class EventEmitter {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    emit(event: string, ...args: any[]): any[];
+    emit<ReturnType = any>(event: string, ...args: any[]): ReturnType[];
+    /**
+     * Limits how many events to accept using EventEmitter#on or EventEmitter#once
+     * @param limit Limit of events to keep. If you want to limit amount of events saved, use 'all'.
+     * @returns this with the new limit
+     */
+    limit(event: 'all' | string, limit: number): this;
 }
 export default EventEmitter;

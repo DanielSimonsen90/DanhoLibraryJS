@@ -22,11 +22,15 @@ HTMLCollection.prototype.array = function () {
     }
     return result;
 };
+Array.prototype.add = function (...items) {
+    this.push(...items);
+    return this;
+};
 Array.prototype.remove = function (item) {
-    let itemInArray = this.includes(item) ? item : this.find(i => i == item);
+    const itemInArray = this.includes(item) ? item : this.find(i => i == item);
     if (!itemInArray)
         throw new Error(`item is not in array!`);
-    let itemIndex = this.indexOf(itemInArray);
+    const itemIndex = this.indexOf(itemInArray);
     this.splice(itemIndex, 1);
     return this;
 };
@@ -58,4 +62,16 @@ Map.prototype.find = function (callback) {
 };
 Map.prototype.includes = function (item, fromIndex) {
     return this.valueArr().includes(item, fromIndex);
+};
+String.prototype.toPascalCase = function () {
+    return this.substring(0, 1).toUpperCase() + this.substring(1);
+};
+function spaceReplacer(self, replacer, replacement) {
+    return self.replace(new RegExp(`${typeof replacer == 'string' ? replacer : replacer.source}+`), replacement);
+}
+String.prototype.toSnakeCase = function (replacer) {
+    return spaceReplacer(this, replacer || ' ', '_');
+};
+String.prototype.toKebabCase = function (replacer) {
+    return spaceReplacer(this, replacer || ' ', '-');
 };

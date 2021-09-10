@@ -8,13 +8,10 @@ const EventCollection_1 = require("./EventCollection");
 class EventEmitter {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
     constructor(events) {
-        this.events = new EventCollection_1.default(events);
+        this._events = new EventCollection_1.default(events);
     }
-    /**
-     * Internal event collection
-     * @private
-     */
-    events = new EventCollection_1.default();
+    /**@private Internal event collection*/
+    _events = new EventCollection_1.default();
     /**
      * Adds listener to event collection, and runs listener when event is emitted
      * @param event Event to handle
@@ -22,7 +19,7 @@ class EventEmitter {
      * @returns this
      */
     on(event, listener) {
-        this.events.add(event, listener);
+        this._events.add(event, listener);
         return this;
     }
     /**
@@ -32,11 +29,7 @@ class EventEmitter {
      * @returns this
      */
     once(event, listener) {
-        const callback = () => {
-            listener(listener.arguments);
-            this.off(event, listener);
-        };
-        this.events.add(event, callback);
+        this._events.add(event, listener, true);
         return this;
     }
     /**
@@ -46,7 +39,7 @@ class EventEmitter {
      * @returns this
      */
     off(event = "all", listener) {
-        this.events.clear(event, listener);
+        this._events.clear(event, listener);
         return this;
     }
     /**
@@ -57,7 +50,16 @@ class EventEmitter {
      * @returns Array of listeners' reponses
      */
     emit(event, ...args) {
-        return this.events.get(event).map(listener => listener(...args));
+        return this._events.emit(event, ...args);
+    }
+    /**
+     * Limits how many events to accept using EventEmitter#on or EventEmitter#once
+     * @param limit Limit of events to keep. If you want to limit amount of events saved, use 'all'.
+     * @returns this with the new limit
+     */
+    limit(event, limit) {
+        this._events.limit(event, limit);
+        return this;
     }
 }
 exports.EventEmitter = EventEmitter;

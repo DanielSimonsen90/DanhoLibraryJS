@@ -8,6 +8,7 @@ declare global {
         array(): Element[]
     }
     interface Array<T> {
+        add(...items: Array<T>): this
         remove(item: T): this
     }
     interface Map<K, V> {
@@ -18,6 +19,11 @@ declare global {
         valueArr(): Array<V>
         find(callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => boolean): [K, V]
         includes(value: V, fromIndex?: number): boolean;
+    }
+    interface String {
+        toPascalCase(): string;
+        toSnakeCase(): string;
+        toKebabCase(): string;
     }
 }
 
@@ -39,6 +45,7 @@ Document.prototype.createProperElement = function<K extends keyof HTMLElementTag
 
     return baseElement;
 }
+
 HTMLCollection.prototype.array = function(this: HTMLCollection) {
     let result = new Array<Element>();
 
@@ -47,14 +54,20 @@ HTMLCollection.prototype.array = function(this: HTMLCollection) {
     }
     return result;
 }
+
+Array.prototype.add = function<T>(this: Array<T>, ...items: Array<T>) {
+    this.push(...items);
+    return this;
+}
 Array.prototype.remove = function<T>(this: Array<T>, item: T): Array<T> {
-    let itemInArray = this.includes(item) ? item : this.find(i => i == item);
+    const itemInArray = this.includes(item) ? item : this.find(i => i == item);
     if (!itemInArray) throw new Error(`item is not in array!`);
     
-    let itemIndex = this.indexOf(itemInArray);
+    const itemIndex = this.indexOf(itemInArray);
     this.splice(itemIndex, 1);
     return this;
 }
+
 Map.prototype.array = function<K, V>(this: Map<K, V>): [K, V][] {
     let result = new Array<[K, V]>();
     for (const kvp of this) {
@@ -87,4 +100,18 @@ Map.prototype.find = function<K, V>(this: Map<K, V>, callback: (value: V, key?: 
 }
 Map.prototype.includes = function<K, V>(this: Map<K, V>, item: V, fromIndex?: number) {
     return this.valueArr().includes(item, fromIndex);
+}
+
+String.prototype.toPascalCase = function(this: string) {
+    return this.substring(0, 1).toUpperCase() + this.substring(1);
+}
+
+function spaceReplacer(self: string, replacer: string | RegExp, replacement: string) {
+    return self.replace(new RegExp(`${typeof replacer == 'string' ? replacer : replacer.source}+`), replacement);
+}
+String.prototype.toSnakeCase = function(this: string, replacer?: string | RegExp) {
+    return spaceReplacer(this, replacer || ' ', '_')
+}
+String.prototype.toKebabCase = function(this: string, replacer?: string | RegExp) {
+    return spaceReplacer(this, replacer || ' ', '-');
 }

@@ -1,25 +1,17 @@
 import EventHandler from "../Types/EventHandler";
+import Event from './Event';
 /**
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
  */
 export declare class EventCollection {
-    /**@param events Map<name: string, handlers: EventHandler[]>*/
     constructor(events?: Map<string, EventHandler[]>);
-    /**
-     * Internal event collection
-     * @private
-     */
+    /**Amount of events stored*/
+    get size(): number;
+    /**@private Internal event collection*/
     private _events;
-    /**
-     * Binds provided handlers to provided event name.
-     * @private
-     * @see EventCollection.add to use
-     * @param name Name of the event to set
-     * @param handlers Handlers to run when event is emitted
-     * @returns this, with updated events
-     */
-    private setEvent;
+    /**@private limit of events*/
+    private _limit;
     /**
      * Returns true if event is in collection
      * @param event Event name
@@ -27,18 +19,18 @@ export declare class EventCollection {
      */
     has(event: string): boolean;
     /**
-     * Returns all event handlers for event name
+     * Returns event matching event parameter
      * @param event Event name
-     * @returns All event handlers for event name
+     * @returns Event
      */
-    get(event: string): EventHandler[];
+    get<T = any>(event: string): Event<T>;
     /**
      * Adds handler to event collection with name as key
      * @param name Event name
      * @param handler Handler for event
      * @returns this
      */
-    add(name: string, handler: EventHandler): this;
+    add(name: string, handler: EventHandler, once?: boolean): this;
     /**
      * @summary clear(): Clears all events
      * @summary clear("all", myEventHandler): Removes myEventHandler from all events that have it
@@ -50,5 +42,12 @@ export declare class EventCollection {
      * @returns this
      */
     clear(name?: string | "all", handler?: EventHandler): this;
+    emit(name: string, ...args: any[]): any[];
+    /**
+     * Limits how many events to accept using EventEmitter#on or EventEmitter#once
+     * @param limit Limit of events to keep
+     * @returns this with the new limit
+     */
+    limit(event: 'all' | string, limit: number): this;
 }
 export default EventCollection;

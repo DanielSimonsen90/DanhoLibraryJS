@@ -7,6 +7,7 @@ declare global {
         array(): Element[];
     }
     interface Array<T> {
+        add(...items: Array<T>): this;
         remove(item: T): this;
     }
     interface Map<K, V> {
@@ -17,5 +18,10 @@ declare global {
         valueArr(): Array<V>;
         find(callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => boolean): [K, V];
         includes(value: V, fromIndex?: number): boolean;
+    }
+    interface String {
+        toPascalCase(): string;
+        toSnakeCase(): string;
+        toKebabCase(): string;
     }
 }

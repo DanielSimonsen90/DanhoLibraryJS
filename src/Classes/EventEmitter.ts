@@ -7,14 +7,11 @@ import EventHandler from "../Types/EventHandler";
 export class EventEmitter {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
     constructor(events?: Map<string, EventHandler[]>) {
-        this.events = new EventCollection(events);
+        this._events = new EventCollection(events);
     }
 
-    /**
-     * Internal event collection
-     * @private
-     */
-    private events = new EventCollection();
+    /**@private Internal event collection*/
+    private _events = new EventCollection();
     
     /**
      * Adds listener to event collection, and runs listener when event is emitted
@@ -22,8 +19,8 @@ export class EventEmitter {
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    public on(event: string, listener: EventHandler): this {
-        this.events.add(event, listener);
+    public on<ReturnType = any>(event: string, listener: EventHandler<ReturnType>): this {
+        this._events.add(event, listener);
         return this;
     }
     /**
@@ -32,25 +29,22 @@ export class EventEmitter {
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    public once(event: string, listener: EventHandler): this {
-        const callback = () => {
-            listener(listener.arguments);
-            this.off(event, listener);
-        };
-
-        this.events.add(event, callback as EventHandler);
+    public once<ReturnType = any>(event: string, listener: EventHandler<ReturnType>): this {
+        this._events.add(event, listener, true);
         return this;
     }
+
     /**
      * Removes listener(s) from event
      * @param event Event to get collection of listeners | "all"
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    public off(event: string = "all", listener?: EventHandler): this {
-        this.events.clear(event, listener);
+    public off<ReturnType = any>(event: string = "all", listener?: EventHandler<ReturnType>): this {
+        this._events.clear(event, listener);
         return this;
     }
+
     /**
      * Emits event and runs all listeners tied to event
      * @param event Event to emit
@@ -58,8 +52,18 @@ export class EventEmitter {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    public emit(event: string, ...args: any[]): any[] {
-        return this.events.get(event).map(listener => listener(...args));
+    public emit<ReturnType = any>(event: string, ...args: any[]): ReturnType[] {
+        return this._events.emit(event, ...args);
+    }
+
+    /**
+     * Limits how many events to accept using EventEmitter#on or EventEmitter#once
+     * @param limit Limit of events to keep. If you want to limit amount of events saved, use 'all'.
+     * @returns this with the new limit
+     */
+    public limit(event: 'all' | string, limit: number) {
+        this._events.limit(event, limit);
+        return this;
     }
 }
 export default EventEmitter;

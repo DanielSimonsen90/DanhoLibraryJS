@@ -1,5 +1,13 @@
-export * as Types from './Types';
-export * as Interfaces from './Interfaces';
-export * as Classes from './Classes';
+import { EventHandler, IElement } from './Types';
+export { EventHandler, IElement };
+
+import { ElementOptions } from './Interfaces';
+export { ElementOptions };
+
+import { EventCollection, EventEmitter } from './Classes';
+export { EventCollection, EventEmitter };
+
+import { CopyToClipboard, SetNavigationSelected } from './Functions';
+export { CopyToClipboard, SetNavigationSelected };
+
 export * as Extensions from './Extensions';
-export * as Functions from './Functions';
