@@ -1,3 +1,4 @@
+import { EventHandler } from "..";
 import IElement from "../Types/IElement";
 
 /**
@@ -9,6 +10,10 @@ export interface ElementOptions {
     /**attributes to give the element*/
     attributes?: [string, string][],
     /**Children of the element*/
-    children?: IElement[]
+    children?: IElement[],
+    /**Events for the element to listen to
+     * @borrows EventHandler
+    */
+    events?: Array<{ name: string, handlers: EventHandler[] }>
 }
 export default ElementOptions

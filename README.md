@@ -282,6 +282,10 @@ interface ElementOptions<K extends keyof HTMLElementTagNameMap> {
     attributes?: [string, string][];
     /**Children of the element*/
     children?: HTMLElementTagNameMap[K][];
+    /**Events for the element to listen to
+     * @borrows EventHandler
+     */
+    events?: Array<{ name: string, handlers: EventHandler[] }>
 }
 /**
  * Replacement tool for 

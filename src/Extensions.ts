@@ -97,6 +97,14 @@ Document.prototype.createProperElement = function<K extends keyof HTMLElementTag
         baseElement.append(...options.children);
     }
 
+    if (options.events) {
+        options.events.forEach(({ name, handlers }) => (
+            handlers.forEach(handler => (
+                baseElement.addEventListener(name, handler)
+            ))
+        ))
+    }
+
     return baseElement;
 }
 

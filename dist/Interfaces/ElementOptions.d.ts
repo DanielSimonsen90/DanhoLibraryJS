@@ -1,3 +1,4 @@
+import { EventHandler } from "..";
 import IElement from "../Types/IElement";
 /**
  * Construction options when creating an HTML element using:
@@ -9,5 +10,12 @@ export interface ElementOptions {
     attributes?: [string, string][];
     /**Children of the element*/
     children?: IElement[];
+    /**Events for the element to listen to
+     * @borrows EventHandler
+    */
+    events?: Array<{
+        name: string;
+        handlers: EventHandler[];
+    }>;
 }
 export default ElementOptions;

@@ -13,6 +13,9 @@ Document.prototype.createProperElement = function (tagName, options) {
     if (options.children) {
         baseElement.append(...options.children);
     }
+    if (options.events) {
+        options.events.forEach(({ name, handlers }) => (handlers.forEach(handler => (baseElement.addEventListener(name, handler)))));
+    }
     return baseElement;
 };
 HTMLCollection.prototype.array = function () {
