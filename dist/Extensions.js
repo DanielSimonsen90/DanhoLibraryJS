@@ -69,9 +69,9 @@ String.prototype.toPascalCase = function () {
 function spaceReplacer(self, replacer, replacement) {
     return self.replace(new RegExp(`${typeof replacer == 'string' ? replacer : replacer.source}+`), replacement);
 }
-String.prototype.toSnakeCase = function (replacer) {
-    return spaceReplacer(this, replacer || ' ', '_');
+String.prototype.toSnakeCase = function (replaceOptions = { replacer: ' ', replacement: '_' }) {
+    return spaceReplacer(this, replaceOptions.replacer, replaceOptions.replacement);
 };
-String.prototype.toKebabCase = function (replacer) {
-    return spaceReplacer(this, replacer || ' ', '-');
+String.prototype.toKebabCase = function (replaceOptions = { replacer: ' ', replacement: '-' }) {
+    return spaceReplacer(this, replaceOptions.replacer, replaceOptions.replacement);
 };

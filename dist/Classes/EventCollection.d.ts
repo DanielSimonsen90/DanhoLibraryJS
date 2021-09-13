@@ -3,6 +3,7 @@ import Event from './Event';
 /**
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
+ * @borrows Event
  */
 export declare class EventCollection {
     constructor(events?: Map<string, EventHandler[]>);
@@ -47,6 +48,8 @@ export declare class EventCollection {
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param limit Limit of events to keep
      * @returns this with the new limit
+     *
+     * @throws Unknown event, if event name isn't recognized
      */
     limit(event: 'all' | string, limit: number): this;
 }

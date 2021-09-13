@@ -4,6 +4,7 @@ import Event from './Event';
 /**
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
+ * @borrows Event
  */
  export class EventCollection {
     constructor(events?: Map<string, EventHandler[]>) {
@@ -98,6 +99,8 @@ import Event from './Event';
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param limit Limit of events to keep
      * @returns this with the new limit
+     * 
+     * @throws Unknown event, if event name isn't recognized
      */
      public limit(event: 'all' | string, limit: number) {
         if (limit <= 0) return;

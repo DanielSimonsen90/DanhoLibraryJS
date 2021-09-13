@@ -5,6 +5,7 @@ const Event_1 = require("./Event");
 /**
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
+ * @borrows Event
  */
 class EventCollection {
     constructor(events) {
@@ -90,6 +91,8 @@ class EventCollection {
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param limit Limit of events to keep
      * @returns this with the new limit
+     *
+     * @throws Unknown event, if event name isn't recognized
      */
     limit(event, limit) {
         if (limit <= 0)

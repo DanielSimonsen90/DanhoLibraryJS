@@ -38,6 +38,7 @@ export declare class EventEmitter {
     emit<ReturnType = any>(event: string, ...args: any[]): ReturnType[];
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
+     * @param event: Specific event to limit, or by default, 'all'
      * @param limit Limit of events to keep. If you want to limit amount of events saved, use 'all'.
      * @returns this with the new limit
      */
