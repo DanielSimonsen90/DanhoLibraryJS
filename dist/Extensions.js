@@ -11,10 +11,10 @@ Document.prototype.createProperElement = function (tagName, options) {
         options.attributes.forEach(([attribute, value]) => baseElement.setAttribute(attribute, value));
     }
     if (options.children) {
-        baseElement.append(...options.children);
+        baseElement.append(...[].concat(options.children));
     }
     if (options.events) {
-        options.events.forEach(({ name, handlers }) => (handlers.forEach(handler => (baseElement.addEventListener(name, handler)))));
+        options.events.forEach(({ name, handler }) => (baseElement.addEventListener(name, handler)));
     }
     return baseElement;
 };

@@ -27,6 +27,10 @@ declare global {
          * @param item Item to remove
          */
         remove(item: T): this
+        /**
+         * Returns a random element from array
+         */
+        random(): T
     }
     interface Map<K, V> {
         /**
@@ -94,14 +98,12 @@ Document.prototype.createProperElement = function<K extends keyof HTMLElementTag
     }
 
     if (options.children) {
-        baseElement.append(...options.children);
+        baseElement.append(...[].concat(options.children));
     }
 
     if (options.events) {
-        options.events.forEach(({ name, handlers }) => (
-            handlers.forEach(handler => (
-                baseElement.addEventListener(name, handler)
-            ))
+        options.events.forEach(({ name, handler }) => (
+            baseElement.addEventListener(name, handler)
         ))
     }
 
@@ -128,6 +130,10 @@ Array.prototype.remove = function<T>(this: Array<T>, item: T): Array<T> {
     const itemIndex = this.indexOf(itemInArray);
     this.splice(itemIndex, 1);
     return this;
+}
+Array.prototype.random = function<T>(this: Array<T>): T {
+    const randomIndex = Math.round(Math.random() * this.length);
+    return this[randomIndex];
 }
 
 Map.prototype.array = function<K, V>(this: Map<K, V>): [K, V][] {

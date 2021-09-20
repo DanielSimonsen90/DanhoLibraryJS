@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Event = void 0;
 /**Base event for @see EventEmitter, @borrows EventHandler*/
 class Event {
     /**
@@ -101,4 +102,5 @@ class Event {
         return this;
     }
 }
+exports.Event = Event;
 exports.default = Event;

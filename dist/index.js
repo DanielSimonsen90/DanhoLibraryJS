@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Extensions = exports.SetNavigationSelected = exports.CopyToClipboard = exports.EventEmitter = exports.EventCollection = void 0;
-const Classes_1 = require("./Classes");
+exports.Extensions = exports.HTMLEvent = exports.SetNavigationSelected = exports.CopyToClipboard = exports.Event = exports.EventEmitter = exports.EventCollection = void 0;
+var Classes_1 = require("./Classes");
 Object.defineProperty(exports, "EventCollection", { enumerable: true, get: function () { return Classes_1.EventCollection; } });
 Object.defineProperty(exports, "EventEmitter", { enumerable: true, get: function () { return Classes_1.EventEmitter; } });
-const Functions_1 = require("./Functions");
+Object.defineProperty(exports, "Event", { enumerable: true, get: function () { return Classes_1.Event; } });
+var Functions_1 = require("./Functions");
 Object.defineProperty(exports, "CopyToClipboard", { enumerable: true, get: function () { return Functions_1.CopyToClipboard; } });
 Object.defineProperty(exports, "SetNavigationSelected", { enumerable: true, get: function () { return Functions_1.SetNavigationSelected; } });
+Object.defineProperty(exports, "HTMLEvent", { enumerable: true, get: function () { return Functions_1.HTMLEvent; } });
 exports.Extensions = require("./Extensions");

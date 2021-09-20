@@ -1,2 +1,2 @@
-type StringRegex = string | RegExp;
+export type StringRegex = string | RegExp;
 export default StringRegex;

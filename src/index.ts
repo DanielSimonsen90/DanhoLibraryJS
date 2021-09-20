@@ -1,13 +1,6 @@
-import { EventHandler, IElement } from './Types';
-export { EventHandler, IElement };
-
-import { ElementOptions } from './Interfaces';
-export { ElementOptions };
-
-import { EventCollection, EventEmitter } from './Classes';
-export { EventCollection, EventEmitter };
-
-import { CopyToClipboard, SetNavigationSelected } from './Functions';
-export { CopyToClipboard, SetNavigationSelected };
+export { EventCollection, EventEmitter, Event } from './Classes';
+export { CopyToClipboard, SetNavigationSelected, HTMLEvent } from './Functions';
+export { ElementOptions, IReplacement } from './Interfaces';
+export { EventHandler, IElement, StringRegex } from './Types';
 
 export * as Extensions from './Extensions';

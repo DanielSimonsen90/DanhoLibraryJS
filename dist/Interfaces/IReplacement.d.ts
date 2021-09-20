@@ -5,7 +5,8 @@ import StringRegex from "../Types/StringRegex";
  * @see String.toKebabCase
  * @borrows StringRegex
 */
-export default interface IReplacement {
+export interface IReplacement {
     replacer?: StringRegex;
     replacement?: string;
 }
+export default IReplacement;

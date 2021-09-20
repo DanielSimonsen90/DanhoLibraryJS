@@ -1,6 +1,6 @@
 import EventHandler from "../Types/EventHandler";
 /**Base event for @see EventEmitter, @borrows EventHandler*/
-export default class Event<ReturnType = any> {
+export declare class Event<ReturnType = any> {
     /**
      * Base event for @see EventEmitter, @borrows EventHandler
      * @param name Name of event
@@ -61,3 +61,4 @@ export default class Event<ReturnType = any> {
      */
     off(listener: EventHandler<ReturnType>, throwNotFoundError?: boolean): this;
 }
+export default Event;

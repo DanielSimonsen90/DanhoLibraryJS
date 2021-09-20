@@ -283,9 +283,9 @@ interface ElementOptions<K extends keyof HTMLElementTagNameMap> {
     /**Children of the element*/
     children?: HTMLElementTagNameMap[K][];
     /**Events for the element to listen to
-     * @borrows EventHandler
-     */
-    events?: Array<{ name: string, handlers: EventHandler[] }>
+     * @use HTMLEvent<Event, RetrunType>(name: Event, handler: (e: Event) => ReturnType)
+    */
+    events?: Array<{ name: string, handler: (e: Event) => any }>
 }
 /**
  * Replacement tool for 

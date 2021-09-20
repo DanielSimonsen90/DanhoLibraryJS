@@ -1,4 +1,4 @@
-import { EventHandler } from "..";
+import HTMLEvent from '../Functions/HTMLEvent'
 import IElement from "../Types/IElement";
 
 /**
@@ -10,10 +10,8 @@ export interface ElementOptions {
     /**attributes to give the element*/
     attributes?: [string, string][],
     /**Children of the element*/
-    children?: IElement[],
-    /**Events for the element to listen to
-     * @borrows EventHandler
-    */
-    events?: Array<{ name: string, handlers: EventHandler[] }>
+    children?: IElement | IElement[],
+    /**Events for the element to listen to*/
+    events?: Array<{ name: string, handler: (e: Event) => any }>
 }
 export default ElementOptions
