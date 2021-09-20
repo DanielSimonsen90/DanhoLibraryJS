@@ -1,14 +1,15 @@
+import BaseEvent from "../Interfaces/BaseEventInterface";
 import EventHandler from "../Types/EventHandler";
 /**Base event for @see EventEmitter, @borrows EventHandler*/
-export declare class Event<ReturnType = any> {
+export declare class Event<Events extends BaseEvent, Name extends keyof Events = keyof Events, Params = Events[Name]> {
     /**
      * Base event for @see EventEmitter, @borrows EventHandler
      * @param name Name of event
      * @param listeners Listeners/Handlers to execute when emitted
      */
-    constructor(name: string, ...listeners: Array<EventHandler<ReturnType>>);
+    constructor(name: Name, ...listeners: Array<EventHandler<Events, Name>>);
     /**Name of event*/
-    name: string;
+    name: Name;
     /**Listener limit - default: 0 */
     limit: number;
     /**Number of times event was emitted - default: 0*/
@@ -23,10 +24,10 @@ export declare class Event<ReturnType = any> {
     private _lastEmitted;
     /**
      * Emits event and returns array of responses
-     * @param args Arguments required for event listeners
+     * @param params Arguments required for event listeners
      * @returns Return values of listeners' returns
      */
-    emit(...args: any[]): ReturnType[];
+    emit(params: Params): any[];
     /**
      * Adds listener to listeners array and returns self with new listener added
      * @param listener Listener to add
@@ -35,7 +36,7 @@ export declare class Event<ReturnType = any> {
      *
      * @throws Limit error, if limit was reached
      */
-    on(listener: EventHandler<ReturnType>, prepend?: boolean): this;
+    on(listener: EventHandler<Events, Name>, prepend?: boolean): this;
     /**
      * Like Event#on, adds listener to listeners array and returns self with new listener added, however removes listener once emitted
      * @param listener Listener to add
@@ -44,13 +45,13 @@ export declare class Event<ReturnType = any> {
      *
      * @throws Limit error, if limit was reached
      */
-    once(listener: EventHandler<ReturnType>, prepend?: boolean): this;
+    once(listener: EventHandler<Events, Name>, prepend?: boolean): this;
     /**
      * Returns true or false, depending if event includes listener
      * @param listener Listener to test
      * @returns True of false, depending if event includes listener
      */
-    includes(listener: EventHandler<ReturnType>): boolean;
+    includes(listener: EventHandler<Events, Name>): boolean;
     /**
      * Removes listener from internal listeners array
      * @param listener Listener to remove
@@ -59,6 +60,6 @@ export declare class Event<ReturnType = any> {
      *
      * @throws NotFound, if throwNotFoundError is true, and internal listeners array doesn't include listener provided
      */
-    off(listener: EventHandler<ReturnType>, throwNotFoundError?: boolean): this;
+    off(listener: EventHandler<Events, Name>, throwNotFoundError?: boolean): this;
 }
 export default Event;

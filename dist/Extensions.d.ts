@@ -26,6 +26,10 @@ declare global {
          * @param item Item to remove
          */
         remove(item: T): this;
+        /**
+         * Returns a random element from array
+         */
+        random(): T;
     }
     interface Map<K, V> {
         /**

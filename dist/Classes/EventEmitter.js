@@ -49,8 +49,8 @@ class EventEmitter {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    emit(event, ...args) {
-        return this._events.emit(event, ...args);
+    emit(event, args) {
+        return this._events.emit(event, args);
     }
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once

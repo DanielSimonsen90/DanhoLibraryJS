@@ -32,13 +32,13 @@ class Event {
     _lastEmitted = null;
     /**
      * Emits event and returns array of responses
-     * @param args Arguments required for event listeners
+     * @param params Arguments required for event listeners
      * @returns Return values of listeners' returns
      */
-    emit(...args) {
+    emit(params) {
         this._runs++;
         this._lastEmitted = new Date();
-        return this._listeners.map(listener => listener(...args));
+        return this._listeners.map(listener => listener(params));
     }
     /**
      * Adds listener to listeners array and returns self with new listener added
@@ -67,8 +67,8 @@ class Event {
      * @throws Limit error, if limit was reached
      */
     once(listener, prepend = false) {
-        const handler = (...args) => {
-            const result = listener(...args);
+        const handler = (params) => {
+            const result = listener(params);
             this.off(handler);
             return result;
         };

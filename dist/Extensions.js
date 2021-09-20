@@ -37,6 +37,10 @@ Array.prototype.remove = function (item) {
     this.splice(itemIndex, 1);
     return this;
 };
+Array.prototype.random = function () {
+    const randomIndex = Math.round(Math.random() * this.length);
+    return this[randomIndex];
+};
 Map.prototype.array = function () {
     let result = new Array();
     for (const kvp of this) {

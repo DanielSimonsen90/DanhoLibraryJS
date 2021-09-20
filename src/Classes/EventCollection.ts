@@ -1,3 +1,4 @@
+import BaseEvent from "../Interfaces/BaseEventInterface";
 import EventHandler from "../Types/EventHandler";
 import Event from './Event';
 
@@ -6,13 +7,13 @@ import Event from './Event';
  * @borrows EventHandler
  * @borrows Event
  */
- export class EventCollection {
-    constructor(events?: Map<string, EventHandler[]>) {
+ export class EventCollection<Events extends BaseEvent> {
+    constructor(events?: Map<keyof Events, EventHandler<Events, keyof Events>[]>) {
         this._events = !events ? 
-            new Map<string, Event>() : 
+            new Map<keyof Events, Event<Events>>() : 
             events.array().reduce((result, [event, handlers]) => 
-                result.set(event, new Event(event, ...handlers)), 
-            new Map<string, Event>());
+                result.set(event, new Event<Events>(event, ...handlers)), 
+            new Map<keyof Events, Event<Events>>());
     }
 
     /**Amount of events stored*/
@@ -20,7 +21,7 @@ import Event from './Event';
         return this._events.size;
     }
     /**@private Internal event collection*/
-    private _events = new Map<string, Event>();
+    private _events = new Map<keyof Events, Event<Events>>();
     /**@private limit of events*/
     private _limit = 0;
 
@@ -29,7 +30,7 @@ import Event from './Event';
      * @param event Event name
      * @returns true if event is in collection
      */
-    public has(event: string): boolean { 
+    public has(event: keyof Events): boolean { 
         return this._events.has(event); 
     }
     /**
@@ -37,7 +38,7 @@ import Event from './Event';
      * @param event Event name
      * @returns Event
      */
-    public get<T = any>(event: string): Event<T> { 
+    public get<T = any>(event: keyof Events): Event<Events> { 
         return this._events.get(event); 
     }
     /**
@@ -46,14 +47,14 @@ import Event from './Event';
      * @param handler Handler for event
      * @returns this
      */
-    public add(name: string, handler: EventHandler, once = false): this {
+    public add(name: keyof Events, handler: EventHandler<Events, keyof Events>, once = false): this {
         if (this._limit > 0 && this._limit + 1 > this._events.size) {
             throw new Error(`Listener limit, ${this._limit}, reached!`);
         }
 
         const event = this.has(name) && this.get(name);
 
-        if (once) this._events.set(name, event ? event.once(handler) : new Event(name).once(handler))
+        if (once) this._events.set(name, event ? event.once(handler) : new Event<Events>(name).once(handler))
         else this._events.set(name, event ? event.on(handler) : new Event(name, handler));
         return this;
     }
@@ -67,12 +68,12 @@ import Event from './Event';
      * @param handler Specific handler to remove. If left blank, all handlers in name will be removed
      * @returns this
      */
-    public clear(name: string | "all" = 'all', handler?: EventHandler): this {
+    public clear(name: keyof Events | "all" = 'all', handler?: EventHandler<Events, keyof Events>): this {
         //clear(): Clears all events
-        if (name.toLowerCase() == 'all' && handler == null) this._events.clear();           
+        if ((name as string).toLowerCase() == 'all' && handler == null) this._events.clear();           
 
         //clear("all", myEventHandler): Removes the "myEventHandler" handler from all events
-        else if (name.toLowerCase() == 'all' && handler) this._events = (() => {
+        else if ((name as string).toLowerCase() == 'all' && handler) this._events = (() => {
             const eventNames = this._events.array().map(([name, event]) => event.includes(handler) && name);
             this._events.forEach((event, name) => 
                 eventNames.includes(name) && 
@@ -83,16 +84,16 @@ import Event from './Event';
         })();
 
         //clear("myEvent"): Deletes myEvent from this._events
-        else if (name.toLowerCase() != "all" && handler == null) this._events.delete(name);
+        else if ((name as string).toLowerCase() != "all" && handler == null) this._events.delete(name as keyof Events);
 
          //clear("myEvent", myEventHandler): Removes the "myEventsHandler" handler from "myEvent"
-        else if (name.toLowerCase() != 'all' && handler) this._events.set(name, this.get(name).off(handler));
+        else if ((name as string).toLowerCase() != 'all' && handler) this._events.set(name as keyof Events, this.get(name as keyof Events).off(handler));
         
         return this;
     }
 
-    public emit(name: string, ...args: any[]) {
-        return this.get(name).emit(...args);
+    public emit<Event extends keyof Events>(name: Event, args: Events[Event]) {
+        return this.get(name).emit(args);
     }
 
     /**
@@ -102,7 +103,7 @@ import Event from './Event';
      * 
      * @throws Unknown event, if event name isn't recognized
      */
-     public limit(event: 'all' | string, limit: number) {
+     public limit<Event extends keyof Events>(event: 'all' | Event, limit: number) {
         if (limit <= 0) return;
 
         if (event == 'all') this._limit = limit;

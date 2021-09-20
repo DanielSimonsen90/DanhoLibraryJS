@@ -1,10 +1,11 @@
-import EventHandler from "../Types/EventHandler";
+import BaseEvent from '../Interfaces/BaseEventInterface';
+import EventHandler from '../Types/EventHandler';
 /**
  * Traditional Node.js EventEmitter for vanilla JavaScript
  */
-export declare class EventEmitter {
+export declare class EventEmitter<Events extends BaseEvent> {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
-    constructor(events?: Map<string, EventHandler[]>);
+    constructor(events?: Map<keyof Events, EventHandler<Events, keyof Events>[]>);
     /**@private Internal event collection*/
     private _events;
     /**
@@ -13,21 +14,21 @@ export declare class EventEmitter {
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    on<ReturnType = any>(event: string, listener: EventHandler<ReturnType>): this;
+    on<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
     /**
      * Adds listener to event collection, and runs listener once when event is emitted
      * @param event Event to handle
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    once<ReturnType = any>(event: string, listener: EventHandler<ReturnType>): this;
+    once<Return extends any, Event extends keyof Events>(event: keyof Events, listener: EventHandler<Events, Event, Return>): this;
     /**
      * Removes listener(s) from event
      * @param event Event to get collection of listeners | "all"
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    off<ReturnType = any>(event?: string, listener?: EventHandler<ReturnType>): this;
+    off<Event extends keyof Events>(event?: Event | string, listener?: EventHandler<Events, Event>): this;
     /**
      * Emits event and runs all listeners tied to event
      * @param event Event to emit
@@ -35,13 +36,13 @@ export declare class EventEmitter {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    emit<ReturnType = any>(event: string, ...args: any[]): ReturnType[];
+    emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): ReturnType[];
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param event: Specific event to limit, or by default, 'all'
      * @param limit Limit of events to keep. If you want to limit amount of events saved, use 'all'.
      * @returns this with the new limit
      */
-    limit(event: 'all' | string, limit: number): this;
+    limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this;
 }
 export default EventEmitter;

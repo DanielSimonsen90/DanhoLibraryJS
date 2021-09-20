@@ -1,3 +1,4 @@
+import BaseEvent from "../Interfaces/BaseEventInterface";
 import EventHandler from "../Types/EventHandler";
 import Event from './Event';
 /**
@@ -5,8 +6,8 @@ import Event from './Event';
  * @borrows EventHandler
  * @borrows Event
  */
-export declare class EventCollection {
-    constructor(events?: Map<string, EventHandler[]>);
+export declare class EventCollection<Events extends BaseEvent> {
+    constructor(events?: Map<keyof Events, EventHandler<Events, keyof Events>[]>);
     /**Amount of events stored*/
     get size(): number;
     /**@private Internal event collection*/
@@ -18,20 +19,20 @@ export declare class EventCollection {
      * @param event Event name
      * @returns true if event is in collection
      */
-    has(event: string): boolean;
+    has(event: keyof Events): boolean;
     /**
      * Returns event matching event parameter
      * @param event Event name
      * @returns Event
      */
-    get<T = any>(event: string): Event<T>;
+    get<T = any>(event: keyof Events): Event<Events>;
     /**
      * Adds handler to event collection with name as key
      * @param name Event name
      * @param handler Handler for event
      * @returns this
      */
-    add(name: string, handler: EventHandler, once?: boolean): this;
+    add(name: keyof Events, handler: EventHandler<Events, keyof Events>, once?: boolean): this;
     /**
      * @summary clear(): Clears all events
      * @summary clear("all", myEventHandler): Removes myEventHandler from all events that have it
@@ -42,8 +43,8 @@ export declare class EventCollection {
      * @param handler Specific handler to remove. If left blank, all handlers in name will be removed
      * @returns this
      */
-    clear(name?: string | "all", handler?: EventHandler): this;
-    emit(name: string, ...args: any[]): any[];
+    clear(name?: keyof Events | "all", handler?: EventHandler<Events, keyof Events>): this;
+    emit<Event extends keyof Events>(name: Event, args: Events[Event]): any[];
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param limit Limit of events to keep
@@ -51,6 +52,6 @@ export declare class EventCollection {
      *
      * @throws Unknown event, if event name isn't recognized
      */
-    limit(event: 'all' | string, limit: number): this;
+    limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this;
 }
 export default EventCollection;

@@ -84,8 +84,8 @@ class EventCollection {
             this._events.set(name, this.get(name).off(handler));
         return this;
     }
-    emit(name, ...args) {
-        return this.get(name).emit(...args);
+    emit(name, args) {
+        return this.get(name).emit(args);
     }
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
