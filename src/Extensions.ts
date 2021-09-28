@@ -31,6 +31,12 @@ declare global {
          * Returns a random element from array
          */
         random(): T
+        /**
+         * Returns item matching index. If negative number, subtracts number from length
+         * @param i Index of item
+         */
+        index(i: number): T
+
     }
     interface Map<K, V> {
         /**
@@ -81,7 +87,13 @@ declare global {
          * Replaces "replacer" (default: ' ') with "replacement" (default: '-')
          * @param replaceOptions This is practically your stereotypical String.replace, if you really want it to be
          */
-        toKebabCase(replaceOptions?: IReplacement): string
+        toKebabCase(replaceOptions?: IReplacement): string,
+        /**
+         * String.substring but accepting negative numbers to cut from length
+         * @param start Start of string. 0 indexed
+         * @param end End of string. 0 indexed, if negative number, substracts number from length
+         */
+        clip(start: number, end?: number): string
     }
 }
 
@@ -135,6 +147,9 @@ Array.prototype.random = function<T>(this: Array<T>): T {
     const randomIndex = Math.round(Math.random() * this.length);
     return this[randomIndex];
 }
+Array.prototype.index = function<T>(this: Array<T>, i: number): T {
+    return this[i < 0 ? this.length + i : i];
+}
 
 Map.prototype.array = function<K, V>(this: Map<K, V>): [K, V][] {
     let result = new Array<[K, V]>();
@@ -173,7 +188,6 @@ Map.prototype.includes = function<K, V>(this: Map<K, V>, item: V, fromIndex?: nu
 String.prototype.toPascalCase = function(this: string) {
     return this.substring(0, 1).toUpperCase() + this.substring(1);
 }
-
 function spaceReplacer(self: string, replacer: string | RegExp, replacement: string) {
     return self.replace(new RegExp(`${typeof replacer == 'string' ? replacer : replacer.source}+`), replacement);
 }
@@ -182,4 +196,7 @@ String.prototype.toSnakeCase = function(this: string, replaceOptions: IReplaceme
 }
 String.prototype.toKebabCase = function(this: string, replaceOptions: IReplacement = { replacer: ' ', replacement: '-' }) {
     return spaceReplacer(this, replaceOptions.replacer, replaceOptions.replacement);
+}
+String.prototype.clip = function(this: string, start: number, end?: number) {
+    return this.substring(start, end < 0 ? this.length + end : end);
 }

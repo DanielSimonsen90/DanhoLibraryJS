@@ -30,6 +30,11 @@ declare global {
          * Returns a random element from array
          */
         random(): T;
+        /**
+         * Returns item matching index. If negative number, subtracts number from length
+         * @param i Index of item
+         */
+        index(i: number): T;
     }
     interface Map<K, V> {
         /**
@@ -81,5 +86,11 @@ declare global {
          * @param replaceOptions This is practically your stereotypical String.replace, if you really want it to be
          */
         toKebabCase(replaceOptions?: IReplacement): string;
+        /**
+         * String.substring but accepting negative numbers to cut from length
+         * @param start Start of string. 0 indexed
+         * @param end End of string. 0 indexed, if negative number, substracts number from length
+         */
+        clip(start: number, end?: number): string;
     }
 }

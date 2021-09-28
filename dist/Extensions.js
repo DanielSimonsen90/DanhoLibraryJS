@@ -41,6 +41,9 @@ Array.prototype.random = function () {
     const randomIndex = Math.round(Math.random() * this.length);
     return this[randomIndex];
 };
+Array.prototype.index = function (i) {
+    return this[i < 0 ? this.length + i : i];
+};
 Map.prototype.array = function () {
     let result = new Array();
     for (const kvp of this) {
@@ -81,4 +84,7 @@ String.prototype.toSnakeCase = function (replaceOptions = { replacer: ' ', repla
 };
 String.prototype.toKebabCase = function (replaceOptions = { replacer: ' ', replacement: '-' }) {
     return spaceReplacer(this, replaceOptions.replacer, replaceOptions.replacement);
+};
+String.prototype.clip = function (start, end) {
+    return this.substring(start, end < 0 ? this.length + end : end);
 };
