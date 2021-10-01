@@ -4,6 +4,9 @@ import EventHandler from '../Types/EventHandler';
 
 /**
  * Traditional Node.js EventEmitter for vanilla JavaScript
+ * @borrows EventCollection
+ * @borrows BaseEvent
+ * @borrows EventHandler
  */
 export class EventEmitter<Events extends BaseEvent> {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
@@ -30,7 +33,7 @@ export class EventEmitter<Events extends BaseEvent> {
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    public once<Return extends any, Event extends keyof Events>(event: keyof Events, listener: EventHandler<Events, Event, Return>): this {
+    public once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this {
         this._events.add(event, listener, true);
         return this;
     }

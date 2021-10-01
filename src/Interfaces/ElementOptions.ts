@@ -1,9 +1,10 @@
-import HTMLEvent from '../Functions/HTMLEvent'
 import IElement from "../Types/IElement";
 
 /**
  * Construction options when creating an HTML element using:
- * @see Document.createProperElement */
+ * @see Document.createProperElement 
+ * @borwwos IElement
+ */
 export interface ElementOptions {
     /**css classes to give the element*/
     classes?: string[],

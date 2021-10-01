@@ -1,6 +1,6 @@
 import BaseEvent from "../Interfaces/BaseEventInterface";
 import EventHandler from "../Types/EventHandler";
-/**Base event for @see EventEmitter, @borrows EventHandler*/
+/**Base event for @see EventEmitter, @borrows EventHandler @borrows BaseEventInterface as BaseEvent*/
 export declare class Event<Events extends BaseEvent, Name extends keyof Events = keyof Events, Params = Events[Name]> {
     /**
      * Base event for @see EventEmitter, @borrows EventHandler

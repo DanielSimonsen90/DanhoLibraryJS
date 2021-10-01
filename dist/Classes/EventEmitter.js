@@ -4,6 +4,9 @@ exports.EventEmitter = void 0;
 const EventCollection_1 = require("./EventCollection");
 /**
  * Traditional Node.js EventEmitter for vanilla JavaScript
+ * @borrows EventCollection
+ * @borrows BaseEvent
+ * @borrows EventHandler
  */
 class EventEmitter {
     /**@param events Map<name: string, handlers: EventHandler[]>*/

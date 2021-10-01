@@ -6,6 +6,7 @@ const Event_1 = require("./Event");
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
  * @borrows Event
+ * @borrows BaseEvent
  */
 class EventCollection {
     constructor(events) {

@@ -43,6 +43,15 @@ class Array<T> {
      * @param item Item to remove
      */
     remove(item: T): this
+    /**
+     * Returns a random element from array
+     */
+    random(): T
+    /**
+     * Returns item matching index. If negative number, subtracts number from length
+     * @param i Index of item
+     */
+    index(i: number): T
 }
 
 interface Map<K, V> {
@@ -87,6 +96,12 @@ interface String {
      * @param replaceOptions This is practically your stereotypical String.replace, if you really want it to be
      */
     toKebabCase(replaceOptions?: IReplacement): string
+    /**
+     * String.substring but accepting negative numbers to cut from length
+     * @param start Start of string. 0 indexed
+     * @param end End of string. 0 indexed, if negative number, substracts number from length
+     */
+    clip(start: number, end?: number): string
 }
 ```
 
@@ -111,17 +126,21 @@ function SetNavigationSelected(query: string, ...currentPageClasses: string[]): 
 
 #### Classes
 ```ts
-/**Base event for @see EventEmitter, @borrows EventHandler*/
-class Event<ReturnType = any> {
+/**Base event for @see EventEmitter, @borrows EventHandler @borrows BaseEventInterface as BaseEvent*/
+class Event<
+    Event extends BaseEvent,
+    Name extends keyof Events = keyof Events,
+    Params = Events[Name]
+> {
     /**
      * Base event for @see EventEmitter, @borrows EventHandler
      * @param name Name of event
      * @param listeners Listeners/Handlers to execute when emitted
      */
-    constructor(name: string, ...listeners: Array<EventHandler<ReturnType>>);
+    constructor(name: Name, ...listeners: Array<EventHandler<Events, Name>>);
 
     /**Name of event*/
-    public name: string;
+    public name: Name;
     /**Listener limit - default: 0 */
     public limit = 0;
     /**Number of times event was emitted - default: 0*/
@@ -134,7 +153,7 @@ class Event<ReturnType = any> {
      * @param args Arguments required for event listeners
      * @returns Return values of listeners' returns
      */
-    public emit(...args: any[]): any[];
+    public emit(params: Params): any[];
     /**
      * Adds listener to listeners array and returns self with new listener added
      * @param listener Listener to add
@@ -143,7 +162,7 @@ class Event<ReturnType = any> {
      * 
      * @throws Limit error, if limit was reached
      */
-    public on(listener: EventHandler<ReturnType>, prepend = false): this
+    public on(listener: EventHandler<Events, Name>, prepend = false): this
     /**
      * Like Event#on, adds listener to listeners array and returns self with new listener added, however removes listener once emitted
      * @param listener Listener to add
@@ -152,13 +171,13 @@ class Event<ReturnType = any> {
      * 
      * @throws Limit error, if limit was reached
      */
-    public once(listener: EventHandler<ReturnType>, prepend = false): this;
+    public once(listener: EventHandler<Events, Name>, prepend = false): this;
     /**
      * Returns true or false, depending if event includes listener
      * @param listener Listener to test
      * @returns True of false, depending if event includes listener
      */
-    public includes(listener: EventHandler<ReturnType>): boolean;
+    public includes(listener: EventHandler<Events, Name>): boolean;
     /**
      * Removes listener from internal listeners array
      * @param listener Listener to remove
@@ -167,17 +186,18 @@ class Event<ReturnType = any> {
      * 
      * @throws NotFound, if throwNotFoundError is true, and internal listeners array doesn't include listener provided
      */
-    public off(listener: EventHandler<ReturnType>, throwNotFoundError = false): this;
+    public off(listener: EventHandler<Events, Name>, throwNotFoundError = false): this;
 }
 
-class EventCollection {
-    /**
-     * Collection of Events from @see EventEmitter
-     * @borrows EventHandler
-     * @borrows Event
-     */
+/**
+ * Collection of Events from @see EventEmitter
+ * @borrows EventHandler
+ * @borrows Event
+ * @borrows BaseEvent
+ */
+class EventCollection<Events extends BaseEvent> {
     /**Events to add in construction - Map<eventName, eventHandlers>*/
-    constructor(events?: Map<string, EventHandler[]>);
+    constructor(events?: Map<keyof Events, EventHandler<Events, keyof Events>[]>);
     /**Amount of events stored*/
     readonly size: number;
     /**
@@ -185,13 +205,13 @@ class EventCollection {
      * @param event Event name
      * @returns true if event is in collection
      */
-    has(event: string): boolean;
+    has(event: keyof Events): boolean;
     /**
      * Returns all event handlers for event name. T is return type for event
      * @param event Event name
      * @returns Event object stored
      */
-    get<T = any>(event: string): Event<T>
+    get(event: keyof Events): Event<Events>
     /**
      * Adds handler to event collection with name as key
      * @param name Event name
@@ -199,7 +219,7 @@ class EventCollection {
      * @param once Whether or not handler only should run once or all times
      * @returns this
      */
-    add(name: string, handler: EventHandler, once = false): this;
+    add(name: keyof Events, handler: EventHandler<Events, keyof Events>, once = false): this;
     /**
      * @summary clear(): Clears all events
      * @summary clear("all", myEventHandler): Removes myEventHandler from all events that have it
@@ -210,14 +230,14 @@ class EventCollection {
      * @param handler Specific handler to remove. If left blank, all handlers in name will be removed
      * @returns this
      */
-    clear(name?: string | "all", handler?: EventHandler): this;
+    clear(name?: keyof Events | "all" = "all", handler?: EventHandler<Events, keyof Events>): this;
     /**
      * Emits event matching name, and provides args param to saved handers. Returns result from all handlers
      * @param name Event name
      * @param args Arguments for event handlers
      * @returns Result from all handlers
      */
-    emit(name: string, ...args: any[]): any[];
+    emit<Event extends keyof Events>(name: Event, args: Events[Event]): any[];
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param limit Limit of events to keep
@@ -225,13 +245,18 @@ class EventCollection {
      * 
      * @throws Unknown event, if event name isn't recognized
      */
-    limit(event: 'all' | string, limit: number): this
+    limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this
 }
 
-/**Traditional Node.js EventEmitter in vanilla JavaScript*/
-class EventEmitter {
+/**
+ * Traditional Node.js EventEmitter for vanilla JavaScript
+ * @borrows EventCollection
+ * @borrows BaseEvent
+ * @borrows EventHandler
+ */
+class EventEmitter<Events extends BaseEvent> {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
-    constructor(events?: Map<string, EventHandler[]>);
+    constructor(events?: Map<keyof Events, EventHandler<Events, keyof Events>[]>);
 
     /**
      * Adds listener to event collection, and runs listener when event is emitted
@@ -239,21 +264,21 @@ class EventEmitter {
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    on<ReturnType = any>(event: string, listener: EventHandler<ReturnType>): this;
+    on<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
     /**
      * Adds listener to event collection, and runs listener once when event is emitted
      * @param event Event to handle
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    once(event: string, listener: EventHandler): this;
+    once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
     /**
      * Removes listener(s) from event
      * @param event Event to get collection of listeners | "all"
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    off(event: string = 'all', listener?: EventHandler): this;
+    off<Event extends keyof Events>(event: Event | string = 'all', listener?: EventHandler<Events, Event>): this;
     /**
      * Emits event and runs all listeners tied to event
      * @param event Event to emit
@@ -261,27 +286,38 @@ class EventEmitter {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    emit<ReturnType = any>(event: string, ...args: any[]): ReturnType[];
+    emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): ReturnType[];
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param event: Specific event to limit, or by default, 'all'
      * @param limit Limit of events to keep. If you want to limit amount of events saved, use 'all'.
      * @returns this with the new limit
      */
-    public limit(event: 'all' | string, limit: number): this;
+    public limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this;
 }
 ```
 
 #### Interfaces
 ```ts
-/**Options for creating a proper HTML element*/
+/**
+ * Default eventhandler mapper. EventEmitter.on(keyof this, this[keyof this])
+ */
+interface BaseEvent {
+    error: [err: Error]
+}
+
+/**
+ * Construction options when creating an HTML element using:
+ * @see Document.createProperElement 
+ * @borwwos IElement
+ */
 interface ElementOptions<K extends keyof HTMLElementTagNameMap> {
     /**css classes to give the element*/
     classes?: string[];
     /**attributes to give the element*/
     attributes?: [string, string][];
     /**Children of the element*/
-    children?: HTMLElementTagNameMap[K][];
+    children?: IElement | IElement[];
     /**Events for the element to listen to
      * @use HTMLEvent<Event, RetrunType>(name: Event, handler: (e: Event) => ReturnType)
     */
@@ -304,8 +340,13 @@ interface IReplacement {
 /**
  * Eventhandler type for:
  * @see EventCollection
+ * @borrows BaseEvent
  */
-type EventHandler<ReturnType = any> = (...args: any[]) => ReturnType;
+type EventHandler<
+    Events extends BaseEvent, 
+    Event extends keyof Events,
+    ReturnType = any
+> = (args: Events[Event]) => ReturnType;
 
 /**
  * Used for HTMLElement.append in ElementOptions, Document.createProperElement.

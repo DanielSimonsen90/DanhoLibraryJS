@@ -2,6 +2,9 @@ import BaseEvent from '../Interfaces/BaseEventInterface';
 import EventHandler from '../Types/EventHandler';
 /**
  * Traditional Node.js EventEmitter for vanilla JavaScript
+ * @borrows EventCollection
+ * @borrows BaseEvent
+ * @borrows EventHandler
  */
 export declare class EventEmitter<Events extends BaseEvent> {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
@@ -21,7 +24,7 @@ export declare class EventEmitter<Events extends BaseEvent> {
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    once<Return extends any, Event extends keyof Events>(event: keyof Events, listener: EventHandler<Events, Event, Return>): this;
+    once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
     /**
      * Removes listener(s) from event
      * @param event Event to get collection of listeners | "all"

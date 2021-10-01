@@ -3,6 +3,7 @@ import BaseEvent from "../Interfaces/BaseEventInterface";
 /**
  * Eventhandler type for:
  * @see EventCollection
+ * @borrows BaseEvent
  */
 export type EventHandler<
     Events extends BaseEvent, 

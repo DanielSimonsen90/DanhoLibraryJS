@@ -6,6 +6,7 @@ import Event from './Event';
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
  * @borrows Event
+ * @borrows BaseEvent
  */
  export class EventCollection<Events extends BaseEvent> {
     constructor(events?: Map<keyof Events, EventHandler<Events, keyof Events>[]>) {
@@ -38,7 +39,7 @@ import Event from './Event';
      * @param event Event name
      * @returns Event
      */
-    public get<T = any>(event: keyof Events): Event<Events> { 
+    public get(event: keyof Events): Event<Events> { 
         return this._events.get(event); 
     }
     /**
