@@ -1,20 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventCollection = void 0;
+const Event_1 = require("./Event");
 /**
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
  */
 class EventCollection {
-    /**@param events Map<name: string, handlers: EventHandler[]>*/
     constructor(events) {
-        this._events = events || new Map();
+        this._events = !events ?
+            new Map() :
+            events.array().reduce((result, [event, handlers]) => result.set(event, new Event_1.Event(event, handlers)), new Map());
     }
-    /**
-     * Internal event collection
-     * @private
-     */
-    _events;
+    /**Amount of events stored*/
+    get size() {
+        return this._events.size;
+    }
+    /**@private Internal event collection*/
+    _events = new Map();
+    /**@private limit of events*/
+    _limit = 0;
     /**
      * Binds provided handlers to provided event name.
      * @private
@@ -23,8 +28,13 @@ class EventCollection {
      * @param handlers Handlers to run when event is emitted
      * @returns this, with updated events
      */
-    setEvent(name, ...handlers) {
-        this._events.set(name, [...(this._events.has(name) ? this._events.get(name) : []), ...handlers]);
+    setEvent(name, prepend, ...handlers) {
+        let event = new Event_1.Event(name, ...handlers);
+        if (this._events.has(name)) {
+            event = this._events.get(name);
+            handlers.forEach(handler => event.on(handler, prepend));
+        }
+        this._events.set(name, new Event_1.Event(name, ...handlers));
         return this;
     }
     /**
@@ -49,8 +59,8 @@ class EventCollection {
      * @param handler Handler for event
      * @returns this
      */
-    add(name, handler) {
-        return this.setEvent(name, handler);
+    add(name, handler, prepend = false) {
+        return this.setEvent(name, prepend, handler);
     }
     /**
      * @summary clear(): Clears all events
@@ -63,21 +73,39 @@ class EventCollection {
      * @returns this
      */
     clear(name = 'all', handler) {
-        if (name.toLowerCase() == 'all' && handler == null)
+        const _name = name;
+        if (_name.toLowerCase() == 'all' && handler == null)
             this._events.clear(); //clear(): Clears all events
-        else if (name.toLowerCase() == 'all' && handler)
+        else if (_name.toLowerCase() == 'all' && handler)
             this._events = (() => {
-                let events = this._events.array().map(([event, handlers]) => handlers.includes(handler) && event);
-                this._events.forEach((v, k) => events.includes(k) &&
-                    this._events.set(k, this._events
-                        .get(k)
-                        .filter(_v => !v.includes(_v))));
+                this._events.forEach(e => e.off(handler));
                 return this._events;
             })();
-        else if (name.toLowerCase() != "all" && handler == null)
+        else if (_name.toLowerCase() != "all" && handler == null)
             this._events.delete(name); //clear("myEvent"): Clears All handlers tied to "myEvent"
-        else if (name.toLowerCase() != 'all' && handler)
-            this._events.set(name, this._events.get(name).filter(h => h != handler)); //clear("myEvent", myEventHandler): Removes the "myEventsHandler" handler from "myEvent"
+        else if (_name.toLowerCase() != 'all' && handler)
+            this._events.set(name, this._events.get(name).off(handler)); //clear("myEvent", myEventHandler): Removes the "myEventsHandler" handler from "myEvent"
+        return this;
+    }
+    emit(name, args) {
+        return this.get(name).emit(args);
+    }
+    /**
+     * Limits how many events to accept using EventEmitter#on or EventEmitter#once
+     * @param limit Limit of events to keep
+     * @returns this with the new limit
+     *
+     * @throws Unknown event, if event name isn't recognized
+     */
+    limit(event, limit) {
+        if (limit <= 0)
+            return;
+        if (event == 'all')
+            this._limit = limit;
+        else if (this.has(event))
+            this.get(event).limit = limit;
+        else
+            throw new Error(`Unknown event, ${event}!`);
         return this;
     }
 }
