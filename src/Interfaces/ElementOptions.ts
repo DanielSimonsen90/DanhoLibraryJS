@@ -9,7 +9,7 @@ export interface ElementOptions {
     /**css classes to give the element*/
     classes?: string[],
     /**attributes to give the element*/
-    attributes?: [string, string][],
+    attributes?: Array<[string, string]>,
     /**Children of the element*/
     children?: IElement | IElement[],
     /**Events for the element to listen to*/

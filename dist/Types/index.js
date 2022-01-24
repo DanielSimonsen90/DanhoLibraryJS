@@ -14,3 +14,4 @@ __exportStar(require("./EventHandler"), exports);
 __exportStar(require("./IElement"), exports);
 __exportStar(require("./StringRegex"), exports);
 __exportStar(require("./PropertiesWith"), exports);
+__exportStar(require("./ArrayLike"), exports);
