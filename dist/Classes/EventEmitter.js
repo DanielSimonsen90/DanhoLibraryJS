@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventEmitter = void 0;
-const EventCollection_1 = require("./EventCollection");
+const EventCollection_1 = __importDefault(require("./EventCollection"));
 /**
  * Traditional Node.js EventEmitter for vanilla JavaScript
  * @borrows EventCollection

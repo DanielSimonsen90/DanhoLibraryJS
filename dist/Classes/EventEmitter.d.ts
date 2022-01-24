@@ -39,7 +39,7 @@ export declare class EventEmitter<Events extends BaseEvent> {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): ReturnType[];
+    emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): Array<ReturnType>;
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param event: Specific event to limit, or by default, 'all'

@@ -26,7 +26,7 @@ export declare class EventCollection<Events extends BaseEvent> {
      * @param event Event name
      * @returns Event
      */
-    get(event: keyof Events): Event<Events>;
+    get(event: keyof Events): Event<Events> | undefined;
     /**
      * Adds handler to event collection with name as key
      * @param name Event name
@@ -45,7 +45,7 @@ export declare class EventCollection<Events extends BaseEvent> {
      * @returns this
      */
     clear(name?: keyof Events | "all", handler?: EventHandler<Events, keyof Events>): this;
-    emit<Event extends keyof Events>(name: Event, args: Events[Event]): any[];
+    emit<Event extends keyof Events>(name: Event, args: Events[Event]): any[] | undefined;
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param limit Limit of events to keep
@@ -53,6 +53,6 @@ export declare class EventCollection<Events extends BaseEvent> {
      *
      * @throws Unknown event, if event name isn't recognized
      */
-    limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this;
+    limit<Event extends keyof Events>(eventName: 'all' | Event, limit: number): this | undefined;
 }
 export default EventCollection;

@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventCollection = void 0;
-const Event_1 = require("./Event");
+const Event_1 = __importDefault(require("./Event"));
 /**
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
@@ -36,6 +39,8 @@ class EventCollection {
      * @returns Event
      */
     get(event) {
+        if (!this.has(event))
+            return undefined;
         return this._events.get(event);
     }
     /**
@@ -81,12 +86,16 @@ class EventCollection {
         else if (name.toLowerCase() != "all" && handler == null)
             this._events.delete(name);
         //clear("myEvent", myEventHandler): Removes the "myEventsHandler" handler from "myEvent"
-        else if (name.toLowerCase() != 'all' && handler)
-            this._events.set(name, this.get(name).off(handler));
+        else if (name.toLowerCase() != 'all' && handler) {
+            const event = this.get(name);
+            if (event)
+                this._events.set(name, event.off(handler));
+        }
         return this;
     }
     emit(name, args) {
-        return this.get(name).emit(args);
+        const event = this.get(name);
+        return event ? event.emit(args) : undefined;
     }
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
@@ -95,15 +104,18 @@ class EventCollection {
      *
      * @throws Unknown event, if event name isn't recognized
      */
-    limit(event, limit) {
+    limit(eventName, limit) {
         if (limit <= 0)
             return;
-        if (event == 'all')
+        if (eventName == 'all') {
             this._limit = limit;
-        else if (this.has(event))
-            this.get(event).limit = limit;
-        else
-            throw new Error(`Unknown event, ${event}!`);
+            return this;
+        }
+        const event = this.get(eventName);
+        if (!event)
+            throw new Error(`Unknown event, ${eventName}!`);
+        event.limit = limit;
+        this._events.set(eventName, event);
         return this;
     }
 }

@@ -13,3 +13,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./EventEmitter"), exports);
 __exportStar(require("./EventCollection"), exports);
 __exportStar(require("./Event"), exports);
+__exportStar(require("./TimeSpan"), exports);
+__exportStar(require("./Time"), exports);

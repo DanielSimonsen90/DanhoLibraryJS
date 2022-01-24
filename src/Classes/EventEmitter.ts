@@ -24,7 +24,7 @@ export class EventEmitter<Events extends BaseEvent> {
      * @returns this
      */
     public on<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this {
-        this._events.add(event, listener);
+        this._events.add(event, listener as any);
         return this;
     }
     /**
@@ -34,7 +34,7 @@ export class EventEmitter<Events extends BaseEvent> {
      * @returns this
      */
     public once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this {
-        this._events.add(event, listener, true);
+        this._events.add(event, listener as any, true);
         return this;
     }
 
@@ -45,7 +45,7 @@ export class EventEmitter<Events extends BaseEvent> {
      * @returns this
      */
     public off<Event extends keyof Events>(event: Event | string = "all", listener?: EventHandler<Events, Event>): this {
-        this._events.clear(event as any, listener);
+        this._events.clear(event as any, listener as any);
         return this;
     }
 
@@ -56,8 +56,8 @@ export class EventEmitter<Events extends BaseEvent> {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    public emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): ReturnType[] {
-        return this._events.emit(event as any, args);
+    public emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): Array<ReturnType> {
+        return this._events.emit<Event>(event, args) as Array<ReturnType>;
     }
 
     /**

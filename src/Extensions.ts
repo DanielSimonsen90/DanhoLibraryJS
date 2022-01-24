@@ -65,7 +65,7 @@ declare global {
          * Returns first [key, value] match to callback param
          * @param callback Callbacking function to find KeyValuePair
          */
-        find(callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => boolean): [K, V]
+        find(callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => boolean): [K, V] | undefined
         /**
          * Whether or not map includes a  value. Returns true if it does, false if not ¯\_(ツ)_/¯ 
          * @param value Value that may be includded in map
@@ -110,7 +110,7 @@ Document.prototype.createProperElement = function<K extends keyof HTMLElementTag
     }
 
     if (options.children) {
-        baseElement.append(...[].concat(options.children));
+        baseElement.append(...new Array().concat(options.children));
     }
 
     if (options.events) {
@@ -126,7 +126,8 @@ HTMLCollection.prototype.array = function(this: HTMLCollection) {
     let result = new Array<Element>();
 
     for (let i = 0; i < this.length; i++) {
-        result.push(this.item(i));
+        const item = this.item(i);
+        if (item !== null) result.push(item);
     }
     return result;
 }
@@ -191,12 +192,12 @@ String.prototype.toPascalCase = function(this: string) {
 function spaceReplacer(self: string, replacer: string | RegExp, replacement: string) {
     return self.replace(new RegExp(`${typeof replacer == 'string' ? replacer : replacer.source}+`), replacement);
 }
-String.prototype.toSnakeCase = function(this: string, replaceOptions: IReplacement = { replacer: ' ', replacement: '_' }) {
-    return spaceReplacer(this, replaceOptions.replacer, replaceOptions.replacement)
+String.prototype.toSnakeCase = function(this: string, replaceOptions: IReplacement) {
+    return spaceReplacer(this, replaceOptions.replacer || ' ', replaceOptions.replacement || '_')
 }
-String.prototype.toKebabCase = function(this: string, replaceOptions: IReplacement = { replacer: ' ', replacement: '-' }) {
-    return spaceReplacer(this, replaceOptions.replacer, replaceOptions.replacement);
+String.prototype.toKebabCase = function(this: string, replaceOptions: IReplacement) {
+    return spaceReplacer(this, replaceOptions.replacer || ' ', replaceOptions.replacement || '-');
 }
 String.prototype.clip = function(this: string, start: number, end?: number) {
-    return this.substring(start, end < 0 ? this.length + end : end);
+    return this.substring(start, end && end < 0 ? this.length + end : end);
 }

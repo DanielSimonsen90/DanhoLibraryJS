@@ -15,6 +15,7 @@ export class Event<
     constructor(name: Name, ...listeners: Array<EventHandler<Events, Name>>) {
         this.name = name;
         this._listeners = listeners;
+        this._lastEmitted = new Date();
     }
 
     /**Name of event*/
@@ -35,7 +36,7 @@ export class Event<
     /**@private Internal runs*/
     private _runs = 0;
     /**@private Internal lastEmitted*/
-    private _lastEmitted: Date = null;
+    private _lastEmitted: Date;
 
     /**
      * Emits event and returns array of responses

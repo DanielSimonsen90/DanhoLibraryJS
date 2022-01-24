@@ -11,7 +11,7 @@ Document.prototype.createProperElement = function (tagName, options) {
         options.attributes.forEach(([attribute, value]) => baseElement.setAttribute(attribute, value));
     }
     if (options.children) {
-        baseElement.append(...[].concat(options.children));
+        baseElement.append(...new Array().concat(options.children));
     }
     if (options.events) {
         options.events.forEach(({ name, handler }) => (baseElement.addEventListener(name, handler)));
@@ -21,7 +21,9 @@ Document.prototype.createProperElement = function (tagName, options) {
 HTMLCollection.prototype.array = function () {
     let result = new Array();
     for (let i = 0; i < this.length; i++) {
-        result.push(this.item(i));
+        const item = this.item(i);
+        if (item !== null)
+            result.push(item);
     }
     return result;
 };
@@ -79,12 +81,12 @@ String.prototype.toPascalCase = function () {
 function spaceReplacer(self, replacer, replacement) {
     return self.replace(new RegExp(`${typeof replacer == 'string' ? replacer : replacer.source}+`), replacement);
 }
-String.prototype.toSnakeCase = function (replaceOptions = { replacer: ' ', replacement: '_' }) {
-    return spaceReplacer(this, replaceOptions.replacer, replaceOptions.replacement);
+String.prototype.toSnakeCase = function (replaceOptions) {
+    return spaceReplacer(this, replaceOptions.replacer || ' ', replaceOptions.replacement || '_');
 };
-String.prototype.toKebabCase = function (replaceOptions = { replacer: ' ', replacement: '-' }) {
-    return spaceReplacer(this, replaceOptions.replacer, replaceOptions.replacement);
+String.prototype.toKebabCase = function (replaceOptions) {
+    return spaceReplacer(this, replaceOptions.replacer || ' ', replaceOptions.replacement || '-');
 };
 String.prototype.clip = function (start, end) {
-    return this.substring(start, end < 0 ? this.length + end : end);
+    return this.substring(start, end && end < 0 ? this.length + end : end);
 };

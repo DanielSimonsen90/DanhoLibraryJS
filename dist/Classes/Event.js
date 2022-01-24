@@ -11,6 +11,7 @@ class Event {
     constructor(name, ...listeners) {
         this.name = name;
         this._listeners = listeners;
+        this._lastEmitted = new Date();
     }
     /**Name of event*/
     name;
@@ -29,7 +30,7 @@ class Event {
     /**@private Internal runs*/
     _runs = 0;
     /**@private Internal lastEmitted*/
-    _lastEmitted = null;
+    _lastEmitted;
     /**
      * Emits event and returns array of responses
      * @param params Arguments required for event listeners

@@ -13,3 +13,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./EventHandler"), exports);
 __exportStar(require("./IElement"), exports);
 __exportStar(require("./StringRegex"), exports);
+__exportStar(require("./PropertiesWith"), exports);

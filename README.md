@@ -1,13 +1,16 @@
 # DanhoLibraryJS
+
 [By DanielSimonsen90 // Danhosaur](https://github.com/DanielSimonsen90)
 
-### Vanilla
+## Vanilla
+
 ```html
 <script src="https://cdn.jsdelivr.net/gh/DanielSimonsen90/DanhoLibraryJS@latest/dist/index.js"></script>
 ```
 
-### Node
-```
+## Node
+
+```cmd
 npm install danholibraryjs
 ```
 
@@ -15,8 +18,10 @@ npm install danholibraryjs
 import { ... } from 'DanhoLibraryJS';
 ```
 
-### Documentation
-#### Extensions
+## Documentation
+
+### Extensions
+
 ```ts
 class Document {
     /**
@@ -105,7 +110,8 @@ interface String {
 }
 ```
 
-#### Functions
+### Functions
+
 ```ts
 /**
  * Copies value to clipboard and alerts a response, if response is defined
@@ -124,7 +130,8 @@ async function CopyToClipboard(value: string, response?: string): Promise<void>;
 function SetNavigationSelected(query: string, ...currentPageClasses: string[]): void;
 ```
 
-#### Classes
+### Classes
+
 ```ts
 /**Base event for @see EventEmitter, @borrows EventHandler @borrows BaseEventInterface as BaseEvent*/
 class Event<
@@ -297,7 +304,8 @@ class EventEmitter<Events extends BaseEvent> {
 }
 ```
 
-#### Interfaces
+### Interfaces
+
 ```ts
 /**
  * Default eventhandler mapper. EventEmitter.on(keyof this, this[keyof this])
@@ -335,7 +343,8 @@ interface IReplacement {
 }
 ```
 
-#### Types
+### Types
+
 ```ts
 /**
  * Eventhandler type for:

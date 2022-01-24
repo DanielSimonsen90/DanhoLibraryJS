@@ -39,7 +39,8 @@ import Event from './Event';
      * @param event Event name
      * @returns Event
      */
-    public get(event: keyof Events): Event<Events> { 
+    public get(event: keyof Events): Event<Events> | undefined { 
+        if (!this.has(event)) return undefined;
         return this._events.get(event); 
     }
     /**
@@ -88,13 +89,17 @@ import Event from './Event';
         else if ((name as string).toLowerCase() != "all" && handler == null) this._events.delete(name as keyof Events);
 
          //clear("myEvent", myEventHandler): Removes the "myEventsHandler" handler from "myEvent"
-        else if ((name as string).toLowerCase() != 'all' && handler) this._events.set(name as keyof Events, this.get(name as keyof Events).off(handler));
+        else if ((name as string).toLowerCase() != 'all' && handler) {
+            const event = this.get(name as keyof Events);
+            if (event) this._events.set(name as keyof Events, event.off(handler));
+        }
         
         return this;
     }
 
     public emit<Event extends keyof Events>(name: Event, args: Events[Event]) {
-        return this.get(name).emit(args);
+        const event = this.get(name);
+        return event ? event.emit(args) : undefined;
     }
 
     /**
@@ -104,13 +109,19 @@ import Event from './Event';
      * 
      * @throws Unknown event, if event name isn't recognized
      */
-     public limit<Event extends keyof Events>(event: 'all' | Event, limit: number) {
+     public limit<Event extends keyof Events>(eventName: 'all' | Event, limit: number) {
         if (limit <= 0) return;
+        
+        if (eventName == 'all') {
+            this._limit = limit;
+            return this;
+        }
+        
+        const event = this.get(eventName);
+        if (!event) throw new Error(`Unknown event, ${eventName}!`);
 
-        if (event == 'all') this._limit = limit;
-        else if (this.has(event)) this.get(event).limit = limit;
-        else throw new Error(`Unknown event, ${event}!`);
-
+        event.limit = limit;
+        this._events.set(eventName, event);
         return this;
     }
 }
