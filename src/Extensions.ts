@@ -8,7 +8,7 @@ declare global {
          * @param tagName HTMLElement tag name
          * @param options Construction options, instead of assigning values after construction
          */
-        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions<K>): HTMLElementTagNameMap[K]
+        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions): HTMLElementTagNameMap[K]
     }
     interface HTMLCollection {
         /**
@@ -56,18 +56,21 @@ declare global {
          * Returns array of keys
          */
         keyArr(): Array<K>
+        /**
+         * Returns array of values
+         */
         valueArr(): Array<V>
         /**
          * Returns first [key, value] match to callback param
          * @param callback Callbacking function to find KeyValuePair
          */
-        find(callback: (value: V, key?: K, index?: number, self?: this) => boolean): [K, V]
+        find(callback: (value: V, key?: K, index?: number, self?: this) => boolean): [K, V] | undefined
         /**
          * Whether or not map includes a  value. Returns true if it does, false if not ¯\_(ツ)_/¯ 
          * @param value Value that may be includded in map
          * @param fromIndex Start looking for value from specific index+. Default: 0
          */
-        includes(value: V, fromIndex?: number): boolean,
+        includes(value: V, fromIndex?: number): boolean
     }
     interface String {
         /**
@@ -93,7 +96,7 @@ declare global {
     }
 }
 
-Document.prototype.createProperElement = function<K extends keyof HTMLElementTagNameMap>(this: Document, tagName: K, options?: ElementOptions<K>) {
+Document.prototype.createProperElement = function<K extends keyof HTMLElementTagNameMap>(this: Document, tagName: K, options?: ElementOptions) {
     let baseElement = document.createElement(tagName);
     if (!options) return baseElement;
 
@@ -106,7 +109,13 @@ Document.prototype.createProperElement = function<K extends keyof HTMLElementTag
     }
 
     if (options.children) {
-        baseElement.append(...options.children);
+        baseElement.append(...new Array().concat(options.children));
+    }
+
+    if (options.events) {
+        options.events.forEach(({ name, handler }) => (
+            baseElement.addEventListener(name, handler)
+        ))
     }
 
     return baseElement;
@@ -116,7 +125,8 @@ HTMLCollection.prototype.array = function(this: HTMLCollection) {
     let result = new Array<Element>();
 
     for (let i = 0; i < this.length; i++) {
-        result.push(this.item(i));
+        const item = this.item(i);
+        if (item !== null) result.push(item);
     }
     return result;
 }
@@ -174,19 +184,19 @@ Map.prototype.find = function<K, V>(this: Map<K, V>, callback: (value: V, key?: 
 Map.prototype.includes = function<K, V>(this: Map<K, V>, item: V, fromIndex?: number) {
     return this.valueArr().includes(item, fromIndex);
 }
+
 String.prototype.toPascalCase = function(this: string) {
     return this.substring(0, 1).toUpperCase() + this.substring(1);
 }
-
 function spaceReplacer(self: string, replacer: string | RegExp, replacement: string) {
     return self.replace(new RegExp(`${typeof replacer == 'string' ? replacer : replacer.source}+`), replacement);
 }
-String.prototype.toSnakeCase = function(this: string, replaceOptions: IReplacement = { replacer: ' ', replacement: '_' }) {
-    return spaceReplacer(this, replaceOptions.replacer, replaceOptions.replacement)
+String.prototype.toSnakeCase = function(this: string, replaceOptions: IReplacement) {
+    return spaceReplacer(this, replaceOptions.replacer || ' ', replaceOptions.replacement || '_')
 }
-String.prototype.toKebabCase = function(this: string, replaceOptions: IReplacement = { replacer: ' ', replacement: '-' }) {
-    return spaceReplacer(this, replaceOptions.replacer, replaceOptions.replacement);
+String.prototype.toKebabCase = function(this: string, replaceOptions: IReplacement) {
+    return spaceReplacer(this, replaceOptions.replacer || ' ', replaceOptions.replacement || '-');
 }
 String.prototype.clip = function(this: string, start: number, end?: number) {
-    return this.substring(start, end < 0 ? this.length + end : end);
+    return this.substring(start, end && end < 0 ? this.length + end : end);
 }

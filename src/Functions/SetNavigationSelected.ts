@@ -7,7 +7,8 @@
  */
  export function SetNavigationSelected(query: string, ...currentPageClasses: string[]) {
     const header = document.querySelector(query);
-    const children = header.children.array().filter(c => c.tagName === 'a') as HTMLAnchorElement[];
+    if (!header) throw `Couldn't find header from query, ${query}`
+    const children = header?.children.array().filter(c => c.tagName === 'a') as HTMLAnchorElement[];
     const currentPage = document.location.href;
 
     children.forEach(gc => {

@@ -1,16 +1,21 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventCollection = void 0;
-const Event_1 = require("./Event");
+const Event_1 = __importDefault(require("./Event"));
 /**
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
+ * @borrows Event
+ * @borrows BaseEvent
  */
 class EventCollection {
     constructor(events) {
         this._events = !events ?
             new Map() :
-            events.array().reduce((result, [event, handlers]) => result.set(event, new Event_1.Event(event, handlers)), new Map());
+            events.array().reduce((result, [event, handlers]) => result.set(event, new Event_1.default(event, handlers)), new Map());
     }
     /**Amount of events stored*/
     get size() {
@@ -29,14 +34,18 @@ class EventCollection {
      * @returns this, with updated events
      */
     setEvent(name, prepend, ...handlers) {
-        let event = new Event_1.Event(name, ...handlers);
+        let event = new Event_1.default(name, ...handlers);
         if (this._events.has(name)) {
             event = this._events.get(name);
             handlers.forEach(handler => event.on(handler, prepend));
         }
-        this._events.set(name, new Event_1.Event(name, ...handlers));
+        this._events.set(name, new Event_1.default(name, ...handlers));
         return this;
     }
+    /**@private Internal event collection*/
+    _events = new Map();
+    /**@private limit of events*/
+    _limit = 0;
     /**
      * Returns true if event is in collection
      * @param event Event name
@@ -46,9 +55,9 @@ class EventCollection {
         return this._events.has(event);
     }
     /**
-     * Returns all event handlers for event name
+     * Returns event matching event parameter
      * @param event Event name
-     * @returns All event handlers for event name
+     * @returns Event
      */
     get(event) {
         return this._events.get(event);
@@ -59,8 +68,15 @@ class EventCollection {
      * @param handler Handler for event
      * @returns this
      */
-    add(name, handler, prepend = false) {
-        return this.setEvent(name, prepend, handler);
+    // public add<EventName extends keyof Events>(name: EventName, handler: EventHandler, prepend = false): this { 
+    //     return this.setEvent(name, prepend, handler); 
+    add(name, handler, once = false) {
+        if (this._limit > 0 && this._limit + 1 > this._events.size) {
+            throw new Error(`Listener limit, ${this._limit}, reached!`);
+        }
+        const event = (this.has(name) && this.get(name)) || new Event_1.default(name);
+        this._events.set(name, event.on(handler, once));
+        return this;
     }
     /**
      * @summary clear(): Clears all events
@@ -88,7 +104,7 @@ class EventCollection {
         return this;
     }
     emit(name, args) {
-        return this.get(name).emit(args);
+        return this.get(name)?.emit(args);
     }
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
@@ -97,15 +113,18 @@ class EventCollection {
      *
      * @throws Unknown event, if event name isn't recognized
      */
-    limit(event, limit) {
+    limit(eventName, limit) {
         if (limit <= 0)
             return;
-        if (event == 'all')
+        if (eventName == 'all') {
             this._limit = limit;
-        else if (this.has(event))
-            this.get(event).limit = limit;
-        else
-            throw new Error(`Unknown event, ${event}!`);
+            return this;
+        }
+        const event = this.get(eventName);
+        if (!event)
+            throw new Error(`Unknown event, ${eventName}!`);
+        event.limit = limit;
+        this._events.set(eventName, event);
         return this;
     }
 }

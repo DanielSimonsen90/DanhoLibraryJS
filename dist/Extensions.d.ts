@@ -7,7 +7,7 @@ declare global {
          * @param tagName HTMLElement tag name
          * @param options Construction options, instead of assigning values after construction
          */
-        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions<K>): HTMLElementTagNameMap[K];
+        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions): HTMLElementTagNameMap[K];
     }
     interface HTMLCollection {
         /**
@@ -55,12 +55,15 @@ declare global {
          * Returns array of keys
          */
         keyArr(): Array<K>;
+        /**
+         * Returns array of values
+         */
         valueArr(): Array<V>;
         /**
          * Returns first [key, value] match to callback param
          * @param callback Callbacking function to find KeyValuePair
          */
-        find(callback: (value: V, key?: K, index?: number, self?: this) => boolean): [K, V];
+        find(callback: (value: V, key?: K, index?: number, self?: this) => boolean): [K, V] | undefined;
         /**
          * Whether or not map includes a  value. Returns true if it does, false if not ¯\_(ツ)_/¯
          * @param value Value that may be includded in map

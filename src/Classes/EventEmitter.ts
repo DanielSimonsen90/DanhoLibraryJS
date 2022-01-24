@@ -1,9 +1,12 @@
 import EventCollection from "./EventCollection";
-import EventHandler from "../Types/EventHandler";
-import BaseEvent from "../Interfaces/BaseEventInterface";
+import BaseEvent from '../Interfaces/BaseEventInterface';
+import EventHandler from '../Types/EventHandler';
 
 /**
  * Traditional Node.js EventEmitter for vanilla JavaScript
+ * @borrows EventCollection
+ * @borrows BaseEvent
+ * @borrows EventHandler
  */
 export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
@@ -11,11 +14,8 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
         this._events = new EventCollection(events);
     }
 
-    /**
-     * Internal event collection
-     * @private
-     */
-    private _events: EventCollection<Events>;
+    /**@private Internal event collection*/
+    private _events = new EventCollection<Events>();
     
     /**
      * Adds listener to event collection, and runs listener when event is emitted
@@ -23,8 +23,8 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    public on<ReturnType extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, ReturnType>): this {
-        this._events.add(event, listener);
+    public on<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this {
+        this._events.add(event, listener as any);
         return this;
     }
     /**
@@ -33,10 +33,11 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    public once<ReturnType extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, ReturnType>): this {
-        this._events.add(event, listener, true);
+    public once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this {
+        this._events.add(event, listener as any, true);
         return this;
     }
+
     /**
      * Removes listener(s) from event
      * @param event Event to get collection of listeners | "all"
@@ -47,6 +48,7 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
         this._events.clear(event, listener);
         return this;
     }
+
     /**
      * Emits event and runs all listeners tied to event
      * @param event Event to emit
@@ -54,8 +56,8 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    public emit<ReturnType extends any, Event extends keyof Events>(event: Event, ...args: Events[Event]): ReturnType[] {
-        return this._events.emit(event, args);
+    public emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): Array<ReturnType> {
+        return this._events.emit(event, args) as Array<ReturnType>;
     }
 
     /**

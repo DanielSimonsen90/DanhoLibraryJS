@@ -1,20 +1,23 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventEmitter = void 0;
-const EventCollection_1 = require("./EventCollection");
+const EventCollection_1 = __importDefault(require("./EventCollection"));
 /**
  * Traditional Node.js EventEmitter for vanilla JavaScript
+ * @borrows EventCollection
+ * @borrows BaseEvent
+ * @borrows EventHandler
  */
 class EventEmitter {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
     constructor(events) {
         this._events = new EventCollection_1.default(events);
     }
-    /**
-     * Internal event collection
-     * @private
-     */
-    _events;
+    /**@private Internal event collection*/
+    _events = new EventCollection_1.default();
     /**
      * Adds listener to event collection, and runs listener when event is emitted
      * @param event Event to handle
@@ -52,7 +55,7 @@ class EventEmitter {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    emit(event, ...args) {
+    emit(event, args) {
         return this._events.emit(event, args);
     }
     /**

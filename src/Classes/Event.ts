@@ -15,6 +15,7 @@ export class Event<
     constructor(name: Name, ...listeners: Array<EventHandler<Events, Name>>) {
         this.name = name;
         this._listeners = listeners;
+        this._lastEmitted = new Date();
     }
 
     /**Name of event*/
@@ -35,7 +36,7 @@ export class Event<
     /**@private Internal runs*/
     private _runs = 0;
     /**@private Internal lastEmitted*/
-    private _lastEmitted: Date = null;
+    private _lastEmitted: Date;
 
     /**
      * Emits event and returns array of responses
@@ -103,7 +104,7 @@ export class Event<
     public off(listener?: EventHandler<Events, Name>, throwNotFoundError = false) {
         try { 
             if (!listener) this._listeners = new Array<EventHandler<Events, Name>>()
-            else if (!this._listeners.includes(listener)) return;
+            else if (!this._listeners.includes(listener)) return this;
             else this._listeners.remove(listener);
          } 
         catch (err) { if (throwNotFoundError) throw err; }

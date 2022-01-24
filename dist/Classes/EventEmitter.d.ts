@@ -1,15 +1,15 @@
-import EventHandler from "../Types/EventHandler";
-import BaseEvent from "../Interfaces/BaseEventInterface";
+import BaseEvent from '../Interfaces/BaseEventInterface';
+import EventHandler from '../Types/EventHandler';
 /**
  * Traditional Node.js EventEmitter for vanilla JavaScript
+ * @borrows EventCollection
+ * @borrows BaseEvent
+ * @borrows EventHandler
  */
 export declare class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
     constructor(events?: Map<keyof Events, EventHandler<Events>>);
-    /**
-     * Internal event collection
-     * @private
-     */
+    /**@private Internal event collection*/
     private _events;
     /**
      * Adds listener to event collection, and runs listener when event is emitted
@@ -17,14 +17,14 @@ export declare class EventEmitter<Events extends BaseEvent<string, Array<any>>> 
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    on<ReturnType extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, ReturnType>): this;
+    on<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
     /**
      * Adds listener to event collection, and runs listener once when event is emitted
      * @param event Event to handle
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    once<ReturnType extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, ReturnType>): this;
+    once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
     /**
      * Removes listener(s) from event
      * @param event Event to get collection of listeners | "all"
@@ -39,7 +39,7 @@ export declare class EventEmitter<Events extends BaseEvent<string, Array<any>>> 
      * @fires event
      * @returns Array of listeners' reponses
      */
-    emit<ReturnType extends any, Event extends keyof Events>(event: Event, ...args: Events[Event]): ReturnType[];
+    emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): Array<ReturnType>;
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param event: Specific event to limit, or by default, 'all'

@@ -1,10 +1,12 @@
 import BaseEvent from "../Interfaces/BaseEventInterface";
 import EventHandler from "../Types/EventHandler";
-import { Event } from "./Event";
+import Event from './Event';
 
 /**
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
+ * @borrows Event
+ * @borrows BaseEvent
  */
  export class EventCollection<Events extends BaseEvent<string, Array<any>>> {
     constructor(events?: Map<keyof Events, EventHandler<Events>>) {
@@ -42,7 +44,11 @@ import { Event } from "./Event";
         this._events.set(name, new Event(name, ...handlers));
         return this;
     }
-    
+    /**@private Internal event collection*/
+    private _events = new Map<keyof Events, Event<Events>>();
+    /**@private limit of events*/
+    private _limit = 0;
+
     /**
      * Returns true if event is in collection
      * @param event Event name
@@ -52,12 +58,12 @@ import { Event } from "./Event";
         return this._events.has(event); 
     }
     /**
-     * Returns all event handlers for event name
+     * Returns event matching event parameter
      * @param event Event name
-     * @returns All event handlers for event name
+     * @returns Event
      */
     public get<EventName extends keyof Events>(event: EventName): Event<Events, EventName> { 
-        return this._events.get(event) as Event<Events, EventName>; 
+        return this._events.get(event) as any; 
     }
     /**
      * Adds handler to event collection with name as key
@@ -65,8 +71,16 @@ import { Event } from "./Event";
      * @param handler Handler for event
      * @returns this
      */
-    public add<EventName extends keyof Events>(name: EventName, handler: EventHandler, prepend = false): this { 
-        return this.setEvent(name, prepend, handler); 
+    // public add<EventName extends keyof Events>(name: EventName, handler: EventHandler, prepend = false): this { 
+    //     return this.setEvent(name, prepend, handler); 
+    public add<EventName extends keyof Events>(name: EventName, handler: EventHandler<Events, keyof Events>, once = false): this {
+        if (this._limit > 0 && this._limit + 1 > this._events.size) {
+            throw new Error(`Listener limit, ${this._limit}, reached!`);
+        }
+
+        const event = (this.has(name) && this.get(name)) || new Event(name);
+        this._events.set(name, event.on(handler, once) as any); 
+        return this;
     }
     /**
      * @summary clear(): Clears all events
@@ -87,12 +101,12 @@ import { Event } from "./Event";
             return this._events;
         })();
         else if (_name.toLowerCase() != "all" && handler == null) this._events.delete(name);                            //clear("myEvent"): Clears All handlers tied to "myEvent"
-        else if (_name.toLowerCase() != 'all' && handler) this._events.set(name, this._events.get(name).off(handler));  //clear("myEvent", myEventHandler): Removes the "myEventsHandler" handler from "myEvent"
+        else if (_name.toLowerCase() != 'all' && handler) this._events.set(name, this._events.get(name)!.off(handler));  //clear("myEvent", myEventHandler): Removes the "myEventsHandler" handler from "myEvent"
         return this;
     }
 
     public emit<Event extends keyof Events>(name: Event, args: Events[Event]) {
-        return this.get(name).emit(args);
+        return this.get(name)?.emit(args);
     }
 
     /**
@@ -102,13 +116,19 @@ import { Event } from "./Event";
      * 
      * @throws Unknown event, if event name isn't recognized
      */
-     public limit<Event extends keyof Events>(event: 'all' | Event, limit: number) {
+     public limit<Event extends keyof Events>(eventName: 'all' | Event, limit: number) {
         if (limit <= 0) return;
+        
+        if (eventName == 'all') {
+            this._limit = limit;
+            return this;
+        }
+        
+        const event = this.get(eventName);
+        if (!event) throw new Error(`Unknown event, ${eventName}!`);
 
-        if (event == 'all') this._limit = limit;
-        else if (this.has(event)) this.get(event).limit = limit;
-        else throw new Error(`Unknown event, ${event}!`);
-
+        event.limit = limit;
+        this._events.set(eventName, event as any);
         return this;
     }
 }

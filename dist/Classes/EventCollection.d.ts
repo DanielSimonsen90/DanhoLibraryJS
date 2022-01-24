@@ -1,9 +1,11 @@
 import BaseEvent from "../Interfaces/BaseEventInterface";
 import EventHandler from "../Types/EventHandler";
-import { Event } from "./Event";
+import Event from './Event';
 /**
  * Collection of Events from @see EventEmitter
  * @borrows EventHandler
+ * @borrows Event
+ * @borrows BaseEvent
  */
 export declare class EventCollection<Events extends BaseEvent<string, Array<any>>> {
     constructor(events?: Map<keyof Events, EventHandler<Events>>);
@@ -22,6 +24,10 @@ export declare class EventCollection<Events extends BaseEvent<string, Array<any>
      * @returns this, with updated events
      */
     private setEvent;
+    /**@private Internal event collection*/
+    private _events;
+    /**@private limit of events*/
+    private _limit;
     /**
      * Returns true if event is in collection
      * @param event Event name
@@ -29,9 +35,9 @@ export declare class EventCollection<Events extends BaseEvent<string, Array<any>
      */
     has<EventName extends keyof Events>(event: EventName): boolean;
     /**
-     * Returns all event handlers for event name
+     * Returns event matching event parameter
      * @param event Event name
-     * @returns All event handlers for event name
+     * @returns Event
      */
     get<EventName extends keyof Events>(event: EventName): Event<Events, EventName>;
     /**
@@ -40,7 +46,7 @@ export declare class EventCollection<Events extends BaseEvent<string, Array<any>
      * @param handler Handler for event
      * @returns this
      */
-    add<EventName extends keyof Events>(name: EventName, handler: EventHandler, prepend?: boolean): this;
+    add<EventName extends keyof Events>(name: EventName, handler: EventHandler<Events, keyof Events>, once?: boolean): this;
     /**
      * @summary clear(): Clears all events
      * @summary clear("all", myEventHandler): Removes myEventHandler from all events that have it
@@ -60,6 +66,6 @@ export declare class EventCollection<Events extends BaseEvent<string, Array<any>
      *
      * @throws Unknown event, if event name isn't recognized
      */
-    limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this;
+    limit<Event extends keyof Events>(eventName: 'all' | Event, limit: number): this | undefined;
 }
 export default EventCollection;
