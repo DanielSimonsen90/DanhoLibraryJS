@@ -26,7 +26,7 @@ declare global {
          * Removes item from array and returns self without item
          * @param item Item to remove
          */
-        remove(item: T): this
+        remove(item: T | number): this
         /**
          * Returns a random element from array
          */
@@ -135,12 +135,9 @@ Array.prototype.add = function<T>(this: Array<T>, ...items: Array<T>) {
     this.push(...items);
     return this;
 }
-Array.prototype.remove = function<T>(this: Array<T>, item: T): Array<T> {
-    const itemInArray = this.includes(item) ? item : this.find(i => i == item);
-    if (!itemInArray) throw new Error(`item is not in array!`);
-    
-    const itemIndex = this.indexOf(itemInArray);
-    this.splice(itemIndex, 1);
+Array.prototype.remove = function<T>(this: Array<T>, value: T | number): Array<T> {
+    const index = typeof value === 'number' ? value : this.indexOf(value);
+    if (index > -1) this.splice(index, 1);
     return this;
 }
 Array.prototype.random = function<T>(this: Array<T>): T {

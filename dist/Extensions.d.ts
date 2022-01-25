@@ -25,7 +25,7 @@ declare global {
          * Removes item from array and returns self without item
          * @param item Item to remove
          */
-        remove(item: T): this;
+        remove(item: T | number): this;
         /**
          * Returns a random element from array
          */

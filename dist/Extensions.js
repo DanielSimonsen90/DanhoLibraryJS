@@ -31,12 +31,10 @@ Array.prototype.add = function (...items) {
     this.push(...items);
     return this;
 };
-Array.prototype.remove = function (item) {
-    const itemInArray = this.includes(item) ? item : this.find(i => i == item);
-    if (!itemInArray)
-        throw new Error(`item is not in array!`);
-    const itemIndex = this.indexOf(itemInArray);
-    this.splice(itemIndex, 1);
+Array.prototype.remove = function (value) {
+    const index = typeof value === 'number' ? value : this.indexOf(value);
+    if (index > -1)
+        this.splice(index, 1);
     return this;
 };
 Array.prototype.random = function () {
