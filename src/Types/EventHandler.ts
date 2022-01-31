@@ -1,4 +1,4 @@
-import BaseEvent from "../Interfaces/BaseEventInterface";
+import BaseEvent from "./BaseEvent";
 
 /**
  * Eventhandler type for:

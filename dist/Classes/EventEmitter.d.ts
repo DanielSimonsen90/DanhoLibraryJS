@@ -1,4 +1,4 @@
-import BaseEvent from '../Interfaces/BaseEventInterface';
+import BaseEvent from '../Types/BaseEvent';
 import EventHandler from '../Types/EventHandler';
 /**
  * Traditional Node.js EventEmitter for vanilla JavaScript
@@ -31,7 +31,7 @@ export declare class EventEmitter<Events extends BaseEvent<string, Array<any>>> 
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    off<ReturnType extends any, Event extends keyof Events>(event?: Event | 'all', listener?: EventHandler<Events, Event, ReturnType>): this;
+    off<Return extends any, Event extends keyof Events>(event?: Event | 'all', listener?: EventHandler<Events, Event, Return>): this;
     /**
      * Emits event and runs all listeners tied to event
      * @param event Event to emit
@@ -39,7 +39,7 @@ export declare class EventEmitter<Events extends BaseEvent<string, Array<any>>> 
      * @fires event
      * @returns Array of listeners' reponses
      */
-    emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): Array<ReturnType>;
+    emit<Return extends any, Event extends keyof Events>(event: Event, ...args: Events[Event]): Array<Return>;
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param event: Specific event to limit, or by default, 'all'

@@ -29,11 +29,13 @@ class Document {
      * @param tagName HTMLElement tag name
      * @param options Construction options, instead of assigning values after construction
      */
-    createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions<K>): HTMLElementTagNameMap[K];
+    createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions): HTMLElementTagNameMap[K];
 }
 
 class HTMLCollection {
-    /**Converts HTMLCollection to Element[]*/
+    /**
+     * Converts HTMLCollection to Element[]
+     */
     array(): Element[];
 }
 
@@ -45,9 +47,9 @@ class Array<T> {
     add(...items: Array<T>): this
     /**
      * Removes item from array and returns self without item
-     * @param item Item to remove
+     * @param item Item or index to remove
      */
-    remove(item: T): this
+    remove(item: T | number): this
     /**
      * Returns a random element from array
      */
@@ -60,27 +62,33 @@ class Array<T> {
 }
 
 interface Map<K, V> {
-    /**Converts map into Array<[Key, Value]>*/
-    array(): [K, V][]
+    /**
+     * Converts map into Array<[Key, Value]>
+     */
+    array(): Array<[K, V]>
     /**
      * Maps values into new types of generics
      * @param callback Callbacking function to map values
      */
-    map<EK, EV>(callback: (value: V, key?: K, index?: number, map?: this) => [EK, EV]): Map<EK, EV>
+    map<EK, EV>(callback: (value: V, key?: K, index?: number, self?: this) => [EK, EV]): Map<EK, EV>
     /**
      * Returns array of "accepted" values. Criteria defined in callback param
      * @param callback Callbacking function to filter away unwanted values
      */
-    filter(callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => boolean): Map<K, V>
-    /**Converts map into array of keys*/
+    filter(callback: (value: V, key?: K, index?: number, self?: this) => boolean): Map<K, V>
+    /**
+     * Returns array of keys
+     */
     keyArr(): Array<K>
-    /**Converts map into array of values*/
+    /**
+     * Returns array of values
+     */
     valueArr(): Array<V>
     /**
-     * Returns first [key, value] match to callback param
+     * Returns first [key, value] match to callback param. Returns undefined if nothing found
      * @param callback Callbacking function to find KeyValuePair
      */
-    find(callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => boolean): [K, V]
+    find(callback: (value: V, key?: K, index?: number, self?: this) => boolean): [K, V] | undefined
     /**
      * Whether or not map includes a  value (value version of Map#has)
      * @param value Value that may be includded in map
@@ -121,6 +129,20 @@ interface String {
 async function CopyToClipboard(value: string, response?: string): Promise<void>;
 
 /**
+ * Create HTMLEvent object from function
+ * @param name Name of the event
+ * @param handler Handler for the event
+ * @returns Parameters as object
+ */
+function HTMLEvent<
+    Event extends keyof HTMLElementEventMap, 
+    ReturnType extends any
+>(name: Event, handler: (event: HTMLElementEventMap[Event]) => ReturnType): { 
+    name: Event, 
+    handler: (event: HTMLElementEventMap[Event]) => ReturnType 
+}
+
+/**
  * Appends classes to header's "a" elements, when navigation to "a"'s page is selected
  * @param query The query selector for Document.querySelector
  * @param currentPageClasses Class(es) to append header's "a" elements
@@ -128,16 +150,26 @@ async function CopyToClipboard(value: string, response?: string): Promise<void>;
  * @borrows Document.querySelector
  */
 function SetNavigationSelected(query: string, ...currentPageClasses: string[]): void;
+
+/**
+ * Converts input into milliseconds
+ * @param input Input to convert to ms. 1s | 2m | 3h | 1M | 60000
+ * @returns Millisecond value of input
+ */
+function ms(input: TimeDelay): number
 ```
 
 ### Classes
 
 ```ts
-/**Base event for @see EventEmitter, @borrows EventHandler @borrows BaseEventInterface as BaseEvent*/
+/**
+ * Base event for @see EventEmitter
+ * @borrows EventHandler 
+ * @borrows BaseEvent
+ */
 class Event<
-    Event extends BaseEvent,
-    Name extends keyof Events = keyof Events,
-    Params = Events[Name]
+    Event extends BaseEvent<string, Array<any>>,
+    Name extends keyof Events = keyof Events
 > {
     /**
      * Base event for @see EventEmitter, @borrows EventHandler
@@ -160,7 +192,7 @@ class Event<
      * @param args Arguments required for event listeners
      * @returns Return values of listeners' returns
      */
-    public emit(params: Params): any[];
+    public emit(...args: Events[Name]): any[];
     /**
      * Adds listener to listeners array and returns self with new listener added
      * @param listener Listener to add
@@ -187,13 +219,13 @@ class Event<
     public includes(listener: EventHandler<Events, Name>): boolean;
     /**
      * Removes listener from internal listeners array
-     * @param listener Listener to remove
+     * @param listener Listener to remove. If none specified, all will be removed
      * @param throwNotFoundError Throw error if listener isn't in listeners array - default: false
      * @returns this, without listener
      * 
      * @throws NotFound, if throwNotFoundError is true, and internal listeners array doesn't include listener provided
      */
-    public off(listener: EventHandler<Events, Name>, throwNotFoundError = false): this;
+    public off(listener?: EventHandler<Events, Name>, throwNotFoundError = false): this;
 }
 
 /**
@@ -202,23 +234,25 @@ class Event<
  * @borrows Event
  * @borrows BaseEvent
  */
-class EventCollection<Events extends BaseEvent> {
+class EventCollection<Events extends BaseEvent<string, Array<any>>> {
     /**Events to add in construction - Map<eventName, eventHandlers>*/
-    constructor(events?: Map<keyof Events, EventHandler<Events, keyof Events>[]>);
+    constructor(events?: Map<keyof Events, EventHandler<Events>>);
+    
     /**Amount of events stored*/
-    readonly size: number;
+    public get size: number
+
     /**
      * Returns true if event is in collection
      * @param event Event name
      * @returns true if event is in collection
      */
-    has(event: keyof Events): boolean;
+    public has<EventName extends keyof Events>(event: EventName): boolean
     /**
      * Returns all event handlers for event name. T is return type for event
      * @param event Event name
      * @returns Event object stored
      */
-    get(event: keyof Events): Event<Events>
+    public get<EventName extends keyof Events>(event: EventName): Event<Events, EventName> 
     /**
      * Adds handler to event collection with name as key
      * @param name Event name
@@ -226,7 +260,7 @@ class EventCollection<Events extends BaseEvent> {
      * @param once Whether or not handler only should run once or all times
      * @returns this
      */
-    add(name: keyof Events, handler: EventHandler<Events, keyof Events>, once = false): this;
+    public add<EventName extends keyof Events>(name: EventName, handler: EventHandler<Events, keyof Events>, once = false): this
     /**
      * @summary clear(): Clears all events
      * @summary clear("all", myEventHandler): Removes myEventHandler from all events that have it
@@ -237,14 +271,14 @@ class EventCollection<Events extends BaseEvent> {
      * @param handler Specific handler to remove. If left blank, all handlers in name will be removed
      * @returns this
      */
-    clear(name?: keyof Events | "all" = "all", handler?: EventHandler<Events, keyof Events>): this;
+    public clear<EventName extends keyof Events>(name: EventName | 'all' = 'all', handler?: EventHandler): this
     /**
      * Emits event matching name, and provides args param to saved handers. Returns result from all handlers
      * @param name Event name
      * @param args Arguments for event handlers
      * @returns Result from all handlers
      */
-    emit<Event extends keyof Events>(name: Event, args: Events[Event]): any[];
+    public emit<Event extends keyof Events>(name: Event, ...args: Events[Event]): any[];
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param limit Limit of events to keep
@@ -252,7 +286,7 @@ class EventCollection<Events extends BaseEvent> {
      * 
      * @throws Unknown event, if event name isn't recognized
      */
-    limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this
+    public limit<Event extends keyof Events>(eventName: 'all' | Event, limit: number): this
 }
 
 /**
@@ -261,9 +295,9 @@ class EventCollection<Events extends BaseEvent> {
  * @borrows BaseEvent
  * @borrows EventHandler
  */
-class EventEmitter<Events extends BaseEvent> {
+class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
     /**@param events Map<name: string, handlers: EventHandler[]>*/
-    constructor(events?: Map<keyof Events, EventHandler<Events, keyof Events>[]>);
+    constructor(events?: Map<keyof Events, EventHandler<Events>>);
 
     /**
      * Adds listener to event collection, and runs listener when event is emitted
@@ -285,7 +319,7 @@ class EventEmitter<Events extends BaseEvent> {
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    off<Event extends keyof Events>(event: Event | string = 'all', listener?: EventHandler<Events, Event>): this;
+    off<Return extends any, Event extends keyof Events>(event: Event | 'all' = 'all', listener?: EventHandler<Events, Event, Return>): this;
     /**
      * Emits event and runs all listeners tied to event
      * @param event Event to emit
@@ -293,7 +327,7 @@ class EventEmitter<Events extends BaseEvent> {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): ReturnType[];
+    emit<Return extends any, Event extends keyof Events>(event: Event, ...args: Events[Event]): Array<Return>;
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param event: Specific event to limit, or by default, 'all'
@@ -302,30 +336,166 @@ class EventEmitter<Events extends BaseEvent> {
      */
     public limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this;
 }
+
+/**
+ * Time utility class
+ * @borrows TimeDelay
+ * @borrows ms
+ */
+class Time {
+    /*
+     * Millisecond in milliseconds (I know that sounds silly but it makes sense later on?)
+     */
+    public static get millisecond: number;
+    /*
+     * Second in milliseconds
+     */
+    public static get second: number;
+    /*
+     * Minute in milliseconds
+     */
+    public static get minute: number;
+    /*
+     * Hour in milliseconds
+     */
+    public static get hour: number;
+    /*
+     * Day in milliseconds
+     */
+    public static get day: number;
+    /*
+     * Week in milliseconds
+     */
+    public static get week: number;
+    /*
+     * Month in milliseconds
+     */
+    public static get month: number;
+    /*
+     * Year in milliseconds
+     */
+    public static get year: number;
+    /*
+     * Average month in milliseconds
+     */
+    public static get avgMonth: number;
+
+    /*
+     * Converts TimeDelay input into milliseconds
+     */
+    public static ms(input: TimeDelay): number
+}
+
+/**
+ * Timespan between 2 dates.
+ * @borrows TimeSpanValue
+ * @borrows Time
+ */
+class TimeSpan {
+    constructor(from: TimeSpanValue, to: TimeSpanValue = Date.now());
+
+    /*
+     * Total x between dates
+     */
+    public years: number;
+    /*
+     * Total x between dates
+     */
+    public months: number;
+    /*
+     * Total x between dates
+     */
+    public weeks: number;
+    /*
+     * Total x between dates
+     */
+    public days: number;
+    /*
+     * Total x between dates
+     */
+    public hours: number;
+    /*
+     * Total x between dates
+     */
+    public minutes: number;
+    /*
+     * Total x between dates
+     */
+    public seconds: number;
+    /*
+     * Total x between dates
+     */
+    public milliseconds: number;
+
+    /**
+     * Get the maximum amount of months between the two dates
+     * @returns Number of max amount of months that are between the two dates
+     */
+    public getTotalMonths(): number;
+    /**
+     * Get the maximum amount of weeks between the two dates
+     * @returns Number of max amount of weeks that are between the two dates
+     */
+    public getTotalWeeks(): number;
+    /**
+     * Get the maximum amount of days between the two dates
+     * @returns Number of max amount of days that are between the two dates
+     */
+    public getTotalDays(): number;
+    /**
+     * Get the maximum amount of hours between the two dates
+     * @returns Number of max amount of hours that are between the two dates
+     */
+    public getTotalHours(): number;
+    /**
+     * Get the maximum amount of minutes between the two dates
+     * @returns Number of max amount of minutes that are between the two dates
+     */
+    public getTotalMinutes(): number;
+    /**
+     * Get the maximum amount of seconds between the two dates
+     * @returns Number of max amount of seconds that are between the two dates
+     */
+    public getTotalSeconds(): number;
+    /**
+     * Get the maximum amount of milliseconds between the two dates
+     * @returns Number of max amount of milliseconds that are between the two dates
+     */
+    public getTotalMilliseconds(): number;
+    
+    /**
+     * Start date of timespan
+     */
+    public from: Date;
+    /**
+     * End date of timespan
+     */
+    public to: Date;
+    /**
+     * Timespan is in the past
+     */
+    public pastTense: boolean;
+
+    public toString(includeMs: boolean = false): string
+}
 ```
 
 ### Interfaces
 
 ```ts
 /**
- * Default eventhandler mapper. EventEmitter.on(keyof this, this[keyof this])
- */
-interface BaseEvent {
-    error: [err: Error]
-}
-
-/**
  * Construction options when creating an HTML element using:
  * @see Document.createProperElement 
  * @borwwos IElement
+ * @borwwos Arrayable
  */
 interface ElementOptions<K extends keyof HTMLElementTagNameMap> {
     /**css classes to give the element*/
-    classes?: string[];
+    classes?: Array<string>;
     /**attributes to give the element*/
-    attributes?: [string, string][];
+    attributes?: Array<[string, string]>;
     /**Children of the element*/
-    children?: IElement | IElement[];
+    children?: Arrayable<IElement>;
     /**Events for the element to listen to
      * @use HTMLEvent<Event, RetrunType>(name: Event, handler: (e: Event) => ReturnType)
     */
@@ -346,13 +516,25 @@ interface IReplacement {
 ### Types
 
 ```ts
+/** Item is single or multiple */
+type Arrayable<T> = T | Array<T>;
+
+/** Event mapper is object with properties that are arrays */
+type BaseEvent<Keys extends string, Types extends Array<any>>;
+
+/** '2s' or 2000 */
+type TimeDelay = number | string;
+
+/** '1h' or new Date(new Date().setHour(new Date().getHour() + 1)) (god i hate dates in javascript I swear I'm making my own someday) */
+type TimeSpanvalue = number | Date;
+
 /**
  * Eventhandler type for:
  * @see EventCollection
  * @borrows BaseEvent
  */
 type EventHandler<
-    Events extends BaseEvent, 
+    Events extends BaseEvent<string, Array<any>> = BaseEvent<string, Array<any>>, 
     Event extends keyof Events,
     ReturnType = any
 > = (args: Events[Event]) => ReturnType;
@@ -368,4 +550,18 @@ type IElement = HTMLElement | string;
 
 /**Used for @see IReplacement*/
 type StringRegex = string | RegExp;
+
+/*
+ * Filters all properties from From that has the return type of Type
+ */
+type PropertiesWith<Type, From> = {
+    [Key in keyof From as From[Key] extends Type ? Key : never]: From[Key]
+}
+
+/*
+ * Filters all properties from From that don't have the return type of Type
+ */
+type PropertiesWithout<Type, From> = {
+    [Key in keyof From as From[Key] extends Type ? never : Key]: From[Key]
+}
 ```

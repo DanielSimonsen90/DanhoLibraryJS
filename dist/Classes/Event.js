@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Event = void 0;
-/**Base event for @see EventEmitter, @borrows EventHandler @borrows BaseEventInterface as BaseEvent*/
+/**
+ * Base event for @see EventEmitter, @borrows EventHandler @borrows BaseEvent
+ */
 class Event {
     /**
      * Base event for @see EventEmitter, @borrows EventHandler
@@ -36,10 +38,10 @@ class Event {
      * @param params Arguments required for event listeners
      * @returns Return values of listeners' returns
      */
-    emit(params) {
+    emit(...params) {
         this._runs++;
         this._lastEmitted = new Date();
-        return this._listeners.map(listener => listener(params));
+        return this._listeners.map(listener => listener(...params));
     }
     /**
      * Adds listener to listeners array and returns self with new listener added
@@ -68,8 +70,8 @@ class Event {
      * @throws Limit error, if limit was reached
      */
     once(listener, prepend = false) {
-        const handler = (params) => {
-            const result = listener(params);
+        const handler = (...params) => {
+            const result = listener(...params);
             this.off(handler);
             return result;
         };
@@ -86,7 +88,7 @@ class Event {
     }
     /**
      * Removes listener from internal listeners array
-     * @param listener Listener to remove
+     * @param listener Listener to remove. If none specified, all will be removed
      * @param throwNotFoundError Throw error if listener isn't in listeners array - default: false
      * @returns this, without listener
      *

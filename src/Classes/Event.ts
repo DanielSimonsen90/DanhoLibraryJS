@@ -1,11 +1,12 @@
-import BaseEvent from "../Interfaces/BaseEventInterface";
+import BaseEvent from "../Types/BaseEvent";
 import EventHandler from "../Types/EventHandler";
 
-/**Base event for @see EventEmitter, @borrows EventHandler @borrows BaseEventInterface as BaseEvent*/
+/**
+ * Base event for @see EventEmitter, @borrows EventHandler @borrows BaseEvent
+ */
 export class Event<
     Events extends BaseEvent<string, Array<any>>,
     Name extends keyof Events = keyof Events,
-    Params = Events[Name],
 > {
     /**
      * Base event for @see EventEmitter, @borrows EventHandler
@@ -43,10 +44,10 @@ export class Event<
      * @param params Arguments required for event listeners
      * @returns Return values of listeners' returns
      */
-    public emit(params: Params) {
+    public emit(...params: Events[Name]) {
         this._runs++;
         this._lastEmitted = new Date();
-        return this._listeners.map(listener => (listener as any)(params))
+        return this._listeners.map(listener => (listener as any)(...params))
     }
     /**
      * Adds listener to listeners array and returns self with new listener added
@@ -75,8 +76,8 @@ export class Event<
      * @throws Limit error, if limit was reached
      */
     public once(listener: EventHandler<Events, Name>, prepend = false) {
-        const handler = (params: Params) => {
-            const result = (listener as any)(params);
+        const handler = (...params: Events[Name]) => {
+            const result = (listener as any)(...params);
             this.off(handler as any);
             return result;
         }
@@ -95,7 +96,7 @@ export class Event<
 
     /**
      * Removes listener from internal listeners array
-     * @param listener Listener to remove
+     * @param listener Listener to remove. If none specified, all will be removed
      * @param throwNotFoundError Throw error if listener isn't in listeners array - default: false
      * @returns this, without listener
      * 

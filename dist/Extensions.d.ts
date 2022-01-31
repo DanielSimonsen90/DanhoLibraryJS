@@ -23,7 +23,7 @@ declare global {
         add(...items: Array<T>): this;
         /**
          * Removes item from array and returns self without item
-         * @param item Item to remove
+         * @param item Item or index to remove
          */
         remove(item: T | number): this;
         /**
@@ -50,7 +50,7 @@ declare global {
          * Returns array of "accepted" values. Criteria defined in callback param
          * @param callback Callbacking function to filter away unwanted values
          */
-        filter(callback: (value: V, key?: K, index?: number, self?: this) => boolean): this;
+        filter(callback: (value: V, key?: K, index?: number, self?: this) => boolean): Map<K, V>;
         /**
          * Returns array of keys
          */
@@ -60,7 +60,7 @@ declare global {
          */
         valueArr(): Array<V>;
         /**
-         * Returns first [key, value] match to callback param
+         * Returns first [key, value] match to callback param. Returns undefined if nothing found
          * @param callback Callbacking function to find KeyValuePair
          */
         find(callback: (value: V, key?: K, index?: number, self?: this) => boolean): [K, V] | undefined;

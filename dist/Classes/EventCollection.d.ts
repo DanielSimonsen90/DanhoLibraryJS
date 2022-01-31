@@ -1,4 +1,4 @@
-import BaseEvent from "../Interfaces/BaseEventInterface";
+import BaseEvent from "../Types/BaseEvent";
 import EventHandler from "../Types/EventHandler";
 import Event from './Event';
 /**
@@ -11,19 +11,6 @@ export declare class EventCollection<Events extends BaseEvent<string, Array<any>
     constructor(events?: Map<keyof Events, EventHandler<Events>>);
     /**Amount of events stored*/
     get size(): number;
-    /**@private Internal event collection*/
-    private _events;
-    /**@private limit of events*/
-    private _limit;
-    /**
-     * Binds provided handlers to provided event name.
-     * @private
-     * @see EventCollection.add to use
-     * @param name Name of the event to set
-     * @param handlers Handlers to run when event is emitted
-     * @returns this, with updated events
-     */
-    private setEvent;
     /**@private Internal event collection*/
     private _events;
     /**@private limit of events*/
@@ -58,7 +45,7 @@ export declare class EventCollection<Events extends BaseEvent<string, Array<any>
      * @returns this
      */
     clear<EventName extends keyof Events>(name?: EventName | 'all', handler?: EventHandler): this;
-    emit<Event extends keyof Events>(name: Event, args: Events[Event]): any[];
+    emit<Event extends keyof Events>(name: Event, ...args: Events[Event]): any[];
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once
      * @param limit Limit of events to keep

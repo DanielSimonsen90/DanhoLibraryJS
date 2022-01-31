@@ -1,4 +1,4 @@
-import BaseEvent from "../Interfaces/BaseEventInterface";
+import BaseEvent from "../Types/BaseEvent";
 import EventHandler from "../Types/EventHandler";
 import Event from './Event';
 
@@ -27,29 +27,6 @@ import Event from './Event';
     private _limit = 0;
     
     /**
-     * Binds provided handlers to provided event name.
-     * @private
-     * @see EventCollection.add to use
-     * @param name Name of the event to set
-     * @param handlers Handlers to run when event is emitted
-     * @returns this, with updated events
-     */
-    private setEvent<EventName extends keyof Events, ReturnType extends any>(name: EventName, prepend: boolean, ...handlers: Array<EventHandler<Events, EventName, ReturnType>>): this {
-        let event = new Event<Events, EventName>(name, ...handlers);
-        if (this._events.has(name)) {
-            event = this._events.get(name) as Event<Events, EventName>;
-            handlers.forEach(handler => event.on(handler, prepend));
-        }
-        
-        this._events.set(name, new Event(name, ...handlers));
-        return this;
-    }
-    /**@private Internal event collection*/
-    private _events = new Map<keyof Events, Event<Events>>();
-    /**@private limit of events*/
-    private _limit = 0;
-
-    /**
      * Returns true if event is in collection
      * @param event Event name
      * @returns true if event is in collection
@@ -71,8 +48,6 @@ import Event from './Event';
      * @param handler Handler for event
      * @returns this
      */
-    // public add<EventName extends keyof Events>(name: EventName, handler: EventHandler, prepend = false): this { 
-    //     return this.setEvent(name, prepend, handler); 
     public add<EventName extends keyof Events>(name: EventName, handler: EventHandler<Events, keyof Events>, once = false): this {
         if (this._limit > 0 && this._limit + 1 > this._events.size) {
             throw new Error(`Listener limit, ${this._limit}, reached!`);
@@ -105,8 +80,8 @@ import Event from './Event';
         return this;
     }
 
-    public emit<Event extends keyof Events>(name: Event, args: Events[Event]) {
-        return this.get(name)?.emit(args);
+    public emit<Event extends keyof Events>(name: Event, ...args: Events[Event]) {
+        return this.get(name)?.emit(...args);
     }
 
     /**

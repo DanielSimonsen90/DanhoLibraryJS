@@ -26,27 +26,6 @@ class EventCollection {
     /**@private limit of events*/
     _limit = 0;
     /**
-     * Binds provided handlers to provided event name.
-     * @private
-     * @see EventCollection.add to use
-     * @param name Name of the event to set
-     * @param handlers Handlers to run when event is emitted
-     * @returns this, with updated events
-     */
-    setEvent(name, prepend, ...handlers) {
-        let event = new Event_1.default(name, ...handlers);
-        if (this._events.has(name)) {
-            event = this._events.get(name);
-            handlers.forEach(handler => event.on(handler, prepend));
-        }
-        this._events.set(name, new Event_1.default(name, ...handlers));
-        return this;
-    }
-    /**@private Internal event collection*/
-    _events = new Map();
-    /**@private limit of events*/
-    _limit = 0;
-    /**
      * Returns true if event is in collection
      * @param event Event name
      * @returns true if event is in collection
@@ -68,8 +47,6 @@ class EventCollection {
      * @param handler Handler for event
      * @returns this
      */
-    // public add<EventName extends keyof Events>(name: EventName, handler: EventHandler, prepend = false): this { 
-    //     return this.setEvent(name, prepend, handler); 
     add(name, handler, once = false) {
         if (this._limit > 0 && this._limit + 1 > this._events.size) {
             throw new Error(`Listener limit, ${this._limit}, reached!`);
@@ -103,8 +80,8 @@ class EventCollection {
             this._events.set(name, this._events.get(name).off(handler)); //clear("myEvent", myEventHandler): Removes the "myEventsHandler" handler from "myEvent"
         return this;
     }
-    emit(name, args) {
-        return this.get(name)?.emit(args);
+    emit(name, ...args) {
+        return this.get(name)?.emit(...args);
     }
     /**
      * Limits how many events to accept using EventEmitter#on or EventEmitter#once

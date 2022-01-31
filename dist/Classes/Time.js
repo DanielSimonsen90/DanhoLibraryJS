@@ -2,6 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Time = exports.ms = exports.ValidTime = void 0;
 exports.ValidTime = /^(\d+(?:\.|,)?\d*)(ms|s|m|h|d|w|M|y)$/;
+/**
+ * Converts input into milliseconds
+ * @param input Input to convert to ms. 1s | 2m | 3h | 1M | 60000
+ * @returns Millisecond value of input
+ */
 function ms(input) {
     if (typeof input === 'number')
         return input;
@@ -10,7 +15,7 @@ function ms(input) {
         throw Error(`Invalid input string "${input}"`);
     match.shift();
     const [value, unit] = match;
-    console.log({ value, unit, input, match });
+    // console.log({ value, unit, input, match });
     const units = new Map([
         ['ms', Time.millisecond],
         ['s', Time.second],
@@ -24,6 +29,11 @@ function ms(input) {
     return parseInt(value) * units.get(unit);
 }
 exports.ms = ms;
+/**
+ * Time utility class
+ * @borrows TimeDelay
+ * @borrows ms
+ */
 class Time {
     static get millisecond() { return 1; }
     static get second() { return Time.millisecond * 1000; }

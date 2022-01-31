@@ -11,8 +11,8 @@ exports.SetNavigationSelected = void 0;
 function SetNavigationSelected(query, ...currentPageClasses) {
     const header = document.querySelector(query);
     if (!header)
-        throw `Couldn't find header from query, ${query}`;
-    const children = header?.children.array().filter(c => c.tagName === 'a');
+        throw { message: `Couldn't find header from query, ${query}` };
+    const children = header.children.array().filter(c => c.tagName === 'a');
     const currentPage = document.location.href;
     children.forEach(gc => {
         if (gc.href != currentPage)

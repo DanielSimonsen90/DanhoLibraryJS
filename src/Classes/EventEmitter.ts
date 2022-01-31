@@ -1,5 +1,5 @@
 import EventCollection from "./EventCollection";
-import BaseEvent from '../Interfaces/BaseEventInterface';
+import BaseEvent from '../Types/BaseEvent';
 import EventHandler from '../Types/EventHandler';
 
 /**
@@ -44,7 +44,7 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    public off<ReturnType extends any, Event extends keyof Events>(event: Event | 'all' = "all", listener?: EventHandler<Events, Event, ReturnType>): this {
+    public off<Return extends any, Event extends keyof Events>(event: Event | 'all' = "all", listener?: EventHandler<Events, Event, Return>): this {
         this._events.clear(event, listener);
         return this;
     }
@@ -56,8 +56,8 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    public emit<ReturnType extends any, Event extends keyof Events>(event: Event, args: Events[Event]): Array<ReturnType> {
-        return this._events.emit(event, args) as Array<ReturnType>;
+    public emit<Return extends any, Event extends keyof Events>(event: Event, ...args: Events[Event]): Array<Return> {
+        return this._events.emit(event, ...args) as Array<Return>;
     }
 
     /**

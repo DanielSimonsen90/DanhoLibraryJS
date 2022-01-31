@@ -1,6 +1,11 @@
 export type TimeDelay = number | string;
 export const ValidTime = /^(\d+(?:\.|,)?\d*)(ms|s|m|h|d|w|M|y)$/;
 
+/**
+ * Converts input into milliseconds
+ * @param input Input to convert to ms. 1s | 2m | 3h | 1M | 60000
+ * @returns Millisecond value of input
+ */
 export function ms(input: TimeDelay) {
     if (typeof input === 'number') return input;
 
@@ -9,8 +14,7 @@ export function ms(input: TimeDelay) {
     match.shift();
 
     const [value, unit] = match;
-    console.log({ value, unit, input, match });
-    
+    // console.log({ value, unit, input, match });
     
     const units = new Map<string, number>([
         ['ms', Time.millisecond],
@@ -26,6 +30,11 @@ export function ms(input: TimeDelay) {
     return parseInt(value) * (units.get(unit) as number);
 }
 
+/**
+ * Time utility class
+ * @borrows TimeDelay
+ * @borrows ms
+ */
 export class Time {
     public static get millisecond(): number { return 1; }
     public static get second(): number { return Time.millisecond * 1000; }
