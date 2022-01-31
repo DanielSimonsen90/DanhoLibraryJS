@@ -1,3 +1,4 @@
+/** '2s' or 2000 */
 export declare type TimeDelay = number | string;
 export declare const ValidTime: RegExp;
 /**
@@ -12,14 +13,23 @@ export declare function ms(input: TimeDelay): number;
  * @borrows ms
  */
 export declare class Time {
+    /** Millisecond in milliseconds (I know that sounds weird but the others make sense) */
     static get millisecond(): number;
+    /** Second in milliseconds */
     static get second(): number;
+    /** Minute in milliseconds */
     static get minute(): number;
+    /** Hour in milliseconds */
     static get hour(): number;
+    /** Day in milliseconds */
     static get day(): number;
+    /** Week in milliseconds */
     static get week(): number;
+    /** Month in milliseconds */
     static get month(): number;
+    /** Year in milliseconds */
     static get year(): number;
+    /** Average month in milliseconds */
     static get avgMonth(): number;
     static ms(input: TimeDelay): number;
 }

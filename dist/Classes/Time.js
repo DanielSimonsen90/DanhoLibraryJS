@@ -35,19 +35,28 @@ exports.ms = ms;
  * @borrows ms
  */
 class Time {
+    /** Millisecond in milliseconds (I know that sounds weird but the others make sense) */
     static get millisecond() { return 1; }
+    /** Second in milliseconds */
     static get second() { return Time.millisecond * 1000; }
+    /** Minute in milliseconds */
     static get minute() { return Time.second * 60; }
+    /** Hour in milliseconds */
     static get hour() { return Time.minute * 60; }
+    /** Day in milliseconds */
     static get day() { return Time.hour * 24; }
+    /** Week in milliseconds */
     static get week() { return Time.day * 7; }
+    /** Month in milliseconds */
     static get month() {
         return Time.avgMonth * Time.day;
     }
+    /** Year in milliseconds */
     static get year() {
         const now = new Date();
         return (365 + (now.getFullYear() % 4 == 0 ? 1 : 0)) * Time.day;
     }
+    /** Average month in milliseconds */
     static get avgMonth() {
         return Math.round([
             ...[1, 3, 5, 7, 8, 10, 12].map(() => 31),

@@ -1,5 +1,8 @@
 import { Time } from "./Time";
 
+/** 
+ * '1h' or new Date(new Date().setHour(new Date().getHour() + 1)) (god i hate dates in javascript I swear I'm making my own someday) 
+ */
 export type TimeSpanValue = number | Date;
 
 /**

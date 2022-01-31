@@ -41,13 +41,13 @@ export class Event<
 
     /**
      * Emits event and returns array of responses
-     * @param params Arguments required for event listeners
+     * @param args Arguments required for event listeners
      * @returns Return values of listeners' returns
      */
-    public emit(...params: Events[Name]) {
+    public emit(...args: Events[Name]) {
         this._runs++;
         this._lastEmitted = new Date();
-        return this._listeners.map(listener => (listener as any)(...params))
+        return this._listeners.map(listener => (listener as any)(...args))
     }
     /**
      * Adds listener to listeners array and returns self with new listener added

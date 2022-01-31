@@ -1,3 +1,6 @@
+/**
+ * '1h' or new Date(new Date().setHour(new Date().getHour() + 1)) (god i hate dates in javascript I swear I'm making my own someday)
+ */
 export declare type TimeSpanValue = number | Date;
 /**
  * Timespan between 2 dates.

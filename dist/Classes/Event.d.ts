@@ -26,10 +26,10 @@ export declare class Event<Events extends BaseEvent<string, Array<any>>, Name ex
     private _lastEmitted;
     /**
      * Emits event and returns array of responses
-     * @param params Arguments required for event listeners
+     * @param args Arguments required for event listeners
      * @returns Return values of listeners' returns
      */
-    emit(...params: Events[Name]): any[];
+    emit(...args: Events[Name]): any[];
     /**
      * Adds listener to listeners array and returns self with new listener added
      * @param listener Listener to add

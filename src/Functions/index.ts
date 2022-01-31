@@ -1,3 +1,3 @@
 export * from './CopyToClipboard';
 export * from './SetNavigationSelected';
-export * from './HTMLEvent'
+export * from './HTMLEvent';
