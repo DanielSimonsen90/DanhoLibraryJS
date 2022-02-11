@@ -129,6 +129,17 @@ interface String {
 async function CopyToClipboard(value: string, response?: string): Promise<void>;
 
 /**
+ * Gets the value of "property" in type "type" from query "query"
+ * Basically, you can get your --color-primary from :root
+ * 
+ * @param property Name of the property to get
+ * @param type Type of the property to parse
+ * @param query Query to get the element that has the property
+ * @returns Property value converted to type
+*/
+function GetCSSProperty<Type extends keyof CSSReturnTypes>(property: string, type: Type, query = ":root"): CSSReturnTypes[Type];
+
+/**
  * Create HTMLEvent object from function
  * @param name Name of the event
  * @param handler Handler for the event
