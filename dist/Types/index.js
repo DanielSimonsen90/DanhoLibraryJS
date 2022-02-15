@@ -12,6 +12,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./Arrayable"), exports);
 __exportStar(require("./BaseEvent"), exports);
+__exportStar(require("./BetterTypes"), exports);
 __exportStar(require("./EventHandler"), exports);
 __exportStar(require("./IElement"), exports);
 __exportStar(require("./PropertiesWith"), exports);
