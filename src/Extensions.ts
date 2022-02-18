@@ -89,10 +89,14 @@ declare global {
         toKebabCase(replaceOptions?: IReplacement): string,
         /**
          * String.substring but accepting negative numbers to cut from length
-         * @param start Start of string. 0 indexed
+         * @param start Start of string. 0 indexed, if negative number, subtracts number from length
          * @param end End of string. 0 indexed, if negative number, substracts number from length
          */
         clip(start: number, end?: number): string
+    }
+    interface ObjectConstructor {
+        array<From = {}>(from: From): Array<[keyof From, From[keyof From]]>
+        keysOf<From = {}>(from: From): Array<keyof From>
     }
 }
 
@@ -195,5 +199,12 @@ String.prototype.toKebabCase = function(this: string, replaceOptions: IReplaceme
     return spaceReplacer(this, replaceOptions.replacer || ' ', replaceOptions.replacement || '-');
 }
 String.prototype.clip = function(this: string, start: number, end?: number) {
-    return this.substring(start, end && end < 0 ? this.length + end : end);
+    return this.substring(start < 0 ? this.length - start : start, end && end < 0 ? this.length + end : end);
+}
+
+Object.keysOf = function<From = {}>(this: object, from: From): Array<keyof From> {
+    return Object.keys(from) as Array<keyof From>;
+}
+Object.array = function<From = {}>(this: object, from: From): Array<[keyof From, From[keyof From]]> {
+    return Object.keysOf(from).map(prop => [prop, from[prop]]) as Array<[keyof From, From[keyof From]]>;
 }

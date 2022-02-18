@@ -86,5 +86,11 @@ String.prototype.toKebabCase = function (replaceOptions) {
     return spaceReplacer(this, replaceOptions.replacer || ' ', replaceOptions.replacement || '-');
 };
 String.prototype.clip = function (start, end) {
-    return this.substring(start, end && end < 0 ? this.length + end : end);
+    return this.substring(start < 0 ? this.length - start : start, end && end < 0 ? this.length + end : end);
+};
+Object.keysOf = function (from) {
+    return Object.keys(from);
+};
+Object.array = function (from) {
+    return Object.keysOf(from).map(prop => [prop, from[prop]]);
 };

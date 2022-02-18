@@ -88,9 +88,13 @@ declare global {
         toKebabCase(replaceOptions?: IReplacement): string;
         /**
          * String.substring but accepting negative numbers to cut from length
-         * @param start Start of string. 0 indexed
+         * @param start Start of string. 0 indexed, if negative number, subtracts number from length
          * @param end End of string. 0 indexed, if negative number, substracts number from length
          */
         clip(start: number, end?: number): string;
+    }
+    interface ObjectConstructor {
+        array<From = {}>(from: From): Array<[keyof From, From[keyof From]]>;
+        keysOf<From = {}>(from: From): Array<keyof From>;
     }
 }
