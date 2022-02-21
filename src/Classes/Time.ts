@@ -37,6 +37,14 @@ export function ms(input: TimeDelay) {
  * @borrows ms
  */
 export class Time {
+    public static get daysInMonth() {
+        return [
+            ...[1, 3, 5, 7, 8, 10, 12].map(() => 31), 
+            ...[4, 6, 9, 11].map(() => 30),
+            28
+        ]
+    }
+
     /** Millisecond in milliseconds (I know that sounds weird but the others make sense) */
     public static get millisecond(): number { return 1; }
     /** Second in milliseconds */
@@ -60,11 +68,7 @@ export class Time {
     }
     /** Average month in milliseconds */
     public static get avgMonth(): number {
-        return Math.round([
-            ...[1, 3, 5, 7, 8, 10, 12].map(() => 31), 
-            ...[4, 6, 9, 11].map(() => 30),
-            28
-        ].reduce((result, num) => result += num, 0) / 12)
+        return Math.round(this.daysInMonth.reduce((result, num) => result += num, 0) / 12)
     }
     public static ms(input: TimeDelay) {
         return ms(input);

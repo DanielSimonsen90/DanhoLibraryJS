@@ -13,6 +13,7 @@ export declare function ms(input: TimeDelay): number;
  * @borrows ms
  */
 export declare class Time {
+    static get daysInMonth(): number[];
     /** Millisecond in milliseconds (I know that sounds weird but the others make sense) */
     static get millisecond(): number;
     /** Second in milliseconds */
