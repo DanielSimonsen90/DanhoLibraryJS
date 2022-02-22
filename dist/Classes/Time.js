@@ -36,11 +36,11 @@ exports.ms = ms;
  */
 class Time {
     static get daysInMonth() {
-        return [
-            ...[1, 3, 5, 7, 8, 10, 12].map(() => 31),
-            ...[4, 6, 9, 11].map(() => 30),
-            28
-        ];
+        return [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        //     ...[1, 3, 5, 7, 8, 10, 12].map(() => 31), 
+        //     ...[4, 6, 9, 11].map(() => 30),
+        //     28
+        // ]
     }
     /** Millisecond in milliseconds (I know that sounds weird but the others make sense) */
     static get millisecond() { return 1; }
