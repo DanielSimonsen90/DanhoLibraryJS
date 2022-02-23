@@ -35,6 +35,13 @@ exports.ms = ms;
  * @borrows ms
  */
 class Time {
+    static get daysInMonth() {
+        return [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        //     ...[1, 3, 5, 7, 8, 10, 12].map(() => 31), 
+        //     ...[4, 6, 9, 11].map(() => 30),
+        //     28
+        // ]
+    }
     /** Millisecond in milliseconds (I know that sounds weird but the others make sense) */
     static get millisecond() { return 1; }
     /** Second in milliseconds */
@@ -58,11 +65,7 @@ class Time {
     }
     /** Average month in milliseconds */
     static get avgMonth() {
-        return Math.round([
-            ...[1, 3, 5, 7, 8, 10, 12].map(() => 31),
-            ...[4, 6, 9, 11].map(() => 30),
-            28
-        ].reduce((result, num) => result += num, 0) / 12);
+        return Math.round(this.daysInMonth.reduce((result, num) => result += num, 0) / 12);
     }
     static ms(input) {
         return ms(input);
