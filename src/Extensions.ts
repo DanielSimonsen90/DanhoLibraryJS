@@ -46,12 +46,12 @@ declare global {
          * Maps values into new types of generics
          * @param callback Callbacking function to map values
          */
-        map<EK, EV>(callback: (value: V, key?: K, index?: number, self?: this) => [EK, EV]): Map<EK, EV>
+        map<EK, EV>(callback: (value: V, key: K, index: number, self: this) => [EK, EV]): Map<EK, EV>
         /**
          * Returns array of "accepted" values. Criteria defined in callback param
          * @param callback Callbacking function to filter away unwanted values
          */
-        filter(callback: (value: V, key?: K, index?: number, self?: this) => boolean): Map<K, V>
+        filter(callback: (value: V, key: K, index: number, self: this) => boolean): Map<K, V>
         /**
          * Returns array of keys
          */
@@ -64,7 +64,7 @@ declare global {
          * Returns first [key, value] match to callback param. Returns undefined if nothing found
          * @param callback Callbacking function to find KeyValuePair
          */
-        find(callback: (value: V, key?: K, index?: number, self?: this) => boolean): [K, V] | undefined
+        find(callback: (value: V, key: K, index: number, self: this) => boolean): [K, V] | undefined
         /**
          * Whether or not map includes a  value. Returns true if it does, false if not ¯\_(ツ)_/¯ 
          * @param value Value that may be includded in map
@@ -97,6 +97,10 @@ declare global {
     interface ObjectConstructor {
         array<From = {}>(from: From): Array<[keyof From, From[keyof From]]>
         keysOf<From = {}>(from: From): Array<keyof From>
+        parseBoolean(value: string): boolean;
+    }
+    interface BooleanConstructor {
+        parseBoolean(value: string): boolean
     }
 }
 
@@ -159,14 +163,14 @@ Map.prototype.array = function<K, V>(this: Map<K, V>): Array<[K, V]> {
     }
     return result;
 }
-Map.prototype.map = function<K, V, EK, EV>(this: Map<K, V>, callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => [EK, EV]): Map<EK, EV> {
+Map.prototype.map = function<K, V, EK, EV>(this: Map<K, V>, callback: (value: V, key: K, index: number, map: Map<K, V>) => [EK, EV]): Map<EK, EV> {
     return this.array()
         .map(([k, v], i) => callback(v, k, i, this))
         .reduce((map, [key, value]) => 
             map.set(key, value), 
         new Map<EK, EV>())
 }
-Map.prototype.filter = function<K, V>(this: Map<K, V>, callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => boolean): Map<K, V> {
+Map.prototype.filter = function<K, V>(this: Map<K, V>, callback: (value: V, key: K, index: number, map: Map<K, V>) => boolean): Map<K, V> {
     return this.array()
         .filter(([k, v], i) => callback(v, k, i, this))
         .reduce((map, [key, value]) => 
@@ -179,7 +183,7 @@ Map.prototype.keyArr = function<K, V>(this: Map<K, V>): Array<K> {
 Map.prototype.valueArr = function<K, V>(this: Map<K, V>): Array<V> {
     return this.array().map(([_, v]) => v);
 }
-Map.prototype.find = function<K, V>(this: Map<K, V>, callback: (value: V, key?: K, index?: number, map?: Map<K, V>) => boolean) {
+Map.prototype.find = function<K, V>(this: Map<K, V>, callback: (value: V, key: K, index: number, map: Map<K, V>) => boolean) {
     return this.array().find(([k, v], i) => callback(v, k, i, this));
 }
 Map.prototype.includes = function<K, V>(this: Map<K, V>, item: V, fromIndex?: number) {
@@ -207,4 +211,7 @@ Object.keysOf = function<From = {}>(this: object, from: From): Array<keyof From>
 }
 Object.array = function<From = {}>(this: object, from: From): Array<[keyof From, From[keyof From]]> {
     return Object.keysOf(from).map(prop => [prop, from[prop]]) as Array<[keyof From, From[keyof From]]>;
+}
+Boolean.parseBoolean = function(value: string) {
+    return value === "true";
 }

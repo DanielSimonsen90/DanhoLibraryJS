@@ -1,5 +1,7 @@
 /** '2s' or 2000 */
-export type TimeDelay = number | string;
+export type TimeUnit = 'ms' | 's' | 'm' | 'h' | 'd'| 'w' | 'M' | 'y';
+export type TimeString = `${number}${TimeUnit}`;
+export type TimeDelay = number | TimeString;
 export const ValidTime = /^(\d+(?:\.|,)?\d*)(ms|s|m|h|d|w|M|y)$/;
 
 /**

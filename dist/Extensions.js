@@ -94,3 +94,6 @@ Object.keysOf = function (from) {
 Object.array = function (from) {
     return Object.keysOf(from).map(prop => [prop, from[prop]]);
 };
+Boolean.parseBoolean = function (value) {
+    return value === "true";
+};
