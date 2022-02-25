@@ -24,3 +24,7 @@ export type TransformTypes<From, BaseType, NewType> = Record<keyof {
 // export type TransformTypes<From, BaseType, NewType> = TransformType<From, BaseType[keyof BaseType], NewType>;
 
 export type ValueOf<T> = T[keyof T];
+
+export type AllPropsAre<Type> = {
+    [key: string]: Type
+}

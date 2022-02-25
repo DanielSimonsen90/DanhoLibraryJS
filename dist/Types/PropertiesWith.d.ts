@@ -18,3 +18,6 @@ export declare type TransformTypes<From, BaseType, NewType> = Record<keyof {
     [Key in keyof From as From[Key] extends BaseType ? Key : never]: Key;
 }, NewType>;
 export declare type ValueOf<T> = T[keyof T];
+export declare type AllPropsAre<Type> = {
+    [key: string]: Type;
+};
