@@ -1,6 +1,5 @@
 import EventCollection from "./EventCollection";
-import BaseEvent from '../Types/BaseEvent';
-import EventHandler from '../Types/EventHandler';
+import { BaseEvent, EventHandler } from '../../Types';
 
 /**
  * Traditional Node.js EventEmitter for vanilla JavaScript

@@ -1,5 +1,4 @@
-import BaseEvent from "../Types/BaseEvent";
-import EventHandler from "../Types/EventHandler";
+import { BaseEvent, EventHandler } from "../../Types/Events";
 import Event from './Event';
 
 /**

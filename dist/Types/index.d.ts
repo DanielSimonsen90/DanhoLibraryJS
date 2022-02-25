@@ -1,7 +1,31 @@
-export * from './Arrayable';
-export * from './BaseEvent';
 export * from './BetterTypes';
-export * from './EventHandler';
-export * from './IElement';
+export * from './Date';
+export * from './Events';
+export * from './TransformTypes';
 export * from './PropertiesWith';
-export * from './StringRegex';
+/**
+ * Item is single or multiple
+ */
+export declare type Arrayable<T> = T | Array<T>;
+/**
+ * Used for HTMLElement.append in ElementOptions, Document.createProperElement.
+ * IElement accepts HTML Elements or HTMl-like strings.
+ *
+ * @see HTMLElement.append
+ * @see Document.createProperElement
+ */
+export declare type IElement = HTMLElement | string;
+/**
+ * Return types of T
+ */
+export declare type ValueOf<T> = T[keyof T];
+/**
+ * Type's properties are ReturnType
+ */
+export declare type AllPropsAre<ReturnType> = {
+    [key: string]: ReturnType;
+};
+/**
+ * string or RegExp.. pretty self-explanatory
+ */
+export declare type StringRegex = string | RegExp;

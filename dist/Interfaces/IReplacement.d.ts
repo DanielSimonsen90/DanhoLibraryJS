@@ -1,4 +1,4 @@
-import StringRegex from "../Types/StringRegex";
+import { StringRegex } from "../Types";
 /**
  * Replacement tool for
  * @see String.toSnakeCase

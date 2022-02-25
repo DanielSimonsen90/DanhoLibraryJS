@@ -46,6 +46,12 @@ export class Time {
         //     28
         // ]
     }
+    public static get weeksInYear() {
+        return Time.daysInYear * Time.day / Time.week
+    }
+    public static get daysInYear() {
+        return Time.year / Time.day;;
+    }
 
     /** Millisecond in milliseconds (I know that sounds weird but the others make sense) */
     public static get millisecond(): number { return 1; }

@@ -10,10 +10,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./Arrayable"), exports);
-__exportStar(require("./BaseEvent"), exports);
 __exportStar(require("./BetterTypes"), exports);
-__exportStar(require("./EventHandler"), exports);
-__exportStar(require("./IElement"), exports);
+__exportStar(require("./Date"), exports);
+__exportStar(require("./Events"), exports);
+__exportStar(require("./TransformTypes"), exports);
 __exportStar(require("./PropertiesWith"), exports);
-__exportStar(require("./StringRegex"), exports);

@@ -1,5 +1,4 @@
-import IElement from "../Types/IElement";
-import Arrayable from '../Types/Arrayable';
+import { Arrayable, IElement } from "../Types";
 /**
  * Construction options when creating an HTML element using:
  * @see Document.createProperElement
