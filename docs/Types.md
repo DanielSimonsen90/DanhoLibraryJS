@@ -6,6 +6,13 @@
 
 ``` ts
 /**
+ * Type's properties are ReturnType
+ */
+export type AllPropsAre<ReturnType> = {
+    [key: string]: ReturnType
+}
+
+/**
  * Item is single or multiple
  */
 export type Arrayable<T> = T | Array<T>;
@@ -20,21 +27,14 @@ export type Arrayable<T> = T | Array<T>;
 export type IElement = HTMLElement | string;
 
 /**
- * Return types of T
- */
-export type ValueOf<T> = T[keyof T];
-
-/**
- * Type's properties are ReturnType
- */
-export type AllPropsAre<ReturnType> = {
-    [key: string]: ReturnType
-}
-
-/**
  * string or RegExp.. pretty self-explanatory
  */
 export type StringRegex = string | RegExp;
+
+/**
+ * Return types of T
+ */
+export type ValueOf<T> = T[keyof T];
 ```
 
 ### BetterTypes
@@ -87,6 +87,20 @@ export default PropertiesWith;
 export type PropertiesWithout<Type, From> = {
     [Key in keyof From as From[Key] extends Type ? never : Key]: From[Key]
 }
+```
+
+### Time
+
+```ts
+/**
+ * Object interface with keys above to number values. If Plural is true, all properties ends with 's'
+ */
+export type TimeProperties<Plural extends boolean = false> = Record<Plural extends true ? `${TimeKeys}s` : TimeKeys, number>
+
+/**
+ * What properties to include when using TimeSpan.toString(format: TimeSpanFormat): string
+ */
+export type TimeSpanFormat = Partial<TransformType<TimeProperties<true>, number, boolean>>
 ```
 
 ### TransformTypes

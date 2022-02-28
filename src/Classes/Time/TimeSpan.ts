@@ -1,16 +1,24 @@
-import { Time } from "./Time";
+import { TransformType } from "../../Types";
+import Time from "./Time";
+import TimeProperties from "./TimeProperties";
 
 /** 
- * '1h' or new Date(new Date().setHour(new Date().getHour() + 1)) (god i hate dates in javascript I swear I'm making my own someday) 
+ * '1h' or 1000 * 60 ^ 3
  */
 export type TimeSpanValue = number | Date;
+
+/**
+ * What properties to include when using TimeSpan.toString(format: TimeSpanFormat): string
+ */
+export type TimeSpanFormat = Partial<TransformType<TimeProperties<true>, number, boolean>>
 
 /**
  * Timespan between 2 dates.
  * @borrows TimeSpanValue
  * @borrows Time
+ * @borrows TimeProperties
  */
-export class TimeSpan {
+export class TimeSpan implements TimeProperties<true> {
     constructor(from: TimeSpanValue, to: TimeSpanValue = Date.now()) {
         //General properties
         this.from = typeof from == 'number' ? new Date(from) : from;
@@ -173,12 +181,15 @@ export class TimeSpan {
      */
     public pastTense: boolean;
 
-    public toString(includeMs: boolean = false) {
+    public toString(format?: TimeSpanFormat) {
         //console.log(`${this.years}Y ${this.months}M ${this.weeks}w ${this.days}d ${this.hours}h ${this.minutes}m ${this.seconds}s ${this.milliseconds}ms`);
-        const times = [...[this.years, this.months, this.weeks, this.days, this.hours, this.minutes, this.seconds], includeMs ? this.milliseconds : -1];
+        const times = [this.years, this.months, this.weeks, this.days, this.hours, this.minutes, this.seconds, this.milliseconds];
         const timeMsg = ["year", "month", "week", "day", "hour", "minute", "second", "millisecond"];
         const result = times.reduce((result, time, i) => (
-            time > 0 ? `${result}${times[i]} ${timeMsg[i]}${times[i] != 1 ? 's' : ''}, ` : result
+            // If time is above 0, format is provided, a property matches current property and said property is true, append addition else return result
+            time > 0 && (format ? timeMsg[i] in format && (format as any)[timeMsg[i]] === true : true) ? 
+                `${result}${times[i]} ${timeMsg[i]}${times[i] != 1 ? 's' : ''}, ` : 
+                result
         ), '');
 
         return result.length > 2 && result.substring(0, result.length - 2) || '';

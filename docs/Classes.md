@@ -193,37 +193,90 @@ class DanhoDate {
     /**
      * Year of the date
      */
-    public get year: number
+    public year: number
 
     /**
      * Month of the date
      */
-    public get month: number
+    public month: number
 
     /**
      * Days in the month of the date
      */
-    public get daysInMonth: number
+    public daysInMonth: number
 
     /**
      * Week of the year the day is in
      */
-    public get week: number
+    public week: number
 
     /**
      * Week of the month the day is in
      */
-    public get weekOfMonth: number
+    public weekOfMonth: number
 
-    public get day: number
-    public get hours: number
-    public get minutes: number
-    public get seconds: number
-    public get milliseconds: number
+    /**
+     * Day of the date
+     */
+    public day: number
 
+    /**
+     * Hours of the date
+     */
+    public hours: number
+    
+    /**
+     * Minutes of the date
+     */
+    public minutes: number
+    
+    /**
+     * Seconds of the date
+     */
+    public seconds: number
+    
+    /**
+     * Milliseconds of the date
+     */
+    public milliseconds: number
+
+    /**
+     * Week day i.e. Monday
+     */
     public get weekDay: LongDay
     
+    /**
+     * Short week day i.e. Mon
+     */
+    public get weekDayShort: ShortDay
+    
+    /**
+     * Month name i.e. February
+     */
+    public get monthName: LongMonth
 
+    /**
+     * Short month name i.e. Feb
+     */
+    public get monthNameShort: ShortMonth
+
+    /**
+     * Sets internal date property
+     * @param data Time properties to set - replacement of i.e. Date.setHours(value: number): number
+     * @returns This, with updated properties
+     */
+    public set(data: Partial<Data>): this
+
+    /**
+     * Calculates the time between this date and provided date
+     * @returns TimeSpan between dates
+     */
+    public between(date: DanhoDate | Constructor): TimeSpan
+
+    /**
+     * String representation of Date. Use internal comment for formatting
+     */
+    public toString(format = "$dd/$MM/$year", relativeFormat?: TimeSpanFormat): string
 }
 
 /**
@@ -284,8 +337,9 @@ class Time {
  * Timespan between 2 dates.
  * @borrows TimeSpanValue
  * @borrows Time
+ * @borrows TimeProperties
  */
-class TimeSpan {
+class TimeSpan implements TimeProperties<true> {
     constructor(from: TimeSpanValue, to: TimeSpanValue = Date.now());
 
     /*

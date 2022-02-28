@@ -82,3 +82,4 @@ export class Time {
         return ms(input);
     }
 }
+export default Time;
