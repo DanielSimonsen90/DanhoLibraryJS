@@ -12,7 +12,7 @@ declare type DateFormat = `${Double}/${Double}/${Quadruple}`;
  */
 export declare type DanhoDateConstructor = Data | DateFormat | number | Date;
 declare class DanhoDate {
-    constructor(data: DanhoDateConstructor);
+    constructor(data?: DanhoDateConstructor);
     /**
      * Reduces ms into provided timeDifference
      * @param ms Millisecond value to reduce

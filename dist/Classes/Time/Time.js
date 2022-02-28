@@ -35,19 +35,43 @@ exports.ms = ms;
  * @borrows ms
  */
 class Time {
+    /**
+     * Array of amount of days in the months. 0 indexed
+     */
     static get daysInMonth() {
         return [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        //     ...[1, 3, 5, 7, 8, 10, 12].map(() => 31), 
-        //     ...[4, 6, 9, 11].map(() => 30),
-        //     28
-        // ]
     }
+    /**
+     * Amount of weeks per year
+     */
     static get weeksInYear() {
         return Time.daysInYear * Time.day / Time.week;
     }
+    /**
+     * Amount of days per year
+     */
     static get daysInYear() {
         return Time.year / Time.day;
         ;
+    }
+    /**
+     * Returns function that converts value into double digit string
+     * @returns (value: number): string
+     */
+    static get DoubleDigit() {
+        return (value) => value.toString().length < 2 ? `0${value}` : value.toString();
+    }
+    /**
+     * Array of names of the months. 0 idnexed
+     */
+    static get MonthNames() {
+        return new Array('Janurary', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+    }
+    /**
+     * Array of names of the days of the week. 0 indexed
+     */
+    static get DayNames() {
+        return new Array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
     }
     /** Millisecond in milliseconds (I know that sounds weird but the others make sense) */
     static get millisecond() { return 1; }

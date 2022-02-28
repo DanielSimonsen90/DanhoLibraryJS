@@ -1,3 +1,5 @@
+import { LongDay, LongMonth } from "../../Types/Date";
+
 /** '2s' or 2000 */
 export type TimeUnit = 'ms' | 's' | 'm' | 'h' | 'd'| 'w' | 'M' | 'y';
 export type TimeString = `${number}${TimeUnit}`;
@@ -39,20 +41,55 @@ export function ms(input: TimeDelay) {
  * @borrows ms
  */
 export class Time {
+    /**
+     * Array of amount of days in the months. 0 indexed
+     */
     public static get daysInMonth() {
         return [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        //     ...[1, 3, 5, 7, 8, 10, 12].map(() => 31), 
-        //     ...[4, 6, 9, 11].map(() => 30),
-        //     28
-        // ]
     }
+
+    /**
+     * Amount of weeks per year
+     */
     public static get weeksInYear() {
         return Time.daysInYear * Time.day / Time.week
     }
+
+    /**
+     * Amount of days per year
+     */
     public static get daysInYear() {
         return Time.year / Time.day;;
     }
 
+    /**
+     * Returns function that converts value into double digit string
+     * @returns (value: number): string 
+     */
+    public static get DoubleDigit() {
+        return (value: number) => value.toString().length < 2 ? `0${value}` : value.toString(); 
+    }
+
+    /**
+     * Array of names of the months. 0 idnexed
+     */
+    public static get MonthNames() {
+        return new Array<LongMonth>(
+            'Janurary', 'February', 
+            'March', 'April', 'May',
+            'June', 'July', 'August',
+            'September', 'October', 'November',
+            'December'
+        );
+    }
+
+    /**
+     * Array of names of the days of the week. 0 indexed
+     */
+    public static get DayNames() {
+        return new Array<LongDay>('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+    }
+        
     /** Millisecond in milliseconds (I know that sounds weird but the others make sense) */
     public static get millisecond(): number { return 1; }
     /** Second in milliseconds */

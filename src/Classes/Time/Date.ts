@@ -14,20 +14,12 @@ type DateFormat = `${Double}/${Double}/${Quadruple}`;
  */
 export type DanhoDateConstructor = Data | DateFormat | number | Date;
 
-const doubleDigit = (value: number) => value.toString().length < 2 ? `0${value}` : value.toString(); 
-const monthNames = new Array<LongMonth>(
-    'Janurary', 'February', 
-    'March', 'April', 'May',
-    'June', 'July', 'August',
-    'September', 'October', 'November',
-    'December'
-);
-const dayNames = new Array<LongDay>('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-
 class DanhoDate {
-    constructor(data: DanhoDateConstructor) {
+    constructor(data?: DanhoDateConstructor) {
+        // data not provided
+        if (!data) this._date = new Date();
         // data is typeof Date
-        if (typeof data === 'object' && data instanceof Date) {
+        else if (typeof data === 'object' && data instanceof Date) {
             this._date = new Date(data);
         } 
         // data is typeof Data
@@ -61,7 +53,7 @@ class DanhoDate {
         .replaceAll('$daysInMonth', this.daysInMonth.toString())
         .replaceAll('$monthShort', this.monthNameShort)
         .replaceAll('$month', this.monthName)
-        .replaceAll('$MM', doubleDigit(this.month))
+        .replaceAll('$MM', Time.DoubleDigit(this.month))
         .replaceAll('$M', this.month.toString())
 
         .replaceAll('$weekMonth', this.weekOfMonth.toString())
@@ -69,21 +61,21 @@ class DanhoDate {
         .replaceAll('$weekDayShort', this.weekDayShort)
         .replaceAll('$week', this.week.toString())
         
-        .replaceAll('$dd', doubleDigit(this.day))
+        .replaceAll('$dd', Time.DoubleDigit(this.day))
         .replaceAll('$d', this.day.toString())
 
-        .replaceAll('$hh12', `${doubleDigit(this.hours)}${this.hours < 12 ? 'AM' : 'PM'}`)
+        .replaceAll('$hh12', `${Time.DoubleDigit(this.hours)}${this.hours < 12 ? 'AM' : 'PM'}`)
         .replaceAll('$h12', `${this.hours > 12 ? 12 - this.hours : this.hours}${this.hours < 12 ? 'AM' : 'PM'}`)
-        .replaceAll('$hh24', doubleDigit(this.hours))
+        .replaceAll('$hh24', Time.DoubleDigit(this.hours))
         .replaceAll('$h24', this.hours.toString())
 
-        .replaceAll('$msms', doubleDigit(this.milliseconds))
+        .replaceAll('$msms', Time.DoubleDigit(this.milliseconds))
         .replaceAll('$ms', this.milliseconds.toString())
         
-        .replaceAll('$ss', doubleDigit(this.seconds))
+        .replaceAll('$ss', Time.DoubleDigit(this.seconds))
         .replaceAll('$s', this.seconds.toString())
         
-        .replaceAll('$mm', doubleDigit(this.minutes))
+        .replaceAll('$mm', Time.DoubleDigit(this.minutes))
         .replaceAll('$m', this.minutes.toString())
     }
 
@@ -159,7 +151,7 @@ class DanhoDate {
     /**
      * Week day i.e. Monday
      */
-    public get weekDay(): LongDay { return dayNames[this.day - 1] || dayNames.at(-1); }
+    public get weekDay(): LongDay { return Time.DayNames[this.day - 1] || Time.DayNames.at(-1); }
     /**
      * Short week day i.e. Mon
      */
@@ -167,7 +159,7 @@ class DanhoDate {
     /**
      * Month name i.e. February
      */
-    public get monthName(): LongMonth { return monthNames[this.month - 1] || monthNames.at(-1); }
+    public get monthName(): LongMonth { return Time.MonthNames[this.month - 1] || Time.MonthNames.at(-1); }
     /**
      * Short month name i.e. Feb
      */

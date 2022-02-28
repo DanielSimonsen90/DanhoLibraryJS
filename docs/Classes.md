@@ -286,9 +286,35 @@ class DanhoDate {
  */
 class Time {
     /**
-     * Returns array of amount of days in the months. 0 indexed
+     * Array of amount of days in the months. 0 indexed
      */
     public static get daysInMonth: Array<number>
+
+    /**
+     * Amount of weeks per year
+     */
+    public static get weeksInYear: number
+
+    /**
+     * Amount of days per year
+     */
+    public static get daysInYear: number
+
+    /**
+     * Returns function that converts value into double digit string
+     * @returns (value: number): string
+     */
+    public static get DoubleDigit(): string
+
+    /**
+     * Array of names of the months. 0 idnexed
+     */
+    public static get MonthNames: Array<LongMonth>
+
+    /**
+     * Array of names of the days of the week. 0 indexed
+     */
+    public static get DayNames: Array<LongDay>
 
     /*
      * Millisecond in milliseconds (I know that sounds silly but it makes sense later on?)
