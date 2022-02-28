@@ -50,6 +50,8 @@ declare class DanhoDate {
      */
     get day(): number;
     set day(value: number);
+    get dayOfWeek(): number;
+    set dayOfWeek(value: number);
     /**
      * Hours of the date
      */

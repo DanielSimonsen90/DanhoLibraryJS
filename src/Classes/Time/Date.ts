@@ -24,8 +24,12 @@ class DanhoDate {
         } 
         // data is typeof Data
         else if (typeof data === 'object') {
-            const { years, months, days, hours, minutes, seconds, milliseconds } = data;
-            this._date = new Date(years, months, days, hours, minutes, seconds, milliseconds)
+            this._date = new Date(data.years, data.months - 1);
+            if (data.days) this._date.setDate(data.days);
+            if (data.hours) this._date.setHours(data.hours);
+            if (data.minutes) this._date.setMinutes(data.minutes);
+            if (data.seconds) this._date.setSeconds(data.seconds);
+            if (data.milliseconds) this._date.setMilliseconds(data.milliseconds);
         }
         // data is string or number
         else this._date = new Date(data);
@@ -38,16 +42,17 @@ class DanhoDate {
      * @returns How many times timeDifference fits in ms
      */
     private _reduceTime(ms: number, timeDifference: number) {
-        let result = 0;
+        let result = ms % timeDifference;
 
-        while (timeDifference > ms) {
-            timeDifference -= ms;
-            result++;
-        }
+        // while (timeDifference > ms) {
+        //     timeDifference -= ms;
+        //     result++;
+        // }
 
         return [result, timeDifference];
     }
     private _format(format: string) {
+        console.log(this);
         return format
         .replaceAll('$year', this.year.toString())
         .replaceAll('$daysInMonth', this.daysInMonth.toString())
@@ -90,7 +95,7 @@ class DanhoDate {
     /**
      * Month of the date
      */
-    public get month(): number { return this._date.getMonth() }
+    public get month(): number { return this._date.getMonth() + 1 }
     public set month(value: number) { this._date.setMonth(value) }
 
     /**
@@ -102,21 +107,42 @@ class DanhoDate {
      * Week of the year the day is in
      */
     public get week(): number {
-        const days = Time.daysInMonth.filter((v, i) => i + 1 <= this.month).reduce((result, i) => result + i, 0);
-        return this._reduceTime(Time.week, this._date.getTime() / (days * Time.day))[0];
+        const firstMonday = new DanhoDate({ years: this.year, months: 1, days: 1 });
+
+        if (firstMonday.weekDayShort !== 'Mon') {
+            const daysToMon = Time.DayNames.reverse().reduce((result, day, i) => 
+                result.set(day, i + 1)
+            , new Map<LongDay, number>()).get(firstMonday.weekDay)!;
+            firstMonday.day += daysToMon;
+        }   
+
+        const timeSince = this.between(firstMonday);
+        const result = Math.ceil(timeSince.getTotalMilliseconds() / Time.week);        
+
+        return result;
     }
     public set week(value: number) { this._date.setDate(value * Time.week / Time.day); }
 
     /**
      * Week of the month the day is in
      */
-    public get weekOfMonth(): number { return Math.round(this.daysInMonth * Time.week / Time.day); }
+    public get weekOfMonth(): number { return Math.round(this.daysInMonth / (Time.week / Time.day)); }
 
     /**
      * Day of the date
      */
     public get day(): number { return this._date.getDate(); }
     public set day(value: number) { this._date.setDate(value); }
+
+    public get dayOfWeek(): number { return this._date.getDay() }
+    public set dayOfWeek(value: number) {
+        const current = this.dayOfWeek;
+
+        if (value > current) var diff = value - current;
+        else diff = current - value;
+
+        this.day -= diff;
+    }
 
     /**
      * Hours of the date
@@ -151,7 +177,7 @@ class DanhoDate {
     /**
      * Week day i.e. Monday
      */
-    public get weekDay(): LongDay { return Time.DayNames[this.day - 1] || Time.DayNames.at(-1); }
+    public get weekDay(): LongDay { return Time.DayNames[this.dayOfWeek - 1] || Time.DayNames.at(-1); }
     /**
      * Short week day i.e. Mon
      */
