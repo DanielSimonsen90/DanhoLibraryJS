@@ -93,6 +93,13 @@ export type PropertiesWithout<Type, From> = {
 
 ```ts
 /**
+ * Type used to construct DanhoDate.
+ * @Data Partial TimeProperties except years & months
+ * @DateFormat string as dd/MM/yyyy
+ */
+export type DanhoDateConstructor = Data | DateFormat | number | Date;
+
+/**
  * Object interface with keys above to number values. If Plural is true, all properties ends with 's'
  */
 export type TimeProperties<Plural extends boolean = false> = Record<Plural extends true ? `${TimeKeys}s` : TimeKeys, number>

@@ -7,7 +7,12 @@ type Data = PartialExcept<BetterOmit<TimeProperties<true>, 'weeks'>, 'years' | '
 type Double = `${number}${number}`;
 type Quadruple = `${Double}${Double}`;
 type DateFormat = `${Double}/${Double}/${Quadruple}`;
-type Constructor = Data | DateFormat | number | Date;
+/**
+ * Type used to construct DanhoDate.
+ * @Data Partial TimeProperties except years & months
+ * @DateFormat string as dd/MM/yyyy
+ */
+export type DanhoDateConstructor = Data | DateFormat | number | Date;
 
 const doubleDigit = (value: number) => value.toString().length < 2 ? `0${value}` : value.toString(); 
 const monthNames = new Array<LongMonth>(
@@ -20,7 +25,7 @@ const monthNames = new Array<LongMonth>(
 const dayNames = new Array<LongDay>('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 
 class DanhoDate {
-    constructor(data: Constructor) {
+    constructor(data: DanhoDateConstructor) {
         // data is typeof Date
         if (typeof data === 'object' && data instanceof Date) {
             this._date = new Date(data);
@@ -186,7 +191,7 @@ class DanhoDate {
      * @param date Date information
      * @returns TimeSpan between this and provided date
      */
-    public between(date: DanhoDate | Constructor): TimeSpan {
+    public between(date: DanhoDate | DanhoDateConstructor): TimeSpan {
         if (date instanceof DanhoDate) return new TimeSpan(this._date, date._date);
         else if (date instanceof Date) return new TimeSpan(this._date, date);
         else if (typeof date === 'object') return new DanhoDate(date).between(this._date);

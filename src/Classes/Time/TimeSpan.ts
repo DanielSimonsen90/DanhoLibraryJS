@@ -1,11 +1,7 @@
 import { TransformType } from "../../Types";
+import DanhoDate, { DanhoDateConstructor } from "./Date";
 import Time from "./Time";
 import TimeProperties from "./TimeProperties";
-
-/** 
- * '1h' or 1000 * 60 ^ 3
- */
-export type TimeSpanValue = number | Date;
 
 /**
  * What properties to include when using TimeSpan.toString(format: TimeSpanFormat): string
@@ -19,16 +15,16 @@ export type TimeSpanFormat = Partial<TransformType<TimeProperties<true>, number,
  * @borrows TimeProperties
  */
 export class TimeSpan implements TimeProperties<true> {
-    constructor(from: TimeSpanValue, to: TimeSpanValue = Date.now()) {
+    constructor(from: DanhoDateConstructor, to: DanhoDateConstructor = Date.now()) {
         //General properties
-        this.from = typeof from == 'number' ? new Date(from) : from;
-        this.to = typeof to == 'number' ? new Date(to) : to;
+        this.from = new DanhoDate(from);
+        this.to = new DanhoDate(to);
 
         //Ensure from < to
-        this._highest = this.from.getTime() > this.to.getTime() ? this.from : this.to; 
+        this._highest = this.from.time > this.to.time ? this.from : this.to; 
         this._lowest = this.from == this._highest ? this.to : this.from;
         this.pastTense = this._highest !== this.to;
-        this._highest = new Date(this._highest.getTime() + Time.millisecond);
+        this._highest = new DanhoDate(this._highest.time + Time.millisecond);
         let timeDifference = this._getTimeDifference();
 
         //Calculate time difference between from & to and set to object properties
@@ -45,18 +41,18 @@ export class TimeSpan implements TimeProperties<true> {
     /**
      * Which of the dates in constructor had the highest getTime()
      */
-    private _highest: Date;
+    private _highest: DanhoDate;
     /**
      * Which of the dates in constructor had the lowest getTime()
      */
-    private _lowest: Date;
+    private _lowest: DanhoDate;
 
     /**
      * The time difference between highest and lowest
      * @returns Time difference in ms between this._highest and this._lowest
      */
     private _getTimeDifference(): number {
-        return Math.round(this._highest.getTime() - this._lowest.getTime())
+        return Math.round(this._highest.time - this._lowest.time)
     }
 
     /**
@@ -171,11 +167,11 @@ export class TimeSpan implements TimeProperties<true> {
     /**
      * Start date of timespan
      */
-    public from: Date;
+    public from: DanhoDate;
     /**
      * End date of timespan
      */
-    public to: Date;
+    public to: DanhoDate;
     /**
      * Timespan is in the past
      */

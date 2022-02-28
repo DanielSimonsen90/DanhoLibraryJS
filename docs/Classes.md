@@ -414,11 +414,11 @@ class TimeSpan implements TimeProperties<true> {
     /**
      * Start date of timespan
      */
-    public from: Date;
+    public from: DanhoDate;
     /**
      * End date of timespan
      */
-    public to: Date;
+    public to: DanhoDate;
     /**
      * Timespan is in the past
      */

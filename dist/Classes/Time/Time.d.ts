@@ -38,3 +38,4 @@ export declare class Time {
     static get avgMonth(): number;
     static ms(input: TimeDelay): number;
 }
+export default Time;

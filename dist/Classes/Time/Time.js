@@ -79,3 +79,4 @@ class Time {
     }
 }
 exports.Time = Time;
+exports.default = Time;

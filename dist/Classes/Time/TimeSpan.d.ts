@@ -1,14 +1,18 @@
+import { TransformType } from "../../Types";
+import DanhoDate, { DanhoDateConstructor } from "./Date";
+import TimeProperties from "./TimeProperties";
 /**
- * '1h' or new Date(new Date().setHour(new Date().getHour() + 1)) (god i hate dates in javascript I swear I'm making my own someday)
+ * What properties to include when using TimeSpan.toString(format: TimeSpanFormat): string
  */
-export declare type TimeSpanValue = number | Date;
+export declare type TimeSpanFormat = Partial<TransformType<TimeProperties<true>, number, boolean>>;
 /**
  * Timespan between 2 dates.
  * @borrows TimeSpanValue
  * @borrows Time
+ * @borrows TimeProperties
  */
-export declare class TimeSpan {
-    constructor(from: TimeSpanValue, to?: TimeSpanValue);
+export declare class TimeSpan implements TimeProperties<true> {
+    constructor(from: DanhoDateConstructor, to?: DanhoDateConstructor);
     /**
      * Which of the dates in constructor had the highest getTime()
      */
@@ -105,15 +109,15 @@ export declare class TimeSpan {
     /**
      * Start date of timespan
      */
-    from: Date;
+    from: DanhoDate;
     /**
      * End date of timespan
      */
-    to: Date;
+    to: DanhoDate;
     /**
      * Timespan is in the past
      */
     pastTense: boolean;
-    toString(includeMs?: boolean): string;
+    toString(format?: TimeSpanFormat): string;
 }
 export default TimeSpan;
