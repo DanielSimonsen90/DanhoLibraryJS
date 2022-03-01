@@ -32,7 +32,8 @@ export declare class Time {
      * Returns function that converts value into double digit string
      * @returns (value: number): string
      */
-    static get DoubleDigit(): (value: number) => string;
+    static DoubleDigit(value: number): string;
+    static th(value: number, includeValue?: boolean): string;
     /**
      * Array of names of the months. 0 idnexed
      */

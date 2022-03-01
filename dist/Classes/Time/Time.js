@@ -58,8 +58,19 @@ class Time {
      * Returns function that converts value into double digit string
      * @returns (value: number): string
      */
-    static get DoubleDigit() {
-        return (value) => value.toString().length < 2 ? `0${value}` : value.toString();
+    static DoubleDigit(value) {
+        return value.toString().length < 2 ? `0${value}` : value.toString();
+    }
+    static th(value, includeValue = false) {
+        const th = (() => {
+            switch (value) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+            }
+        })();
+        return includeValue ? value + th : th;
     }
     /**
      * Array of names of the months. 0 idnexed

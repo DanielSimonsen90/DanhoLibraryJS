@@ -13,13 +13,7 @@ declare type DateFormat = `${Double}/${Double}/${Quadruple}`;
 export declare type DanhoDateConstructor = Data | DateFormat | number | Date;
 declare class DanhoDate {
     constructor(data?: DanhoDateConstructor);
-    /**
-     * Reduces ms into provided timeDifference
-     * @param ms Millisecond value to reduce
-     * @param timeDifference Time difference in ms that for each timeDifference in ms, add 1 to result
-     * @returns How many times timeDifference fits in ms
-     */
-    private _reduceTime;
+    private _formats;
     private _format;
     protected _date: Date;
     /**
@@ -123,6 +117,8 @@ declare class DanhoDate {
      * @$weekday Replaced with day of the week i.e. Wednesday
      * @$dd Replaced with double digit day i.e. 02
      * @$d Replaced with single digit day i.e. 2
+     * @$ddth Replaced with double digit day + "th" i.e. 05th
+     * @$dth Replaced with double digit day + "th" i.e. 5th
      *
      * @$hh12 Replaced with double digit hour in 12-hour format i.e. 09
      * @$hh24 Replaced with double digit hour in 24-hour format i.e. 21

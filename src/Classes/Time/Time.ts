@@ -66,8 +66,20 @@ export class Time {
      * Returns function that converts value into double digit string
      * @returns (value: number): string 
      */
-    public static get DoubleDigit() {
-        return (value: number) => value.toString().length < 2 ? `0${value}` : value.toString(); 
+    public static DoubleDigit(value: number) {
+        return value.toString().length < 2 ? `0${value}` : value.toString(); 
+    }
+
+    public static th(value: number, includeValue = false) {
+        const th = (() => {
+            switch (value) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+            }
+        })();
+        return includeValue ? value + th : th;
     }
 
     /**

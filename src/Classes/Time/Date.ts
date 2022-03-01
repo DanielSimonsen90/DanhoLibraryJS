@@ -33,55 +33,45 @@ class DanhoDate {
         }
         // data is string or number
         else this._date = new Date(data);
+
+        this._formats = new Map<string, string | number>([
+            ['year', this.year],
+            ['daysInMonth', this.daysInMonth],
+            ['monthShort', this.monthNameShort],
+            ['month', this.monthName],
+            ['MM', Time.DoubleDigit(this.month)],
+            ['M', this.month],
+
+            ['weekMonth', this.weekOfMonth],
+            ['weekDay', this.weekDay],
+            ['weekDayShort', this.weekDayShort],
+            ['week', this.week],
+
+            ['dd', Time.DoubleDigit(this.day)],
+            ['ddth', `${Time.DoubleDigit(this.day)}${Time.th(this.day)}`],
+            ['d', this.day],
+            ['dth', Time.th(this.day, true)],
+
+            ['hh12', `${Time.DoubleDigit(this.hours)}${this.hours < 12 ? 'AM' : 'PM'}`],
+            ['h12', `${this.hours > 12 ? 12 - this.hours : this.hours}${this.hours < 12 ? 'AM' : 'PM'}`],
+            ['hh24', Time.DoubleDigit(this.hours)],
+            ['h24', this.hours],
+            ['mm', Time.DoubleDigit(this.minutes)],
+            ['m', this.minutes],
+            ['ss', Time.DoubleDigit(this.seconds)],
+            ['s', this.seconds],
+            ['msms', Time.DoubleDigit(this.milliseconds)],
+            ['ms', this.milliseconds]
+        ]).map((v, k) => [k, v.toString()])
     }
 
-    /**
-     * Reduces ms into provided timeDifference
-     * @param ms Millisecond value to reduce
-     * @param timeDifference Time difference in ms that for each timeDifference in ms, add 1 to result
-     * @returns How many times timeDifference fits in ms
-     */
-    private _reduceTime(ms: number, timeDifference: number) {
-        let result = ms % timeDifference;
-
-        // while (timeDifference > ms) {
-        //     timeDifference -= ms;
-        //     result++;
-        // }
-
-        return [result, timeDifference];
-    }
+    private _formats: Map<string, string>;
     private _format(format: string) {
-        console.log(this);
         return format
-        .replaceAll('$year', this.year.toString())
-        .replaceAll('$daysInMonth', this.daysInMonth.toString())
-        .replaceAll('$monthShort', this.monthNameShort)
-        .replaceAll('$month', this.monthName)
-        .replaceAll('$MM', Time.DoubleDigit(this.month))
-        .replaceAll('$M', this.month.toString())
-
-        .replaceAll('$weekMonth', this.weekOfMonth.toString())
-        .replaceAll('$weekDay', this.weekDay)
-        .replaceAll('$weekDayShort', this.weekDayShort)
-        .replaceAll('$week', this.week.toString())
-        
-        .replaceAll('$dd', Time.DoubleDigit(this.day))
-        .replaceAll('$d', this.day.toString())
-
-        .replaceAll('$hh12', `${Time.DoubleDigit(this.hours)}${this.hours < 12 ? 'AM' : 'PM'}`)
-        .replaceAll('$h12', `${this.hours > 12 ? 12 - this.hours : this.hours}${this.hours < 12 ? 'AM' : 'PM'}`)
-        .replaceAll('$hh24', Time.DoubleDigit(this.hours))
-        .replaceAll('$h24', this.hours.toString())
-
-        .replaceAll('$msms', Time.DoubleDigit(this.milliseconds))
-        .replaceAll('$ms', this.milliseconds.toString())
-        
-        .replaceAll('$ss', Time.DoubleDigit(this.seconds))
-        .replaceAll('$s', this.seconds.toString())
-        
-        .replaceAll('$mm', Time.DoubleDigit(this.minutes))
-        .replaceAll('$m', this.minutes.toString())
+            .split(/\$/)
+            .map(v => v.split(/\W/)[0])
+            .filter(v => v)
+            .reduce((result, key) => result.replaceAll(key, this._formats.get(key)!), format.replaceAll('$', ''));
     }
 
     protected _date: Date
@@ -107,18 +97,18 @@ class DanhoDate {
      * Week of the year the day is in
      */
     public get week(): number {
-        const firstMonday = new DanhoDate({ years: this.year, months: 1, days: 1 });
+        const firstMonday = new Date(this.year, 1, 1);
 
-        if (firstMonday.weekDayShort !== 'Mon') {
+        if (firstMonday.getDay() !== 1) {
             const daysToMon = Time.DayNames.reverse().reduce((result, day, i) => 
                 result.set(day, i + 1)
-            , new Map<LongDay, number>()).get(firstMonday.weekDay)!;
-            firstMonday.day += daysToMon;
-        }   
+            , new Map<LongDay, number>()).get(Time.DayNames[firstMonday.getDay() - 1])!;
+            firstMonday.setDate(firstMonday.getDate() + daysToMon);
+        }
 
-        const timeSince = this.between(firstMonday);
-        const result = Math.ceil(timeSince.getTotalMilliseconds() / Time.week);        
-
+        const timeDiff = Math.round(firstMonday.getTime() - this.time);
+        const timeSince = Time.millisecond % timeDiff;
+        const result = Math.ceil(timeSince / Time.week);
         return result;
     }
     public set week(value: number) { this._date.setDate(value * Time.week / Time.day); }
@@ -234,6 +224,8 @@ class DanhoDate {
      * @$weekday Replaced with day of the week i.e. Wednesday
      * @$dd Replaced with double digit day i.e. 02
      * @$d Replaced with single digit day i.e. 2
+     * @$ddth Replaced with double digit day + "th" i.e. 05th
+     * @$dth Replaced with double digit day + "th" i.e. 5th
      * 
      * @$hh12 Replaced with double digit hour in 12-hour format i.e. 09
      * @$hh24 Replaced with double digit hour in 24-hour format i.e. 21
