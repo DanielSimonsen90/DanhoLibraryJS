@@ -12,10 +12,14 @@ declare type DateFormat = `${Double}/${Double}/${Quadruple}`;
  */
 export declare type DanhoDateConstructor = Data | DateFormat | number | Date;
 declare class DanhoDate {
+    /**
+     * Returns the value of the current irl time
+     */
+    static get now(): number;
     constructor(data?: DanhoDateConstructor);
     private _formats;
     private _format;
-    protected _date: Date;
+    date: Date;
     /**
      * Year of the date
      */
@@ -98,7 +102,7 @@ declare class DanhoDate {
      * @param date Date information
      * @returns TimeSpan between this and provided date
      */
-    between(date: DanhoDate | DanhoDateConstructor): TimeSpan;
+    between(date?: DanhoDate | DanhoDateConstructor): TimeSpan;
     /**
      * String representation of this
      * @param format String format of date

@@ -5,7 +5,10 @@ Array.prototype.add = function (...items) {
     return this;
 };
 Array.prototype.update = function (old, updated) {
-    const index = typeof old === 'number' ? old : this.indexOf(old);
+    const item = typeof old === 'number' ? this[old] : typeof old === 'function' ? this.find(old) : old;
+    if (!item)
+        throw new Error('Old was not found in array!');
+    const index = this.indexOf(item);
     return this[index] = updated;
 };
 Array.prototype.remove = function (value) {

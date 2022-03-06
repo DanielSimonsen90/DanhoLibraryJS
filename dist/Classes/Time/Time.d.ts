@@ -41,7 +41,7 @@ export declare class Time {
     /**
      * Array of names of the days of the week. 0 indexed
      */
-    static get DayNames(): ("Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday")[];
+    static get DayNames(): ("Monday" | "Friday" | "Sunday" | "Tuesday" | "Wednesday" | "Thursday" | "Saturday")[];
     /** Millisecond in milliseconds (I know that sounds weird but the others make sense) */
     static get millisecond(): number;
     /** Second in milliseconds */

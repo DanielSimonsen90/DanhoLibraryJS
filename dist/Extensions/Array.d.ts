@@ -1,4 +1,5 @@
 export {};
+declare type UpdateFinder<T> = (item: T, index: number, self: Array<T>) => boolean;
 declare global {
     interface Array<T> {
         /**
@@ -11,7 +12,7 @@ declare global {
          * @param old The old value or index to update
          * @param updated Updated value
          */
-        update(old: T | number, updated: T): T;
+        update(old: T | number | UpdateFinder<T>, updated: T): T;
         /**
          * Removes item from array and returns self without item
          * @param item Item or index to remove

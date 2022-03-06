@@ -15,24 +15,31 @@ type DateFormat = `${Double}/${Double}/${Quadruple}`;
 export type DanhoDateConstructor = Data | DateFormat | number | Date;
 
 class DanhoDate {
+    /**
+     * Returns the value of the current irl time
+     */
+    public static get now() {
+        return Date.now();
+    }
+
     constructor(data?: DanhoDateConstructor) {
         // data not provided
-        if (!data) this._date = new Date();
+        if (!data) this.date = new Date();
         // data is typeof Date
         else if (typeof data === 'object' && data instanceof Date) {
-            this._date = new Date(data);
+            this.date = new Date(data);
         } 
         // data is typeof Data
         else if (typeof data === 'object') {
-            this._date = new Date(data.years, data.months - 1);
-            if (data.days) this._date.setDate(data.days);
-            if (data.hours) this._date.setHours(data.hours);
-            if (data.minutes) this._date.setMinutes(data.minutes);
-            if (data.seconds) this._date.setSeconds(data.seconds);
-            if (data.milliseconds) this._date.setMilliseconds(data.milliseconds);
+            this.date = new Date(data.years, data.months - 1);
+            if (data.days) this.date.setDate(data.days);
+            if (data.hours) this.date.setHours(data.hours);
+            if (data.minutes) this.date.setMinutes(data.minutes);
+            if (data.seconds) this.date.setSeconds(data.seconds);
+            if (data.milliseconds) this.date.setMilliseconds(data.milliseconds);
         }
         // data is string or number
-        else this._date = new Date(data);
+        else this.date = new Date(data);
 
         this._formats = new Map<string, string | number>([
             ['year', this.year],
@@ -74,19 +81,19 @@ class DanhoDate {
             .reduce((result, key) => result.replaceAll(key, this._formats.get(key)!), format.replaceAll('$', ''));
     }
 
-    protected _date: Date
+    public date: Date
 
     /**
      * Year of the date
      */
-    public get year(): number { return this._date.getFullYear() }
-    public set year(value: number) { this._date.setFullYear(value); }
+    public get year(): number { return this.date.getFullYear() }
+    public set year(value: number) { this.date.setFullYear(value); }
 
     /**
      * Month of the date
      */
-    public get month(): number { return this._date.getMonth() + 1 }
-    public set month(value: number) { this._date.setMonth(value) }
+    public get month(): number { return this.date.getMonth() + 1 }
+    public set month(value: number) { this.date.setMonth(value) }
 
     /**
      * Days in the month of the date
@@ -111,7 +118,7 @@ class DanhoDate {
         const result = Math.ceil(timeSince / Time.week);
         return result;
     }
-    public set week(value: number) { this._date.setDate(value * Time.week / Time.day); }
+    public set week(value: number) { this.date.setDate(value * Time.week / Time.day); }
 
     /**
      * Week of the month the day is in
@@ -121,10 +128,10 @@ class DanhoDate {
     /**
      * Day of the date
      */
-    public get day(): number { return this._date.getDate(); }
-    public set day(value: number) { this._date.setDate(value); }
+    public get day(): number { return this.date.getDate(); }
+    public set day(value: number) { this.date.setDate(value); }
 
-    public get dayOfWeek(): number { return this._date.getDay() }
+    public get dayOfWeek(): number { return this.date.getDay() }
     public set dayOfWeek(value: number) {
         const current = this.dayOfWeek;
 
@@ -137,32 +144,32 @@ class DanhoDate {
     /**
      * Hours of the date
      */
-    public get hours(): number { return this._date.getHours(); }
-    public set hours(value: number) { this._date.setHours(value); }
+    public get hours(): number { return this.date.getHours(); }
+    public set hours(value: number) { this.date.setHours(value); }
 
     /**
      * Minutes of the date
      */
-    public get minutes(): number { return this._date.getMinutes(); }
-    public set minutes(value: number) { this._date.setMinutes(value); }
+    public get minutes(): number { return this.date.getMinutes(); }
+    public set minutes(value: number) { this.date.setMinutes(value); }
 
     /**
      * Seconds of the date
      */
-    public get seconds(): number { return this._date.getSeconds(); }
-    public set seconds(value: number) { this._date.setSeconds(value); }
+    public get seconds(): number { return this.date.getSeconds(); }
+    public set seconds(value: number) { this.date.setSeconds(value); }
 
     /**
      * Milliseconds of the date
      */
-    public get milliseconds(): number { return this._date.getMilliseconds(); }
-    public set milliseconds(value: number) { this._date.setMilliseconds(value); }
+    public get milliseconds(): number { return this.date.getMilliseconds(); }
+    public set milliseconds(value: number) { this.date.setMilliseconds(value); }
 
     /**
      * Millisecond value of internal time
      */
-    public get time(): number { return this._date.getTime(); }
-    public set time(value: number) { this._date.setTime(value) }
+    public get time(): number { return this.date.getTime(); }
+    public set time(value: number) { this.date.setTime(value) }
 
     /**
      * Week day i.e. Monday
@@ -188,9 +195,9 @@ class DanhoDate {
      */
     public set(data: Partial<Data>) {
         const { years, months, days, hours, minutes, seconds, milliseconds } = data;
-        const ymd = this._date.setFullYear(years || this.year, months, days);
+        const ymd = this.date.setFullYear(years || this.year, months, days);
         const hmsms = new Date(ymd).setHours(hours || this.hours, minutes, seconds, milliseconds);
-        this._date = new Date(hmsms);
+        this.date = new Date(hmsms);
         return this;
     }
 
@@ -199,11 +206,12 @@ class DanhoDate {
      * @param date Date information
      * @returns TimeSpan between this and provided date
      */
-    public between(date: DanhoDate | DanhoDateConstructor): TimeSpan {
-        if (date instanceof DanhoDate) return new TimeSpan(this._date, date._date);
-        else if (date instanceof Date) return new TimeSpan(this._date, date);
-        else if (typeof date === 'object') return new DanhoDate(date).between(this._date);
-        return new TimeSpan(this._date, new Date(date));
+    public between(date?: DanhoDate | DanhoDateConstructor): TimeSpan {
+        if (!date) return new TimeSpan(this.date, new Date());
+        else if (date instanceof DanhoDate) return new TimeSpan(this.date, date.date);
+        else if (date instanceof Date) return new TimeSpan(this.date, date);
+        else if (typeof date === 'object') return new DanhoDate(date).between(this.date);
+        return new TimeSpan(this.date, new Date(date));
     }
 
     /**

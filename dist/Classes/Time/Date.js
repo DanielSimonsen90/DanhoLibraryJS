@@ -7,31 +7,37 @@ exports.Date = void 0;
 const Time_1 = __importDefault(require("./Time"));
 const TimeSpan_1 = __importDefault(require("./TimeSpan"));
 class DanhoDate {
+    /**
+     * Returns the value of the current irl time
+     */
+    static get now() {
+        return Date.now();
+    }
     constructor(data) {
         // data not provided
         if (!data)
-            this._date = new Date();
+            this.date = new Date();
         // data is typeof Date
         else if (typeof data === 'object' && data instanceof Date) {
-            this._date = new Date(data);
+            this.date = new Date(data);
         }
         // data is typeof Data
         else if (typeof data === 'object') {
-            this._date = new Date(data.years, data.months - 1);
+            this.date = new Date(data.years, data.months - 1);
             if (data.days)
-                this._date.setDate(data.days);
+                this.date.setDate(data.days);
             if (data.hours)
-                this._date.setHours(data.hours);
+                this.date.setHours(data.hours);
             if (data.minutes)
-                this._date.setMinutes(data.minutes);
+                this.date.setMinutes(data.minutes);
             if (data.seconds)
-                this._date.setSeconds(data.seconds);
+                this.date.setSeconds(data.seconds);
             if (data.milliseconds)
-                this._date.setMilliseconds(data.milliseconds);
+                this.date.setMilliseconds(data.milliseconds);
         }
         // data is string or number
         else
-            this._date = new Date(data);
+            this.date = new Date(data);
         this._formats = new Map([
             ['year', this.year],
             ['daysInMonth', this.daysInMonth],
@@ -67,17 +73,17 @@ class DanhoDate {
             .filter(v => v)
             .reduce((result, key) => result.replaceAll(key, this._formats.get(key)), format.replaceAll('$', ''));
     }
-    _date;
+    date;
     /**
      * Year of the date
      */
-    get year() { return this._date.getFullYear(); }
-    set year(value) { this._date.setFullYear(value); }
+    get year() { return this.date.getFullYear(); }
+    set year(value) { this.date.setFullYear(value); }
     /**
      * Month of the date
      */
-    get month() { return this._date.getMonth() + 1; }
-    set month(value) { this._date.setMonth(value); }
+    get month() { return this.date.getMonth() + 1; }
+    set month(value) { this.date.setMonth(value); }
     /**
      * Days in the month of the date
      */
@@ -96,7 +102,7 @@ class DanhoDate {
         const result = Math.ceil(timeSince / Time_1.default.week);
         return result;
     }
-    set week(value) { this._date.setDate(value * Time_1.default.week / Time_1.default.day); }
+    set week(value) { this.date.setDate(value * Time_1.default.week / Time_1.default.day); }
     /**
      * Week of the month the day is in
      */
@@ -104,9 +110,9 @@ class DanhoDate {
     /**
      * Day of the date
      */
-    get day() { return this._date.getDate(); }
-    set day(value) { this._date.setDate(value); }
-    get dayOfWeek() { return this._date.getDay(); }
+    get day() { return this.date.getDate(); }
+    set day(value) { this.date.setDate(value); }
+    get dayOfWeek() { return this.date.getDay(); }
     set dayOfWeek(value) {
         const current = this.dayOfWeek;
         if (value > current)
@@ -118,28 +124,28 @@ class DanhoDate {
     /**
      * Hours of the date
      */
-    get hours() { return this._date.getHours(); }
-    set hours(value) { this._date.setHours(value); }
+    get hours() { return this.date.getHours(); }
+    set hours(value) { this.date.setHours(value); }
     /**
      * Minutes of the date
      */
-    get minutes() { return this._date.getMinutes(); }
-    set minutes(value) { this._date.setMinutes(value); }
+    get minutes() { return this.date.getMinutes(); }
+    set minutes(value) { this.date.setMinutes(value); }
     /**
      * Seconds of the date
      */
-    get seconds() { return this._date.getSeconds(); }
-    set seconds(value) { this._date.setSeconds(value); }
+    get seconds() { return this.date.getSeconds(); }
+    set seconds(value) { this.date.setSeconds(value); }
     /**
      * Milliseconds of the date
      */
-    get milliseconds() { return this._date.getMilliseconds(); }
-    set milliseconds(value) { this._date.setMilliseconds(value); }
+    get milliseconds() { return this.date.getMilliseconds(); }
+    set milliseconds(value) { this.date.setMilliseconds(value); }
     /**
      * Millisecond value of internal time
      */
-    get time() { return this._date.getTime(); }
-    set time(value) { this._date.setTime(value); }
+    get time() { return this.date.getTime(); }
+    set time(value) { this.date.setTime(value); }
     /**
      * Week day i.e. Monday
      */
@@ -163,9 +169,9 @@ class DanhoDate {
      */
     set(data) {
         const { years, months, days, hours, minutes, seconds, milliseconds } = data;
-        const ymd = this._date.setFullYear(years || this.year, months, days);
+        const ymd = this.date.setFullYear(years || this.year, months, days);
         const hmsms = new Date(ymd).setHours(hours || this.hours, minutes, seconds, milliseconds);
-        this._date = new Date(hmsms);
+        this.date = new Date(hmsms);
         return this;
     }
     /**
@@ -174,13 +180,15 @@ class DanhoDate {
      * @returns TimeSpan between this and provided date
      */
     between(date) {
-        if (date instanceof DanhoDate)
-            return new TimeSpan_1.default(this._date, date._date);
+        if (!date)
+            return new TimeSpan_1.default(this.date, new Date());
+        else if (date instanceof DanhoDate)
+            return new TimeSpan_1.default(this.date, date.date);
         else if (date instanceof Date)
-            return new TimeSpan_1.default(this._date, date);
+            return new TimeSpan_1.default(this.date, date);
         else if (typeof date === 'object')
-            return new DanhoDate(date).between(this._date);
-        return new TimeSpan_1.default(this._date, new Date(date));
+            return new DanhoDate(date).between(this.date);
+        return new TimeSpan_1.default(this.date, new Date(date));
     }
     /**
      * String representation of this
