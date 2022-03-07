@@ -55,6 +55,7 @@ declare class DanhoDate {
      */
     get hours(): number;
     set hours(value: number);
+    get isPM(): boolean;
     /**
      * Minutes of the date
      */

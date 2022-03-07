@@ -147,6 +147,10 @@ class DanhoDate {
     public get hours(): number { return this.date.getHours(); }
     public set hours(value: number) { this.date.setHours(value); }
 
+    public get isPM(): boolean {
+        return this.hours > 11;
+    }
+
     /**
      * Minutes of the date
      */
