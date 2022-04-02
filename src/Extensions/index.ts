@@ -1,4 +1,5 @@
 import ElementOptions from "../Interfaces/ElementOptions";
+import { EventHandler } from "../Types";
 export * from './Array';
 export * from './Map';
 export * from './Object';
@@ -37,22 +38,27 @@ try {
         let baseElement = document.createElement(tagName);
         if (!options) return baseElement;
 
-        if (options.classes) {
-            baseElement.classList.add(...options.classes);
+        const { id, class: className, children, dataset, ...rest } = options;
+        if (id) baseElement.id = id;
+        if (className) {
+            const classNames = Array.isArray(className) ? className : [className];
+            classNames.forEach(className => baseElement.classList.add(className));
         }
+        if (children) {
+            const childrenElements = Array.isArray(children) ? children : [children];
+            childrenElements.forEach(child => baseElement.append(child));
+        }
+        if (dataset) Object.entries(dataset).forEach(([key, value]) => baseElement.dataset[key] = value);
         
-        if (options.attributes) {
-            options.attributes.forEach(([attribute, value]) => baseElement.setAttribute(attribute, value));
-        }
+        for (const optionKey in rest) {
+            const optionValue = rest[optionKey as keyof typeof rest] as EventHandler | object;
+            if (optionValue === undefined) continue;
 
-        if (options.children) {
-            baseElement.append(...new Array().concat(options.children));
-        }
-
-        if (options.events) {
-            options.events.forEach(({ name, handler }) => (
-                baseElement.addEventListener(name, handler)
-            ))
+            if (typeof optionValue === 'function') {
+                baseElement.addEventListener(optionKey.substring(2), rest[optionKey as keyof typeof rest] as EventListener);
+            } else {
+                baseElement.setAttribute(optionKey, optionValue.toString());
+            }
         }
 
         return baseElement;

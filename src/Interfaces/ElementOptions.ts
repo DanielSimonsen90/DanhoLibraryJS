@@ -1,19 +1,21 @@
 import { Arrayable, IElement } from "../Types"
 
+type Events = Record<
+    `on${Capitalize<keyof HTMLElementEventMap>}`,
+    (event: Event) => void
+>
+
 /**
  * Construction options when creating an HTML element using:
  * @see Document.createProperElement 
  * @borwwos IElement
  * @borrows Arrayable
  */
-export interface ElementOptions {
-    /**css classes to give the element*/
-    classes?: Array<string>,
-    /**attributes to give the element*/
-    attributes?: Array<[string, string]>,
-    /**Children of the element*/
-    children?: Arrayable<IElement>,
-    /**Events for the element to listen to*/
-    events?: Array<{ name: string, handler: (e: Event) => any }>
-}
-export default ElementOptions
+export type ElementOptions = Partial<
+    Events & Record<string, any> & {
+    id: string,
+    class: Arrayable<string>;
+    children: Arrayable<IElement>;
+    dataset: Record<string, string>
+}>
+export default ElementOptions;
