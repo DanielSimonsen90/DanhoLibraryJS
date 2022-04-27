@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -22,17 +26,29 @@ try {
         let baseElement = document.createElement(tagName);
         if (!options)
             return baseElement;
-        if (options.classes) {
-            baseElement.classList.add(...options.classes);
+        const { id, class: className, children, dataset, ...rest } = options;
+        if (id)
+            baseElement.id = id;
+        if (className) {
+            const classNames = Array.isArray(className) ? className : [className];
+            classNames.forEach(className => baseElement.classList.add(className));
         }
-        if (options.attributes) {
-            options.attributes.forEach(([attribute, value]) => baseElement.setAttribute(attribute, value));
+        if (children) {
+            const childrenElements = Array.isArray(children) ? children : [children];
+            childrenElements.forEach(child => baseElement.append(child));
         }
-        if (options.children) {
-            baseElement.append(...new Array().concat(options.children));
-        }
-        if (options.events) {
-            options.events.forEach(({ name, handler }) => (baseElement.addEventListener(name, handler)));
+        if (dataset)
+            Object.entries(dataset).forEach(([key, value]) => baseElement.dataset[key] = value);
+        for (const optionKey in rest) {
+            const optionValue = rest[optionKey];
+            if (optionValue === undefined)
+                continue;
+            if (typeof optionValue === 'function') {
+                baseElement.addEventListener(optionKey.substring(2), rest[optionKey]);
+            }
+            else {
+                baseElement.setAttribute(optionKey, optionValue.toString());
+            }
         }
         return baseElement;
     };
