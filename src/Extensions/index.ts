@@ -1,5 +1,5 @@
 import ElementOptions from "../Interfaces/ElementOptions";
-import { EventHandler } from "../Types";
+import { EventHandler, IElement } from "../Types";
 export * from './Array';
 export * from './Map';
 export * from './Object';
@@ -19,7 +19,8 @@ declare global {
          * @param tagName HTMLElement tag name
          * @param options Construction options, instead of assigning values after construction
          */
-        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions): HTMLElementTagNameMap[K]
+        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions, ...children: Array<IElement>): HTMLElementTagNameMap[K]
+        createFromHtml<K extends keyof HTMLElementTagNameMap>(html: string, parentTag?: K): HTMLElementTagNameMap[K]
     }
     interface HTMLCollection {
         /**
@@ -34,16 +35,17 @@ Boolean.parseBoolean = function(value: string) {
 };
 
 try {
-    Document.prototype.createProperElement = function<K extends keyof HTMLElementTagNameMap>(this: Document, tagName: K, options?: ElementOptions) {
+    Document.prototype.createProperElement = function<K extends keyof HTMLElementTagNameMap>(this: Document, tagName: K, options?: ElementOptions, ...children: Array<IElement>): HTMLElementTagNameMap[K] {
         let baseElement = document.createElement(tagName);
         if (!options) return baseElement;
 
-        const { id, class: className, children, dataset, ...rest } = options;
+        const { id, class: className, dataset, ...rest } = options;
         if (id) baseElement.id = id;
         if (className) {
             const classNames = Array.isArray(className) ? className : [className];
             classNames.forEach(className => baseElement.classList.add(className));
         }
+        children ?? options.children;
         if (children) {
             const childrenElements = Array.isArray(children) ? children : [children];
             childrenElements.forEach(child => baseElement.append(child));
@@ -62,6 +64,9 @@ try {
         }
 
         return baseElement;
+    }
+    Document.prototype.createFromHtml = function<K extends keyof HTMLElementTagNameMap>(this: Document, html: string, parentTag?: K): HTMLElementTagNameMap[K] {
+        return new DOMParser().parseFromString(html, 'text/html').body.firstChild as HTMLElementTagNameMap[K];
     }
 
     HTMLCollection.prototype.array = function(this: HTMLCollection) {

@@ -1,4 +1,5 @@
 import ElementOptions from "../Interfaces/ElementOptions";
+import { IElement } from "../Types";
 export * from './Array';
 export * from './Map';
 export * from './Object';
@@ -16,7 +17,8 @@ declare global {
          * @param tagName HTMLElement tag name
          * @param options Construction options, instead of assigning values after construction
          */
-        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions): HTMLElementTagNameMap[K];
+        createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions, ...children: Array<IElement>): HTMLElementTagNameMap[K];
+        createFromHtml<K extends keyof HTMLElementTagNameMap>(html: string, parentTag?: K): HTMLElementTagNameMap[K];
     }
     interface HTMLCollection {
         /**

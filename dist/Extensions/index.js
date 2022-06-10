@@ -22,17 +22,18 @@ Boolean.parseBoolean = function (value) {
     return value === "true";
 };
 try {
-    Document.prototype.createProperElement = function (tagName, options) {
+    Document.prototype.createProperElement = function (tagName, options, ...children) {
         let baseElement = document.createElement(tagName);
         if (!options)
             return baseElement;
-        const { id, class: className, children, dataset, ...rest } = options;
+        const { id, class: className, dataset, ...rest } = options;
         if (id)
             baseElement.id = id;
         if (className) {
             const classNames = Array.isArray(className) ? className : [className];
             classNames.forEach(className => baseElement.classList.add(className));
         }
+        children ?? options.children;
         if (children) {
             const childrenElements = Array.isArray(children) ? children : [children];
             childrenElements.forEach(child => baseElement.append(child));
@@ -51,6 +52,9 @@ try {
             }
         }
         return baseElement;
+    };
+    Document.prototype.createFromHtml = function (html, parentTag) {
+        return new DOMParser().parseFromString(html, 'text/html').body.firstChild;
     };
     HTMLCollection.prototype.array = function () {
         let result = new Array();
