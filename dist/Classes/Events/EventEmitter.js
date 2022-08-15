@@ -10,6 +10,30 @@ const EventCollection_1 = __importDefault(require("./EventCollection"));
  * @borrows EventCollection
  * @borrows BaseEvent
  * @borrows EventHandler
+ *
+ * @example ```ts
+ * import { EventEmitter } from 'danholibraryjs';
+ *
+ * type EventTypes = {
+ *  create: [username: string, password: string],
+ *  update: [id: string, user: User],
+ *  delete: [id: string, reason?: string],
+ * }
+ *
+ * const emitter = new EventEmitter<EventTypes>(new Map([
+ *  ['create', (username, password) => {
+ *     return { username, password };
+ *  }],
+ *  ['update', (id, user) => {
+ *    return { id, ...user };
+ *  }]
+ * ]));
+ *
+ * const onDelete = (id: string, reason?: string) => console.log(`User ${id} was deleted because ${reason}`);
+ * emitter.on('delete', onDelete);
+ * emitter.emit('delete', '1', 'No longer needed');
+ * emitter.off('delete', onDelete);
+ * ```
  */
 class EventEmitter {
     /**@param events Map<name: string, handlers: EventHandler[]>*/

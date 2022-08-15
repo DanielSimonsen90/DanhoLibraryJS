@@ -127,3 +127,11 @@ export type TransformTypes<From, BaseType, NewType> = Record<keyof {
     [Key in keyof From as From[Key] extends BaseType ? Key : never]: Key 
 }, NewType>
 ```
+
+### Store
+```ts
+/**
+ * Reducer function to map wanted parameters when using @see Store.on(action, reducer);
+ */
+export type Reducer<State, Types extends Record<string, any[]>, Action extends keyof Types> = (state: State, ...args: Types[Action]) => State
+```
