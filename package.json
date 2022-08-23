@@ -12,6 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/DanielSimonsen90/DanhoLibraryJS.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "keywords": ["library", "javascript"],
   "author": "DanielSimonsen90 | Danhosaur | Daniel Simonsen",
   "license": "ISC",
