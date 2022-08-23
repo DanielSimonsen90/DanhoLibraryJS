@@ -58,6 +58,13 @@ interface Array<T> {
      * @param i Index of item
      */
     index(i: number): T
+    /**
+     * For every number in array, do callback
+     * @param every For every x in array
+     * @param callback Do this for every x in array
+     * @returns Mapped array
+     */
+    nth<U>(every: number, callback: (collection: Array<T>, index: number, self: this) => U): Array<U>
 }
 ```
 

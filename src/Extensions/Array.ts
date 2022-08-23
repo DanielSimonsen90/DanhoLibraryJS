@@ -28,7 +28,14 @@ declare global {
          * Returns item matching index. If negative number, subtracts number from length
          * @param i Index of item
          */
-        index(i: number): T
+        index(i: number): T,
+        /**
+         * For every x in array, execute callback
+         * @param every i.e every 2nd item in array
+         * @param callback Function to execute
+         * @returns Array of results
+         */
+        nth<U>(every: number, callback: (collection: Array<T>, index: number, self: this) => U): Array<U>
     }
 }
 
@@ -54,4 +61,19 @@ Array.prototype.random = function<T>(this: Array<T>): T {
 }
 Array.prototype.index = function<T>(this: Array<T>, i: number): T {
     return this[i < 0 ? this.length + i : i];
+}
+Array.prototype.nth = function<T, U>(this: Array<T>, every: number, callback: (collection: Array<T>, index: number, self: Array<T>) => U): Array<U> {
+    const result = new Array<U>();
+    let collection = new Array<T>();
+
+    for (let i = 0; i < this.length; i++) {
+        collection.push(this[i]);
+
+        if (i % every === 0) {
+            result.push(callback(collection, i, this));
+            collection = new Array<T>();
+        }
+    }
+
+    return result;
 }
