@@ -1,5 +1,4 @@
 import IReplacement from "../Interfaces/IReplacement";
-export {}
 
 declare global {
     interface String {
@@ -26,18 +25,30 @@ declare global {
     }
 }
 
-String.prototype.toPascalCase = function(this: string) {
+function toPascalCase(this: string) {
     return this.substring(0, 1).toUpperCase() + this.substring(1);
 }
+String.prototype.toPascalCase = toPascalCase;
+
 function spaceReplacer(self: string, replacer: string | RegExp, replacement: string) {
     return self.replace(new RegExp(`${typeof replacer == 'string' ? replacer : replacer.source}+`), replacement);
 }
-String.prototype.toSnakeCase = function(this: string, replaceOptions: IReplacement) {
+
+function toSnakeCase(this: string, replaceOptions: IReplacement) {
     return spaceReplacer(this, replaceOptions.replacer || ' ', replaceOptions.replacement || '_')
 }
-String.prototype.toKebabCase = function(this: string, replaceOptions: IReplacement) {
+String.prototype.toSnakeCase = toSnakeCase;
+
+function toKebabCase(this: string, replaceOptions: IReplacement) {
     return spaceReplacer(this, replaceOptions.replacer || ' ', replaceOptions.replacement || '-');
 }
-String.prototype.clip = function(this: string, start: number, end?: number) {
+String.prototype.toKebabCase = toKebabCase;
+
+function clip(this: string, start: number, end?: number) {
     return this.substring(start < 0 ? this.length - start : start, end && end < 0 ? this.length + end : end);
 }
+String.prototype.clip = clip;
+
+export const StringExtensions = {
+    toPascalCase, toSnakeCase, toKebabCase, clip
+};

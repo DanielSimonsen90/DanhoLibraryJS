@@ -8,11 +8,15 @@ export * from './PropertiesWith';
  */
 export declare type Arrayable<T> = T | Array<T>;
 /**
+ * Item is function or T
+ */
+export declare type Functionable<T> = T | (() => T);
+/**
  * Used for HTMLElement.append in ElementOptions, Document.createProperElement.
  * IElement accepts HTML Elements or HTMl-like strings.
  *
  * @see HTMLElement.append
- * @see Document.createProperElement
+ * @see Document.createElement
  */
 export declare type IElement = HTMLElement | string;
 /**
@@ -29,3 +33,4 @@ export declare type AllPropsAre<ReturnType> = {
  * string or RegExp.. pretty self-explanatory
  */
 export declare type StringRegex = string | RegExp;
+export declare type If<Boolean extends boolean, True, False> = Boolean extends true ? True : False;

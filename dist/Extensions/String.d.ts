@@ -1,5 +1,4 @@
 import IReplacement from "../Interfaces/IReplacement";
-export {};
 declare global {
     interface String {
         /**
@@ -24,3 +23,14 @@ declare global {
         clip(start: number, end?: number): string;
     }
 }
+declare function toPascalCase(this: string): string;
+declare function toSnakeCase(this: string, replaceOptions: IReplacement): string;
+declare function toKebabCase(this: string, replaceOptions: IReplacement): string;
+declare function clip(this: string, start: number, end?: number): string;
+export declare const StringExtensions: {
+    toPascalCase: typeof toPascalCase;
+    toSnakeCase: typeof toSnakeCase;
+    toKebabCase: typeof toKebabCase;
+    clip: typeof clip;
+};
+export {};
