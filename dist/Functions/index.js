@@ -16,5 +16,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./CopyToClipboard"), exports);
 __exportStar(require("./GetCSSProperty"), exports);
+__exportStar(require("./GetNestedProperty"), exports);
 __exportStar(require("./SetNavigationSelected"), exports);
 __exportStar(require("./HTMLEvent"), exports);

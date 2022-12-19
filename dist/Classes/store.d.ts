@@ -1,6 +1,6 @@
 import { Arrayable } from "../Types";
 import { EventEmitter } from "./Events";
-export declare type Reducer<State, Types extends Record<string, any[]>, Action extends keyof Types> = (state: State, ...args: Types[Action]) => State;
+export type Reducer<State, Types extends Record<string, any[]>, Action extends keyof Types> = (state: State, ...args: Types[Action]) => State;
 /**
  * EventEmitter, but it stores state and handles state change with reducers
  *

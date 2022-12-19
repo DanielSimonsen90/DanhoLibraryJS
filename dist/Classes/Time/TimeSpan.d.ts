@@ -4,7 +4,7 @@ import TimeProperties from "./TimeProperties";
 /**
  * What properties to include when using TimeSpan.toString(format: TimeSpanFormat): string
  */
-export declare type TimeSpanFormat = Partial<TransformType<TimeProperties<true>, number, boolean>>;
+export type TimeSpanFormat = Partial<TransformType<TimeProperties<true>, number, boolean>>;
 /**
  * Timespan between 2 dates.
  * @borrows TimeSpanValue

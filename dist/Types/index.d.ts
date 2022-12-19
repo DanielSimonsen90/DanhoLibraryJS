@@ -6,7 +6,11 @@ export * from './PropertiesWith';
 /**
  * Item is single or multiple
  */
-export declare type Arrayable<T> = T | Array<T>;
+export type Arrayable<T> = T | Array<T>;
+/**
+ * If Condition is true, Then, Else... pretty self-explanatory
+ */
+export type If<Condition, Then, Else> = Condition extends true ? Then : Else;
 /**
  * Used for HTMLElement.append in ElementOptions, Document.createProperElement.
  * IElement accepts HTML Elements or HTMl-like strings.
@@ -14,18 +18,18 @@ export declare type Arrayable<T> = T | Array<T>;
  * @see HTMLElement.append
  * @see Document.createProperElement
  */
-export declare type IElement = HTMLElement | string;
+export type IElement = HTMLElement | string;
 /**
  * Return types of T
  */
-export declare type ValueOf<T> = T[keyof T];
+export type ValueOf<T> = T[keyof T];
 /**
  * Type's properties are ReturnType
  */
-export declare type AllPropsAre<ReturnType> = {
+export type AllPropsAre<ReturnType> = {
     [key: string]: ReturnType;
 };
 /**
  * string or RegExp.. pretty self-explanatory
  */
-export declare type StringRegex = string | RegExp;
+export type StringRegex = string | RegExp;

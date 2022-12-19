@@ -10,6 +10,11 @@ export * from './PropertiesWith';
 export type Arrayable<T> = T | Array<T>;
 
 /**
+ * If Condition is true, Then, Else... pretty self-explanatory
+ */
+export type If<Condition, Then, Else> = Condition extends true ? Then : Else;
+
+/**
  * Used for HTMLElement.append in ElementOptions, Document.createProperElement.
  * IElement accepts HTML Elements or HTMl-like strings.
  * 

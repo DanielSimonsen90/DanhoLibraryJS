@@ -1,5 +1,5 @@
 export {};
-declare type UpdateFinder<T> = (item: T, index: number, self: Array<T>) => boolean;
+type UpdateFinder<T> = (item: T, index: number, self: Array<T>) => boolean;
 declare global {
     interface Array<T> {
         /**
@@ -27,5 +27,12 @@ declare global {
          * @param i Index of item
          */
         index(i: number): T;
+        /**
+         * For every x in array, execute callback
+         * @param every i.e every 2nd item in array
+         * @param callback Function to execute
+         * @returns Array of results
+         */
+        nth<U>(every: number, callback: (collection: Array<T>, index: number, self: this) => U): Array<U>;
     }
 }

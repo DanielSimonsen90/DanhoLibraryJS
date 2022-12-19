@@ -22,6 +22,14 @@ async function CopyToClipboard(value: string, response?: string): Promise<void>;
 function GetCSSProperty<Type extends keyof CSSReturnTypes>(property: string, type: Type, query = ":root"): CSSReturnTypes[Type];
 
 /**
+ * Gets a nested property from an object
+ * @param parent Parent object to search
+ * @param key Key to search for. Can be nested with dot notation
+ * @returns Value of key or null if not found
+ */
+function GetNestedProperty<Parent, Key extends string>(parent: Parent, key: Key): GetNestedProperty<Parent, Key> | null;
+
+/**
  * Create HTMLEvent object from function
  * @param name Name of the event
  * @param handler Handler for the event

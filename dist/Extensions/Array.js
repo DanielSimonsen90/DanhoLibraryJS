@@ -24,3 +24,15 @@ Array.prototype.random = function () {
 Array.prototype.index = function (i) {
     return this[i < 0 ? this.length + i : i];
 };
+Array.prototype.nth = function (every, callback) {
+    const result = new Array();
+    let collection = new Array();
+    for (let i = 0; i < this.length; i++) {
+        collection.push(this[i]);
+        if (i % every === 0) {
+            result.push(callback(collection, i, this));
+            collection = new Array();
+        }
+    }
+    return result;
+};

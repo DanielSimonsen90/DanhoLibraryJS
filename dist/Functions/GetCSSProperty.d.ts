@@ -1,4 +1,4 @@
-declare type CSSReturnTypes = {
+type CSSReturnTypes = {
     string: string;
     number: number;
 };

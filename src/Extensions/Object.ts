@@ -18,7 +18,7 @@ declare global {
 }
 
 Object.keysOf = function<From = {}>(this: object, from: From): Array<keyof From> {
-    return Object.keys(from) as Array<keyof From>;
+    return Object.keys(from as any) as Array<keyof From>;
 }
 Object.array = function<From = {}>(this: object, from: From): Array<[keyof From, ValueOf<From>]> {
     return Object.keysOf(from).map(prop => [prop, from[prop]]) as Array<[keyof From, ValueOf<From>]>;
