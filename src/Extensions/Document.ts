@@ -6,8 +6,10 @@ declare global {
          * Creates an element like Document#createElement, however with construction options to assign values in construction instead of after construction.
          * @param tagName HTMLElement tag name
          * @param options Construction options, instead of assigning values after construction
+         * @param children Child elements
          */
-        createProperElement<Tag extends keyof HTMLElementTagNameMap>(tagName: Tag, options?: HTMLElementTagNameMap[Tag], ...children: Array<IElement>): HTMLElementTagNameMap[Tag]
+        createProperElement<Tag extends keyof HTMLElementTagNameMap>(tagName: Tag, options?: Partial<HTMLElementTagNameMap[Tag]>, ...children: Array<IElement>): HTMLElementTagNameMap[Tag]
+        createProperElement<Tag extends keyof HTMLElementTagNameMap>(tagName: Tag, ...children: Array<IElement>): HTMLElementTagNameMap[Tag]
         createElementFromString<K extends keyof HTMLElementTagNameMap>(html: string, parentTag?: K): HTMLElementTagNameMap[K]
     }
     interface HTMLCollection {
@@ -19,7 +21,8 @@ declare global {
 }
 
 function createElement<Tag extends keyof HTMLElementTagNameMap>(
-    this: Document, tagName: Tag, options?: HTMLElementTagNameMap[Tag] | string, 
+    this: Document, tagName: Tag, 
+    options?: Partial<HTMLElementTagNameMap[Tag]> | string, 
     ...children: Array<IElement>
 ): HTMLElementTagNameMap[Tag] {
     
@@ -42,7 +45,7 @@ Document.prototype.createProperElement = createElement;
 
 function createElementFromString<Tag extends keyof HTMLElementTagNameMap>(this: Document, html: string, tag?: Tag): HTMLElementTagNameMap[Tag] {
     if (!html.startsWith(`<${tag}`)) html = `<${tag}>${html}</${tag}>`;
-    return new DOMParser().parseFromString(html, 'text/html').body.firstChild as HTMLElementTagNameMap[Tag];
+    return new DOMParser().parseFromString(html, 'text/html').body.firstElementChild as HTMLElementTagNameMap[Tag];
 }
 Document.prototype.createElementFromString = createElementFromString;
 

@@ -1,4 +1,4 @@
-type UpdateFinder<T> = (item: T, index: number, self: Array<T>) => boolean
+export type UpdateFinder<T> = (item: T, index: number, self: Array<T>) => boolean
 
 declare global {
     interface Array<T> {
@@ -33,7 +33,7 @@ declare global {
          * @param callback Function to execute
          * @returns Array of results
          */
-        nth<U>(every: number, callback: (collection: Array<T>, index: number, self: this) => U): Array<U>
+        nth<U>(every: number, callback: (item: T, index: number, collection: Array<T>, self: this) => U): Array<U>
     }
 }
 
@@ -44,7 +44,9 @@ function add<T>(this: Array<T>, ...items: Array<T>) {
 Array.prototype.add = add;
 
 function update<T>(this: Array<T>, old: T | number | UpdateFinder<T>, updated: T) {
-    const item = typeof old === 'number' ? this[old] : typeof old === 'function' ? this.find(old as UpdateFinder<T>) : old;
+    const item = typeof old === 'number' ? this[old] 
+        : typeof old === 'function' ? this.find(old as UpdateFinder<T>) 
+        : old;
     if (!item) throw new Error('Old was not found in array!');
 
     const index = this.indexOf(item);
@@ -70,15 +72,15 @@ function index<T>(this: Array<T>, i: number): T {
 }
 Array.prototype.index = index;
 
-function nth<T, U>(this: Array<T>, every: number, callback: (collection: Array<T>, index: number, self: Array<T>) => U): Array<U> {
+function nth<T, U>(this: Array<T>, every: number, callback: (item: T, index: number, collection: Array<T>, self: Array<T>) => U): Array<U> {
     const result = new Array<U>();
     let collection = new Array<T>();
 
     for (let i = 0; i < this.length; i++) {
         collection.push(this[i]);
-
+        
         if (i % every === 0) {
-            result.push(callback(collection, i, this));
+            result.push(callback(this[i], i, collection, this));
             collection = new Array<T>();
         }
     }

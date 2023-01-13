@@ -41,3 +41,21 @@ export type AllPropsAre<ReturnType> = {
 export type StringRegex = string | RegExp;
 
 export type If<Boolean extends boolean, True, False> = Boolean extends true ? True : False;
+
+/**
+ * GetRepeatedKeys<[
+ *  { username: string, password: string },
+ *  { username: number, email: string },
+ * ]> // { username: string | number }
+ */
+export type GetRepeatedKeys<Types extends Array<any>> = (
+    Types extends [infer First, infer Second, ...infer Rest]
+        ? First extends object
+            ? Second extends object
+                ? {
+                    [Key in Extract<keyof First, keyof Second>]: First[Key] | Second[Key]
+                } & GetRepeatedKeys<Rest>
+            : {}
+        : {}
+    : {}
+);

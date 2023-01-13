@@ -46,7 +46,10 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    public on<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this {
+    public on<Return extends any, Event extends keyof Events>(
+        event: Event, 
+        listener: EventHandler<Events, Event, Return>
+    ): EventEmitter<Events> {
         this._events.add(event, listener as any);
         return this;
     }
@@ -56,7 +59,10 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    public once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this {
+    public once<Return extends any, Event extends keyof Events>(
+        event: Event, 
+        listener: EventHandler<Events, Event, Return>
+    ): EventEmitter<Events> {
         this._events.add(event, listener as any, true);
         return this;
     }
@@ -67,7 +73,10 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    public off<Return extends any, Event extends keyof Events>(event: Event | 'all' = "all", listener?: EventHandler<Events, Event, Return>): this {
+    public off<Return extends any, Event extends keyof Events>(
+        event: Event | 'all' = "all", 
+        listener?: EventHandler<Events, Event, Return>
+    ): EventEmitter<Events> {
         this._events.clear(event, listener);
         return this;
     }
@@ -79,7 +88,9 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
      * @fires event
      * @returns Array of listeners' reponses
      */
-    public emit<Return extends any, Event extends keyof Events>(event: Event, ...args: Events[Event]): Array<Return> {
+    public emit<Return extends any, Event extends keyof Events>(
+        event: Event, ...args: Events[Event]
+    ): Array<Return> {
         return this._events.emit(event, ...args) as Array<Return>;
     }
 
@@ -89,7 +100,7 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
      * @param limit Limit of events to keep. If you want to limit amount of events saved, use 'all'.
      * @returns this with the new limit
      */
-    public limit<Event extends keyof Events>(event: 'all' | Event, limit: number) {
+    public limit<Event extends keyof Events>(event: 'all' | Event, limit: number): EventEmitter<Events> {
         this._events.limit<Event>(event, limit);
         return this;
     }
