@@ -99,7 +99,7 @@ import Event from './Event';
         }
         
         const event = this.get(eventName);
-        if (!event) throw new Error(`Unknown event, ${eventName as string}!`);
+        if (!event) throw new Error(`Unknown event, ${eventName.toString()}!`);
 
         event.limit = limit;
         this._events.set(eventName, event as any);

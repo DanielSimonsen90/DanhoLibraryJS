@@ -82,4 +82,3 @@ class Store extends Events_1.EventEmitter {
     }
 }
 exports.Store = Store;
-exports.default = Store;

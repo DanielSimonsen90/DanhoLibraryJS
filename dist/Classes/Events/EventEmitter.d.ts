@@ -40,21 +40,21 @@ export declare class EventEmitter<Events extends BaseEvent<string, Array<any>>> 
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    on<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
+    on<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): EventEmitter<Events>;
     /**
      * Adds listener to event collection, and runs listener once when event is emitted
      * @param event Event to handle
      * @param listener Callback function to run, when event occurs
      * @returns this
      */
-    once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
+    once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): EventEmitter<Events>;
     /**
      * Removes listener(s) from event
      * @param event Event to get collection of listeners | "all"
      * @param listener If left null, removes all listeners tied to event, else only removes listener from event
      * @returns this
      */
-    off<Return extends any, Event extends keyof Events>(event?: Event | 'all', listener?: EventHandler<Events, Event, Return>): this;
+    off<Return extends any, Event extends keyof Events>(event?: Event | 'all', listener?: EventHandler<Events, Event, Return>): EventEmitter<Events>;
     /**
      * Emits event and runs all listeners tied to event
      * @param event Event to emit
@@ -69,6 +69,6 @@ export declare class EventEmitter<Events extends BaseEvent<string, Array<any>>> 
      * @param limit Limit of events to keep. If you want to limit amount of events saved, use 'all'.
      * @returns this with the new limit
      */
-    limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this;
+    limit<Event extends keyof Events>(event: 'all' | Event, limit: number): EventEmitter<Events>;
 }
 export default EventEmitter;

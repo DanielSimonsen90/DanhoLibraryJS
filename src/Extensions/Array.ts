@@ -1,6 +1,4 @@
-export {};
-
-type UpdateFinder<T> = (item: T, index: number, self: Array<T>) => boolean
+export type UpdateFinder<T> = (item: T, index: number, self: Array<T>) => boolean
 
 declare global {
     interface Array<T> {
@@ -35,45 +33,63 @@ declare global {
          * @param callback Function to execute
          * @returns Array of results
          */
-        nth<U>(every: number, callback: (collection: Array<T>, index: number, self: this) => U): Array<U>
+        nth<U>(every: number, callback: (item: T, index: number, collection: Array<T>, self: this) => U): Array<U>
     }
 }
 
-Array.prototype.add = function<T>(this: Array<T>, ...items: Array<T>) {
+function add<T>(this: Array<T>, ...items: Array<T>) {
     this.push(...items);
     return this;
 }
-Array.prototype.update = function<T>(this: Array<T>, old: T | number | UpdateFinder<T>, updated: T) {
-    const item = typeof old === 'number' ? this[old] : typeof old === 'function' ? this.find(old as UpdateFinder<T>) : old;
+Array.prototype.add = add;
+
+function update<T>(this: Array<T>, old: T | number | UpdateFinder<T>, updated: T) {
+    const item = typeof old === 'number' ? this[old] 
+        : typeof old === 'function' ? this.find(old as UpdateFinder<T>) 
+        : old;
     if (!item) throw new Error('Old was not found in array!');
 
     const index = this.indexOf(item);
     return this[index] = updated;
 }
-Array.prototype.remove = function<T>(this: Array<T>, value: T | number): Array<T> {
+Array.prototype.update = update;
+
+function remove<T>(this: Array<T>, value: T | number): Array<T> {
     const index = typeof value === 'number' ? value : this.indexOf(value);
     if (index > -1) this.splice(index, 1);
     return this;
 }
-Array.prototype.random = function<T>(this: Array<T>): T {
+Array.prototype.remove = remove;
+
+function random<T>(this: Array<T>): T {
     const randomIndex = Math.round(Math.random() * this.length);
     return this[randomIndex];
 }
-Array.prototype.index = function<T>(this: Array<T>, i: number): T {
+Array.prototype.random = random;
+
+function index<T>(this: Array<T>, i: number): T {
     return this[i < 0 ? this.length + i : i];
 }
-Array.prototype.nth = function<T, U>(this: Array<T>, every: number, callback: (collection: Array<T>, index: number, self: Array<T>) => U): Array<U> {
+Array.prototype.index = index;
+
+function nth<T, U>(this: Array<T>, every: number, callback: (item: T, index: number, collection: Array<T>, self: Array<T>) => U): Array<U> {
     const result = new Array<U>();
     let collection = new Array<T>();
 
     for (let i = 0; i < this.length; i++) {
         collection.push(this[i]);
-
+        
         if (i % every === 0) {
-            result.push(callback(collection, i, this));
+            result.push(callback(this[i], i, collection, this));
             collection = new Array<T>();
         }
     }
 
     return result;
 }
+Array.prototype.nth = nth;
+
+export const ArrayExtensions = {
+    add, update, remove, 
+    random, index, nth
+};

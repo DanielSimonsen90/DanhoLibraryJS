@@ -1,4 +1,3 @@
-export {};
 declare global {
     interface Map<K, V> {
         /**
@@ -36,3 +35,20 @@ declare global {
         includes(value: V, fromIndex?: number): boolean;
     }
 }
+declare function array<K, V>(this: Map<K, V>): Array<[K, V]>;
+declare function map<K, V, EK, EV>(this: Map<K, V>, callback: (value: V, key: K, index: number, map: Map<K, V>) => [EK, EV]): Map<EK, EV>;
+declare function filter<K, V>(this: Map<K, V>, callback: (value: V, key: K, index: number, map: Map<K, V>) => boolean): Map<K, V>;
+declare function keyArr<K, V>(this: Map<K, V>): Array<K>;
+declare function valueArr<K, V>(this: Map<K, V>): Array<V>;
+declare function find<K, V>(this: Map<K, V>, callback: (value: V, key: K, index: number, map: Map<K, V>) => boolean): [K, V] | undefined;
+declare function includes<K, V>(this: Map<K, V>, item: V, fromIndex?: number): boolean;
+export declare const MapExtensions: {
+    array: typeof array;
+    map: typeof map;
+    filter: typeof filter;
+    keyArr: typeof keyArr;
+    valueArr: typeof valueArr;
+    find: typeof find;
+    includes: typeof includes;
+};
+export {};

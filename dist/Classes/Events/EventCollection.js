@@ -99,7 +99,7 @@ class EventCollection {
         }
         const event = this.get(eventName);
         if (!event)
-            throw new Error(`Unknown event, ${eventName}!`);
+            throw new Error(`Unknown event, ${eventName.toString()}!`);
         event.limit = limit;
         this._events.set(eventName, event);
         return this;

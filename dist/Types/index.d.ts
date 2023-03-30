@@ -8,15 +8,16 @@ export * from './PropertiesWith';
  */
 export type Arrayable<T> = T | Array<T>;
 /**
- * If Condition is true, Then, Else... pretty self-explanatory
+ * Item is function or T
  */
-export type If<Condition, Then, Else> = Condition extends true ? Then : Else;
+export type Functionable<T> = T | (() => T);
+
 /**
  * Used for HTMLElement.append in ElementOptions, Document.createProperElement.
  * IElement accepts HTML Elements or HTMl-like strings.
  *
  * @see HTMLElement.append
- * @see Document.createProperElement
+ * @see Document.createElement
  */
 export type IElement = HTMLElement | string;
 /**
@@ -33,3 +34,13 @@ export type AllPropsAre<ReturnType> = {
  * string or RegExp.. pretty self-explanatory
  */
 export type StringRegex = string | RegExp;
+export type If<Boolean extends boolean, True, False> = Boolean extends true ? True : False;
+/**
+ * GetRepeatedKeys<[
+ *  { username: string, password: string },
+ *  { username: number, email: string },
+ * ]> // { username: string | number }
+ */
+export type GetRepeatedKeys<Types extends Array<any>> = (Types extends [infer First, infer Second, ...infer Rest] ? First extends object ? Second extends object ? {
+    [Key in Extract<keyof First, keyof Second>]: First[Key] | Second[Key];
+} & GetRepeatedKeys<Rest> : {} : {} : {});
