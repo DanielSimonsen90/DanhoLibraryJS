@@ -1,8 +1,8 @@
 import { LongMonth } from "../../Types/Date";
 /** '2s' or 2000 */
-export declare type TimeUnit = 'ms' | 's' | 'm' | 'h' | 'd' | 'w' | 'M' | 'y';
-export declare type TimeString = `${number}${TimeUnit}`;
-export declare type TimeDelay = number | TimeString;
+export type TimeUnit = 'ms' | 's' | 'm' | 'h' | 'd' | 'w' | 'M' | 'y';
+export type TimeString = `${number}${TimeUnit}`;
+export type TimeDelay = number | TimeString;
 export declare const ValidTime: RegExp;
 /**
  * Converts input into milliseconds

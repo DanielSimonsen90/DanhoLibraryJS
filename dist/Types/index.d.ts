@@ -6,11 +6,11 @@ export * from './PropertiesWith';
 /**
  * Item is single or multiple
  */
-export declare type Arrayable<T> = T | Array<T>;
+export type Arrayable<T> = T | Array<T>;
 /**
  * Item is function or T
  */
-export declare type Functionable<T> = T | (() => T);
+export type Functionable<T> = T | (() => T);
 /**
  * Used for HTMLElement.append in ElementOptions, Document.createProperElement.
  * IElement accepts HTML Elements or HTMl-like strings.
@@ -18,19 +18,28 @@ export declare type Functionable<T> = T | (() => T);
  * @see HTMLElement.append
  * @see Document.createElement
  */
-export declare type IElement = HTMLElement | string;
+export type IElement = HTMLElement | string;
 /**
  * Return types of T
  */
-export declare type ValueOf<T> = T[keyof T];
+export type ValueOf<T> = T[keyof T];
 /**
  * Type's properties are ReturnType
  */
-export declare type AllPropsAre<ReturnType> = {
+export type AllPropsAre<ReturnType> = {
     [key: string]: ReturnType;
 };
 /**
  * string or RegExp.. pretty self-explanatory
  */
-export declare type StringRegex = string | RegExp;
-export declare type If<Boolean extends boolean, True, False> = Boolean extends true ? True : False;
+export type StringRegex = string | RegExp;
+export type If<Boolean extends boolean, True, False> = Boolean extends true ? True : False;
+/**
+ * GetRepeatedKeys<[
+ *  { username: string, password: string },
+ *  { username: number, email: string },
+ * ]> // { username: string | number }
+ */
+export type GetRepeatedKeys<Types extends Array<any>> = (Types extends [infer First, infer Second, ...infer Rest] ? First extends object ? Second extends object ? {
+    [Key in Extract<keyof First, keyof Second>]: First[Key] | Second[Key];
+} & GetRepeatedKeys<Rest> : {} : {} : {});

@@ -1,5 +1,5 @@
 import { PropertiesWith, If } from '../../Types';
-declare type PrimitiveMap = {
+type PrimitiveMap = {
     string: string;
     number: number;
     boolean: boolean;
@@ -21,7 +21,7 @@ declare type PrimitiveMap = {
  *  allowFunctions: AllowFunctions = false
  * ): Object with properties from source that matches primitive type
  */
-export declare type Properties = {
+export type Properties = {
     [Key in keyof PrimitiveMap as `get${Capitalize<Key>}s`]: <Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions) => If<AllowFunctions, PropertiesWith<PrimitiveMap[Key] | ((...args: any[]) => PrimitiveMap[Key]), Source>, PropertiesWith<PrimitiveMap[Key], Source>>;
 };
 export declare const properties: Properties;

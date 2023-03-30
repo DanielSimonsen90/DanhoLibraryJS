@@ -58,7 +58,7 @@ export class Event<
      */
     public on(listener: EventHandler<Events, Name>, prepend = false) {
         if (this.limit > 0 && this._listeners.length + 1 > this.limit) {
-            throw new Error(`Event limit, ${this.limit}, reached for event ${this.name}!`);
+            throw new Error(`Event limit, ${this.limit}, reached for event ${this.name.toString()}!`);
         }
 
         if (prepend) this._listeners = [listener, ...this._listeners]

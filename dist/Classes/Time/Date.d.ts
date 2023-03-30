@@ -1,16 +1,16 @@
 import { BetterOmit, PartialExcept, LongMonth, LongDay, ShortDay, ShortMonth } from "../../Types";
 import TimeProperties from "./TimeProperties";
 import TimeSpan, { TimeSpanFormat } from "./TimeSpan";
-declare type Data = PartialExcept<BetterOmit<TimeProperties<true>, 'weeks'>, 'years' | 'months'>;
-declare type Double = `${number}${number}`;
-declare type Quadruple = `${Double}${Double}`;
-declare type DateFormat = `${Double}/${Double}/${Quadruple}`;
+type Data = PartialExcept<BetterOmit<TimeProperties<true>, 'weeks'>, 'years' | 'months'>;
+type Double = `${number}${number}`;
+type Quadruple = `${Double}${Double}`;
+type DateFormat = `${Double}/${Double}/${Quadruple}`;
 /**
  * Type used to construct DanhoDate.
  * @Data Partial TimeProperties except years & months
  * @DateFormat string as dd/MM/yyyy
  */
-export declare type DanhoDateConstructor = Data | DateFormat | number | Date;
+export type DanhoDateConstructor = Data | DateFormat | number | Date;
 declare class DanhoDate {
     /**
      * Returns the value of the current irl time

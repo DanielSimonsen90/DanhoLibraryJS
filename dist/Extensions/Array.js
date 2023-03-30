@@ -7,7 +7,9 @@ function add(...items) {
 }
 Array.prototype.add = add;
 function update(old, updated) {
-    const item = typeof old === 'number' ? this[old] : typeof old === 'function' ? this.find(old) : old;
+    const item = typeof old === 'number' ? this[old]
+        : typeof old === 'function' ? this.find(old)
+            : old;
     if (!item)
         throw new Error('Old was not found in array!');
     const index = this.indexOf(item);
@@ -36,7 +38,7 @@ function nth(every, callback) {
     for (let i = 0; i < this.length; i++) {
         collection.push(this[i]);
         if (i % every === 0) {
-            result.push(callback(collection, i, this));
+            result.push(callback(this[i], i, collection, this));
             collection = new Array();
         }
     }

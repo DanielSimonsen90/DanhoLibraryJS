@@ -21,7 +21,7 @@ Document.prototype.createProperElement = createElement;
 function createElementFromString(html, tag) {
     if (!html.startsWith(`<${tag}`))
         html = `<${tag}>${html}</${tag}>`;
-    return new DOMParser().parseFromString(html, 'text/html').body.firstChild;
+    return new DOMParser().parseFromString(html, 'text/html').body.firstElementChild;
 }
 Document.prototype.createElementFromString = createElementFromString;
 HTMLCollection.prototype.array = function () {
