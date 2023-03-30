@@ -1,9 +1,6 @@
 import { Arrayable } from "../Types";
 import { EventEmitter } from "./Events";
 export type Reducer<State, Types extends Record<string, any[]>, Action extends keyof Types> = (state: State, ...args: Types[Action]) => State;
-export type Actions<State, ActionTypes extends Record<string, any[]>> = {
-    [Action in keyof ActionTypes]?: Arrayable<Reducer<State, ActionTypes, Action>>;
-};
 /**
  * EventEmitter, but it stores state and handles state change with reducers
  *
@@ -67,9 +64,16 @@ export type Actions<State, ActionTypes extends Record<string, any[]>> = {
  *
  * ```
  */
-export declare class Store<State extends object, ActionTypes extends Record<string, any[]>, StoreActions extends Actions<State, ActionTypes> = Actions<State, ActionTypes>> extends EventEmitter<Record<keyof StoreActions, ActionTypes[keyof ActionTypes]> & Record<'stateChange', [previous: State, current: State]>> {
-    constructor(state: State, actions?: StoreActions);
+export declare class Store<State extends object, ActionTypes extends Record<string, any[]>, Actions extends {
+    [Action in keyof ActionTypes]: Array<Reducer<State, ActionTypes, Action>>;
+} = {
+    [Action in keyof ActionTypes]: Array<Reducer<State, ActionTypes, Action>>;
+}> extends EventEmitter<Record<keyof Actions, ActionTypes[keyof ActionTypes]> & Record<'stateChange', [previous: State, current: State]>> {
+    constructor(state: State, actions?: {
+        [Action in keyof ActionTypes]?: Arrayable<Reducer<State, ActionTypes, Action>>;
+    });
     private _state;
     get state(): State;
     dispatch<Action extends keyof ActionTypes>(action: Action, ...args: ActionTypes[Action]): State;
 }
+export default Store;

@@ -1,12 +1,14 @@
 {
   "name": "danholibraryjs",
-  "version": "1.8.0",
+  "version": "1.10.0",
   "description": "Library for Javascript.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "npx tsc --project tsconfig.json",
-    "build-watch": "npx tsc --project tsconfig.json --watch true"
+    "build-watch": "npx tsc --project tsconfig.json --watch true",
+    "login-github": "npm login --scope=@DanielSimonsen90 --registry=https://npm.pkg.github.com",
+    "login-npm": "npm login --scope@danhosaur --registry=https://registry.npmjs.org"
   },
   "repository": {
     "type": "git",
@@ -14,6 +16,7 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
+    
   },
   "keywords": ["library", "javascript"],
   "author": "DanielSimonsen90 | Danhosaur | Daniel Simonsen",

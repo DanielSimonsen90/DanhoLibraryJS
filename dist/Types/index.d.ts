@@ -11,6 +11,7 @@ export type Arrayable<T> = T | Array<T>;
  * Item is function or T
  */
 export type Functionable<T> = T | (() => T);
+
 /**
  * Used for HTMLElement.append in ElementOptions, Document.createProperElement.
  * IElement accepts HTML Elements or HTMl-like strings.
