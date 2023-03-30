@@ -1,5 +1,8 @@
 {
-  "name": "danholibraryjs",
+  "name": "@danielsimonsen90/danholibraryjs",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "version": "1.10.0",
   "description": "Library for Javascript.",
   "main": "dist/index.js",
@@ -13,10 +16,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DanielSimonsen90/DanhoLibraryJS.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-    
   },
   "keywords": ["library", "javascript"],
   "author": "DanielSimonsen90 | Danhosaur | Daniel Simonsen",
