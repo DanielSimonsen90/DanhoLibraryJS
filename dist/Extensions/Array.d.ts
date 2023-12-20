@@ -1,5 +1,4 @@
-export {};
-type UpdateFinder<T> = (item: T, index: number, self: Array<T>) => boolean;
+export type UpdateFinder<T> = (item: T, index: number, self: Array<T>) => boolean;
 declare global {
     interface Array<T> {
         /**
@@ -33,6 +32,21 @@ declare global {
          * @param callback Function to execute
          * @returns Array of results
          */
-        nth<U>(every: number, callback: (collection: Array<T>, index: number, self: this) => U): Array<U>;
+        nth<U>(every: number, callback: (item: T, index: number, collection: Array<T>, self: this) => U): Array<U>;
     }
 }
+declare function add<T>(this: Array<T>, ...items: Array<T>): T[];
+declare function update<T>(this: Array<T>, old: T | number | UpdateFinder<T>, updated: T): T;
+declare function remove<T>(this: Array<T>, value: T | number): Array<T>;
+declare function random<T>(this: Array<T>): T;
+declare function index<T>(this: Array<T>, i: number): T;
+declare function nth<T, U>(this: Array<T>, every: number, callback: (item: T, index: number, collection: Array<T>, self: Array<T>) => U): Array<U>;
+export declare const ArrayExtensions: {
+    add: typeof add;
+    update: typeof update;
+    remove: typeof remove;
+    random: typeof random;
+    index: typeof index;
+    nth: typeof nth;
+};
+export {};

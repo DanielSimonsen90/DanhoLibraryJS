@@ -10,4 +10,7 @@ export type TransformType<From, Start, Switch> = {
 export type TransformTypes<From, BaseType, NewType> = Record<keyof {
     [Key in keyof From as From[Key] extends BaseType ? Key : never]: Key;
 }, NewType>;
+export type Json<T> = {
+    [Key in keyof T]: T[Key] extends object ? Json<T[Key]> : T[Key] extends Array<infer U> ? Array<Json<U>> : T[Key] extends number | string | boolean | null ? T[Key] : string;
+};
 export default TransformTypes;

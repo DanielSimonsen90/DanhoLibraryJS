@@ -40,7 +40,7 @@ export type Guid = string;
 /**
  * C# TimeSpan representation from JSON
  */
-export type TimeSpan = string;
+export type TimeSpanType = string;
 
 /**
  * Used for HTMLElement.append in ElementOptions, Document.createProperElement.

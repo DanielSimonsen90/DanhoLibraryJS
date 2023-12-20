@@ -49,15 +49,3 @@ exports.ArrayExtensions = {
     add, update, remove,
     random, index, nth
 };
-Array.prototype.nth = function (every, callback) {
-    const result = new Array();
-    let collection = new Array();
-    for (let i = 0; i < this.length; i++) {
-        collection.push(this[i]);
-        if (i % every === 0) {
-            result.push(callback(collection, i, this));
-            collection = new Array();
-        }
-    }
-    return result;
-};

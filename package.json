@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Library for Javascript.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
