@@ -15,14 +15,14 @@ export function serializeForm<T extends object>(form: HTMLFormElement, log = fal
 
       const name = element.getAttribute('name');
       if (!name) {
-        console.error('[DanhoLibraryRJS] [FormUtil]: name attribute is required', { element });
+        console.error('[DanhoLibraryJS] [FormUtil]: name attribute is required', { element });
         throw new Error('name attribute is required');
       }
 
       const value = element.value;
       if (value === null) console.warn(`${name}.value returned null`, { element });
 
-      if (log) console.log(`[DanhoLibraryRJS] [FormUtil]`, { name, value });
+      if (log) console.log(`[DanhoLibraryJS] [FormUtil]`, { name, value });
       acc[name] = /^\d$/.test(value) ? parseInt(value) : value;
     }
 
