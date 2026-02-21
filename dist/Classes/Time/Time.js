@@ -3,11 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Time = exports.ms = exports.ValidTime = void 0;
 exports.ValidTime = /^(\d+(?:\.|,)?\d*)(ms|s|m|h|d|w|M|y)$/;
 /**
- * Converts input into milliseconds
+ * Converts input into milliseconds. Supports multiple time units in one string by space separation. E.g. 1h 30m
  * @param input Input to convert to ms. 1s | 2m | 3h | 1M | 60000
  * @returns Millisecond value of input
  */
 function ms(input) {
+    return input.toString().split(' ').reduce((result, unit) => result += msSingular(unit), 0);
+}
+exports.ms = ms;
+function msSingular(input) {
     if (typeof input === 'number')
         return input;
     const match = input.match(exports.ValidTime);
@@ -28,7 +32,6 @@ function ms(input) {
     ]);
     return parseInt(value) * units.get(unit);
 }
-exports.ms = ms;
 /**
  * Time utility class
  * @borrows TimeDelay
@@ -73,10 +76,10 @@ class Time {
         return includeValue ? value + th : th;
     }
     /**
-     * Array of names of the months. 0 idnexed
+     * Array of names of the months. 0 indexed
      */
     static get MonthNames() {
-        return new Array('Janurary', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+        return new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
     }
     /**
      * Array of names of the days of the week. 0 indexed

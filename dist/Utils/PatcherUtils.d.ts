@@ -1,0 +1,6 @@
+type PatchEvent = 'before' | 'instead' | 'after';
+type PatcherReplacement<TTarget extends object, TProperty extends keyof TTarget, TPatchEvent extends PatchEvent> = (TPatchEvent extends 'before' ? TTarget[TProperty] extends (...args: infer TArgs) => any ? (...args: TArgs) => TArgs | void : (current: TTarget[TProperty], update: TTarget[TProperty]) => TTarget[TProperty] | void : TPatchEvent extends 'instead' ? TTarget[TProperty] extends (...args: infer TArgs) => infer TReturn ? (...args: TArgs) => TReturn : (current: TTarget[TProperty], update: TTarget[TProperty]) => TTarget[TProperty] : TTarget[TProperty] extends (...args: infer TArgs) => any ? (...args: TArgs) => void : (previous: TTarget[TProperty], updated: TTarget[TProperty]) => void);
+export declare function patch<TTarget extends object, TProperty extends keyof TTarget, TPatchEvent extends PatchEvent, TPatchReplacement extends PatcherReplacement<TTarget, TProperty, TPatchEvent>>(target: TTarget, property: TProperty, event: TPatchEvent, replacement: TPatchReplacement): (() => TTarget[TProperty] & Function) | (() => TTarget) | undefined;
+export declare function unpatch<TTarget extends object, TProperty extends keyof TTarget>(target: TTarget, property: TProperty): void;
+export declare function unpatchAll(): void;
+export {};

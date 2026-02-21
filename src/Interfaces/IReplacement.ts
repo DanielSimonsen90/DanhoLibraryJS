@@ -7,7 +7,7 @@ import { StringRegex } from "../Types";
  * @borrows StringRegex
 */
 export interface IReplacement {
-    replacer?: StringRegex,
-    replacement?: string
+  replacer?: StringRegex,
+  replacement?: string;
 }
 export default IReplacement;

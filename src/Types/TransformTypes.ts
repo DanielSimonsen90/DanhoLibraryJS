@@ -2,27 +2,35 @@
  * Converts Start types to Switch types in From type
  */
 export type TransformType<From, Start, Switch> = {
-    [Key in keyof From]: From[Key] extends Start ? Switch : From[Key]
-}
+  [Key in keyof From]: From[Key] extends Start ? Switch : From[Key]
+};
 
 /**
  * Returns object with properties matching BaseType with types of NewType
  */
-export type TransformTypes<From, BaseType, NewType> = Record<keyof { 
-    [Key in keyof From as From[Key] extends BaseType ? Key : never]: Key 
-}, NewType>
+export type TransformTypes<From, BaseType, NewType> = Record<keyof {
+  [Key in keyof From as From[Key] extends BaseType ? Key : never]: Key
+}, NewType>;
 
 //Returns From with properties switched from BaseType to NewType
 // export type TransformTypes<From, BaseType, NewType> = TransformType<From, BaseType[keyof BaseType], NewType>;
 
 export type Json<T> = {
-    [Key in keyof T]: T[Key] extends object 
-        ? Json<T[Key]> 
-        : T[Key] extends Array<infer U> 
-            ? Array<Json<U>> 
-            : T[Key] extends number | string | boolean | null
-                ? T[Key]
-                : string
-}
+  [Key in keyof T]: T[Key] extends object
+    ? Json<T[Key]>
+    : T[Key] extends Array<infer U>
+      ? Array<Json<U>>
+      : T[Key] extends number | string | boolean | null
+        ? T[Key]
+        : string
+};
+
+
+/**
+ * Type's properties are ReturnType
+ */
+export type AllPropsAre<ReturnType> = {
+  [key: string]: ReturnType;
+};
 
 export default TransformTypes;

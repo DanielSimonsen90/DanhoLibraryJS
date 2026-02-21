@@ -77,7 +77,7 @@ class EventEmitter {
      * @param event Event to emit
      * @param args Arguments for the event
      * @fires event
-     * @returns Array of listeners' reponses
+     * @returns Array of listeners' responses
      */
     emit(event, ...args) {
         return this._events.emit(event, ...args);

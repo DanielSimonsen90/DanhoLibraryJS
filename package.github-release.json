@@ -1,0 +1,6 @@
+{
+  "name": "@danielsimonsen90/danholibraryjs",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
+}

@@ -126,8 +126,11 @@ class DanhoDate {
      */
     get hours() { return this.date.getHours(); }
     set hours(value) { this.date.setHours(value); }
+    get isAM() {
+        return this.hours < 12;
+    }
     get isPM() {
-        return this.hours > 11;
+        return this.hours >= 12;
     }
     /**
      * Minutes of the date

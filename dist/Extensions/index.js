@@ -14,17 +14,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BooleanExtensions = void 0;
 __exportStar(require("./Array"), exports);
 __exportStar(require("./Document"), exports);
 __exportStar(require("./Map"), exports);
 __exportStar(require("./Object"), exports);
+__exportStar(require("./Number"), exports);
 __exportStar(require("./String"), exports);
-function parseBoolean(value) {
-    return value === "true";
-}
-;
-Boolean.parseBoolean = parseBoolean;
-exports.BooleanExtensions = {
-    parseBoolean
-};

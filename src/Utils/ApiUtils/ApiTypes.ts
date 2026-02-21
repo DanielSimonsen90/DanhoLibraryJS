@@ -1,4 +1,4 @@
-// An ApiEndpoint paramter can be either a string or undefined
+// An ApiEndpoint parameter can be either a string or undefined
 export type TParam = string | undefined;
 
 // All possible HTTP methods
@@ -6,6 +6,7 @@ export type HttpMethods =
   | 'GET'
   | 'POST'
   | 'PUT'
+  | 'PATCH'
   | 'DELETE';
 
 // Options for the Request function
