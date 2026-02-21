@@ -23,7 +23,7 @@ export function classNames(...args: Array<any>): string {
     }
 
     return acc + ' ';
-  }, '');
+  }, '').trim();
 }
 
 export function randomId(length = 16): string {
