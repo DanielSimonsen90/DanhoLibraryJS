@@ -8,6 +8,7 @@ export * from './Function';
 export * from './TransformTypes';
 export * from './Object';
 export * from './PropertiesWith';
+export * from './String';
 
 /**
  * Used for HTMLElement.append in ElementOptions, Document.createProperElement.
