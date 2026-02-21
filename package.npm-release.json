@@ -1,0 +1,6 @@
+{
+  "name": "danholibraryjs",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
+}
