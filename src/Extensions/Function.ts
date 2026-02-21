@@ -31,11 +31,12 @@ Function.is = is;
 export function resolveFunctionable<T, TArgs extends any[] = any[]>(functionable: Functionable<T, TArgs>, ...args: TArgs): T {
   return is(functionable) ? functionable(...args) : functionable;
 }
-Function.prototype.resolveFunctionable = resolveFunctionable;
+Function.resolveFunctionable = resolveFunctionable;
 
 export function forceFunction<T, TArgs extends any[] = any[]>(functionable: Functionable<T, TArgs>): (...args: TArgs) => T {
   return is(functionable) ? functionable : () => functionable;
 }
+Function.forceFunction = forceFunction;
 
 export const FunctionExtensions = {
   is,
