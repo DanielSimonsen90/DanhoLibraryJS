@@ -132,8 +132,8 @@ export class Time {
   public static get avgMonth(): number {
     return Math.round(this.daysInMonth.reduce((result, num) => result += num, 0) / 12);
   }
-  public static ms(input: TimeDelay) {
-    return msSingular(input);
+  public static ms(input: Autocomplete<TimeDelay>) {
+    return ms(input);
   }
 }
 export default Time;
