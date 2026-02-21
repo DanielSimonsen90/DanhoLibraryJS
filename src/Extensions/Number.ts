@@ -5,20 +5,18 @@ type Separators = {
 
 declare global {
   interface Number {
-    toString(separators?: Partial<Separators>): string;
+    toSeparationString(separators: Partial<Separators>): string;
     toRomanNumeral(): string;
   }
 }
 
-export function toString(this: number, separatorsOrRadix?: Partial<Separators> | number): string {
-  if (typeof separatorsOrRadix !== 'object' || Object.isNullOrUndefined(separatorsOrRadix)) return this.toString(separatorsOrRadix);
-  
-  const { thousand = '.', decimal = '.' } = separatorsOrRadix as Partial<Separators>;
+export function toSeparationString(this: number, separators: Partial<Separators>): string {
+  const { thousand = '.', decimal = '.' } = separators;
   const [integerPart, decimalPart] = this.toString().split('.');
   const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousand);
   return decimalPart ? `${formattedInteger}${decimal}${decimalPart}` : formattedInteger;
 }
-Number.prototype.toString = toString;
+Number.prototype.toSeparationString = toSeparationString;
 
 export function toRomanNumeral(this: number): string {
   if (this <= 0 || this >= 4000) throw new RangeError('Number must be between 1 and 3999 to convert to Roman numeral');
