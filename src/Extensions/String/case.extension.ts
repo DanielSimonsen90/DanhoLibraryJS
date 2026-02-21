@@ -45,7 +45,7 @@ const caseMap: Record<Case, Record<Case, (str: string) => string>> = {
     upper: (str: string) => str.toUpperCase(),
 
     camel: (str: string) => str.replace(/(_\w)/g, (match) => match[1].toUpperCase()),
-    pascal: (str: string) => str.replace(/(_\w)/g, (match) => match[1].toUpperCase()),
+    pascal: (str: string) => str[0].toUpperCase() + str.substring(1, str.length).replace(/(_\w)/g, (match) => match[1].toUpperCase()),
     kebab: (str: string) => str.replace(/_/g, '-'),
   },
   kebab: {

@@ -1,5 +1,4 @@
 import { PropertiesWith, If } from '../../Types';
-import { StringExtensions } from '../String';
 
 type PrimitiveMap = {
   string: string;
@@ -38,7 +37,7 @@ export const properties: Properties = [
   'object', 'function', 'any',
   'Date', 'RegExp', 'Promise', 'Array', 'Map', 'Set'
 ].reduce((result, primitive) => {
-  result[`get${StringExtensions.toPascalCase.bind(primitive)()}s` as keyof Properties] = function <Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions: AllowFunctions = false as AllowFunctions) {
+  result[`get${primitive.convertCase('camel', 'pascal')}s` as keyof Properties] = function <Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions: AllowFunctions = false as AllowFunctions) {
     return Object.keysOf<Source>(source).reduce((result, key) => {
       if ((source[key] as any).constructor.name === primitive ||
         (withFunctions && typeof source[key] === 'function' && source[key] as any).constructor.name === primitive) {
