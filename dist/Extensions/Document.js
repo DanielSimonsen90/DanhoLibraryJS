@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DocumentExtensions = void 0;
+exports.DocumentExtension = void 0;
 function createElement(tagName, options, ...children) {
     const element = Object.assign(document.createElement(tagName), typeof options === 'string' ? {} : options);
     children ??= typeof options === 'string' ? [options] : [];
@@ -17,16 +17,21 @@ function createElement(tagName, options, ...children) {
         element.appendChild(children);
     return element;
 }
-Document.prototype.createProperElement = createElement;
 function createElementFromString(html, tag) {
     if (!html.startsWith(`<${tag}`))
         html = `<${tag}>${html}</${tag}>`;
     return new DOMParser().parseFromString(html, 'text/html').body.firstElementChild;
 }
-Document.prototype.createElementFromString = createElementFromString;
-HTMLCollection.prototype.array = function () {
-    return Array.from(this);
+exports.DocumentExtension = {
+    createElement,
+    createElementFromString
 };
-exports.DocumentExtensions = {
-    createElement, createElementFromString
-};
+if (Document) {
+    Document.prototype.createProperElement = createElement;
+    Document.prototype.createElementFromString = createElementFromString;
+}
+if (HTMLCollection) {
+    HTMLCollection.prototype.array = function () {
+        return Array.from(this);
+    };
+}

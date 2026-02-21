@@ -41,18 +41,23 @@ function createElement<Tag extends keyof HTMLElementTagNameMap>(
   return element;
 
 }
-Document.prototype.createProperElement = createElement;
-
 function createElementFromString<Tag extends keyof HTMLElementTagNameMap>(this: Document, html: string, tag?: Tag): HTMLElementTagNameMap[Tag] {
   if (!html.startsWith(`<${tag}`)) html = `<${tag}>${html}</${tag}>`;
   return new DOMParser().parseFromString(html, 'text/html').body.firstElementChild as HTMLElementTagNameMap[Tag];
 }
-Document.prototype.createElementFromString = createElementFromString;
 
-HTMLCollection.prototype.array = function (this: HTMLCollection) {
-  return Array.from(this);
+export const DocumentExtension = {
+  createElement,
+  createElementFromString
 };
 
-export const DocumentExtensions = {
-  createElement, createElementFromString
-};
+if (Document) {
+  Document.prototype.createProperElement = createElement;
+  Document.prototype.createElementFromString = createElementFromString;
+}
+
+if (HTMLCollection) {
+  HTMLCollection.prototype.array = function (this: HTMLCollection) {
+    return Array.from(this);
+  };
+}

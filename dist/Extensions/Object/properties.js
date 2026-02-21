@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.properties = void 0;
+const case_extension_1 = require("../String/case.extension");
 exports.properties = [
     'string', 'number', 'boolean', 'undefined', 'null',
     'object', 'function', 'any',
     'Date', 'RegExp', 'Promise', 'Array', 'Map', 'Set'
 ].reduce((result, primitive) => {
-    result[`get${primitive.convertCase('camel', 'pascal')}s`] = function (source, withFunctions = false) {
+    result[`get${(0, case_extension_1.convertCase)('camel', 'pascal')}s`] = function (source, withFunctions = false) {
         return Object.keysOf(source).reduce((result, key) => {
             if (source[key].constructor.name === primitive ||
                 (withFunctions && typeof source[key] === 'function' && source[key]).constructor.name === primitive) {

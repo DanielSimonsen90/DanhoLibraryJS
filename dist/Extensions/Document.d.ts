@@ -20,7 +20,7 @@ declare global {
 }
 declare function createElement<Tag extends keyof HTMLElementTagNameMap>(this: Document, tagName: Tag, options?: Partial<HTMLElementTagNameMap[Tag]> | string, ...children: Array<IElement>): HTMLElementTagNameMap[Tag];
 declare function createElementFromString<Tag extends keyof HTMLElementTagNameMap>(this: Document, html: string, tag?: Tag): HTMLElementTagNameMap[Tag];
-export declare const DocumentExtensions: {
+export declare const DocumentExtension: {
     createElement: typeof createElement;
     createElementFromString: typeof createElementFromString;
 };
