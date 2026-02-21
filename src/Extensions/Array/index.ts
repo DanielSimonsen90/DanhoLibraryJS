@@ -3,7 +3,7 @@ import * as CRUD from './crud.extension';
 import * as Loop from './loop.extension';
 import * as Random from './random.extension';
 import * as Sort from './sort.extension';
-import * as String from '../String/case.extension';
+import * as String from './string.extension';
 
 export const ArrayExtensions = {
   ...Array,

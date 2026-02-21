@@ -1,7 +1,7 @@
 const DebounceManager = {
   timers: new Map<string, number>(),
   abortListeners: new Map<string, () => void>(),
-}
+};
 
 /**
  * Delay running the callback until delay milliseconds have passed without the function being called again. 
@@ -20,7 +20,7 @@ export function debounce<T>(debounceId: string, callback: () => T, delay: number
   if (timers.has(debounceId)) {
     clearTimeout(timers.get(debounceId));
     timers.delete(debounceId);
-    
+
     const existingListener = abortListeners.get(debounceId);
     if (existingListener && signal) {
       signal.removeEventListener('abort', existingListener);
@@ -55,7 +55,7 @@ export function debounce<T>(debounceId: string, callback: () => T, delay: number
         clearTimeout(timeoutId);
         timers.delete(debounceId);
         abortListeners.delete(debounceId);
-        
+
         const error = new DOMException('Debounce aborted', 'AbortError');
         reject(error);
       };
@@ -76,7 +76,7 @@ export function debounce<T>(debounceId: string, callback: () => T, delay: number
  */
 export function wrapInDebounce<T>(callback: (...args: T[]) => void, delay: number) {
   const controller = new AbortController();
-  
+
   return {
     debounced: (...args: T[]) => debounce(Symbol().toString(), () => callback(...args), delay, controller.signal),
     controller,

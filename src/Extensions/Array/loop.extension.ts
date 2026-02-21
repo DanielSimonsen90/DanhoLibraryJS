@@ -27,7 +27,7 @@ export function nth<T, U>(
   for (let i = 0; i < this.length; i++) {
     collection.push(this[i]);
 
-    if (i % every === 0) {
+    if ((i + 1) % every === 0) {
       result.push(callback(this[i], i, collection, this));
       collection = new Array<T>();
     }
