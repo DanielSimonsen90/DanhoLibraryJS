@@ -13,4 +13,10 @@ export type TransformTypes<From, BaseType, NewType> = Record<keyof {
 export type Json<T> = {
     [Key in keyof T]: T[Key] extends object ? Json<T[Key]> : T[Key] extends Array<infer U> ? Array<Json<U>> : T[Key] extends number | string | boolean | null ? T[Key] : string;
 };
+/**
+ * Type's properties are ReturnType
+ */
+export type AllPropsAre<ReturnType> = {
+    [key: string]: ReturnType;
+};
 export default TransformTypes;

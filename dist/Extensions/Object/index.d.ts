@@ -1,49 +1,10 @@
-import { ValueOf } from "../../Types";
-import { Properties } from "./properties";
-declare global {
-    interface ObjectConstructor {
-        /**
-         * Destructures object into array of [property, value]
-         * @param from Object to destruct
-         */
-        array<From extends {} = {}>(from: From): Array<[keyof From, ValueOf<From>]>;
-        /**
-         * Omits properties from object, but for some reason the correct term is "extract"
-         * @param from Object to extract properties from
-         * @param props Properties to extract/Omit
-         */
-        extract<From extends {}, Props extends keyof From>(from: From, ...props: Array<Props | Partial<From>>): Omit<From, Props>;
-        /**
-         * Pick properties from object, but for some reason the correct term is "exclude"
-         * @param from Object to exclude properties from
-         * @param props Properties to exclude/pick
-         */
-        exclude<From extends {}, Props extends keyof From>(from: From, ...props: Array<Props | Partial<From>>): Pick<From, Props>;
-        /**
-         * Returns true if object is empty
-         * @param obj Object to check
-         */
-        isNullOrUndefined(obj: any): obj is null | undefined;
-        /**
-         * Destructures object into array of property keys
-         * @param from Object to destruct
-         */
-        keysOf<From extends {} = {}>(from: From): Array<keyof From>;
-        omit<From extends {}, Exclude extends keyof From>(from: From, ...exclude: Exclude[]): Omit<From, Exclude>;
-        properties: Properties;
-    }
-}
-declare function array<From extends {} = {}>(this: object, from: From): Array<[keyof From, ValueOf<From>]>;
-declare function extract<From extends {}, Props extends keyof From>(from: From, ...props: Array<Props | Partial<From>>): Omit<From, Props>;
-declare function exclude<From extends {}, Props extends keyof From>(from: From, ...props: Array<Props | Partial<From>>): Pick<From, Props>;
-declare function isNullOrUndefined(obj: any): obj is null | undefined;
-declare function keysOf<From extends {} = {}>(this: object, from: From): Array<keyof From>;
 export declare const ObjectExtensions: {
-    properties: Properties;
-    array: typeof array;
-    extract: typeof extract;
-    exclude: typeof exclude;
-    isNullOrUndefined: typeof isNullOrUndefined;
-    keysOf: typeof keysOf;
+    omit<From extends {}, Props extends keyof From>(from: From, ...props: (Props | Partial<From>)[]): Omit<From, Props>;
+    pick<From_1 extends {}, Props_1 extends keyof From_1>(from: From_1, ...props: (Props_1 | Partial<From_1>)[]): Pick<From_1, Props_1>;
+    difference<T extends object>(source: T, target: T, ...exclude: (keyof T)[]): Omit<T, keyof T>;
+    combine<T_1 extends Record<string, any>>(...objects: ({ [key in keyof T_1]?: (T_1[key] extends Record<string, any> ? T_1[key] extends infer T_2 extends Record<string, any> ? { [key_1 in keyof T_2]?: (T_1[key][key_1] extends Record<string, any> ? T_1[key][key_1] extends infer T_3 extends Record<string, any> ? { [key_2 in keyof T_3]?: (T_1[key][key_1][key_2] extends Record<string, any> ? T_1[key][key_1][key_2] extends infer T_4 extends Record<string, any> ? { [key_3 in keyof T_4]?: (T_1[key][key_1][key_2][key_3] extends Record<string, any> ? T_1[key][key_1][key_2][key_3] extends infer T_5 extends Record<string, any> ? { [key_4 in keyof T_5]?: (T_1[key][key_1][key_2][key_3][key_4] extends Record<string, any> ? T_1[key][key_1][key_2][key_3][key_4] extends infer T_6 extends Record<string, any> ? { [key_5 in keyof T_6]?: (T_1[key][key_1][key_2][key_3][key_4][key_5] extends Record<string, any> ? T_1[key][key_1][key_2][key_3][key_4][key_5] extends infer T_7 extends Record<string, any> ? { [key_6 in keyof T_7]?: (T_1[key][key_1][key_2][key_3][key_4][key_5][key_6] extends Record<string, any> ? T_1[key][key_1][key_2][key_3][key_4][key_5][key_6] extends infer T_8 extends Record<string, any> ? { [key_7 in keyof T_8]?: (T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7] extends Record<string, any> ? T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7] extends infer T_9 extends Record<string, any> ? { [key_8 in keyof T_9]?: (T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7][key_8] extends Record<string, any> ? T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7][key_8] extends infer T_10 extends Record<string, any> ? { [key_9 in keyof T_10]?: (T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7][key_8][key_9] extends Record<string, any> ? T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7][key_8][key_9] extends infer T_11 extends Record<string, any> ? { [key_10 in keyof T_11]?: (T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7][key_8][key_9][key_10] extends Record<string, any> ? any : T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7][key_8][key_9][key_10]) | undefined; } : never : T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7][key_8][key_9]) | undefined; } : never : T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7][key_8]) | undefined; } : never : T_1[key][key_1][key_2][key_3][key_4][key_5][key_6][key_7]) | undefined; } : never : T_1[key][key_1][key_2][key_3][key_4][key_5][key_6]) | undefined; } : never : T_1[key][key_1][key_2][key_3][key_4][key_5]) | undefined; } : never : T_1[key][key_1][key_2][key_3][key_4]) | undefined; } : never : T_1[key][key_1][key_2][key_3]) | undefined; } : never : T_1[key][key_1][key_2]) | undefined; } : never : T_1[key][key_1]) | undefined; } : never : T_1[key]) | undefined; } | undefined)[]): T_1;
+    areEqual<T_12 extends object | null>(a?: T_12 | undefined, b?: T_12 | undefined): boolean;
+    isNullOrUndefined(obj: any): obj is null | undefined;
+    array<From_2 extends {} = {}>(this: object, from: From_2): [keyof From_2, import("../..").ValueOf<From_2>][];
+    keysOf<From_3 extends {} = {}>(this: object, from: From_3): (keyof From_3)[];
 };
-export {};

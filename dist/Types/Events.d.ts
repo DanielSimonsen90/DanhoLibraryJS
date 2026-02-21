@@ -1,9 +1,9 @@
 /**
- * Default eventhandler mapper. Object with properties that are arrays
+ * Default event-handler mapper. Object with properties that are arrays
  */
 export type BaseEvent<Keys extends string, Types extends Array<any>> = Record<Keys, Types>;
 /**
- * Eventhandler type for:
+ * Event-handler type for:
  * @see EventCollection
  * @borrows BaseEvent
  */

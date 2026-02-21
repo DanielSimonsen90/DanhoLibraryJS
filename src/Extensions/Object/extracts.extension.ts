@@ -92,6 +92,7 @@ export function combine<T extends Record<string, any | undefined>>(...objects: A
           } else throw err;
         }
       } else if (obj[key] !== undefined && obj[key] !== null && obj[key] !== '') {
+        // @ts-ignore
         (acc[key] as Combinable<T>) = obj[key];
       }
     }

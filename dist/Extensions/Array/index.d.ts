@@ -1,0 +1,20 @@
+import * as CRUD from './crud.extension';
+export declare const ArrayExtensions: {
+    join<T>(this: T[], separator?: string, endSeparator?: string): string;
+    orderBy<T_1>(this: T_1[], ...comparators: ((a: T_1, b: T_1) => number)[]): T_1[];
+    orderByDescending<T_2>(this: T_2[], ...comparators: ((a: T_2, b: T_2) => number)[]): T_2[];
+    sortByProperty<T_3 extends object>(this: T_3[], ...properties: (keyof T_3)[]): T_3[];
+    random<T_4>(this: T_4[]): T_4;
+    shuffle<T_5>(this: T_5[]): T_5[];
+    randomWithPercentages<T_6>(items: [item: T_6, weight: number][]): T_6;
+    nth<T_7, U>(this: T_7[], every: number, callback: (item: T_7, index: number, collection: T_7[], self: T_7[]) => U): U[];
+    add<T_8>(this: T_8[], ...items: T_8[]): T_8[];
+    update<T_9>(this: T_9[], old: number | T_9 | CRUD.UpdateFinder<T_9>, updated: T_9): T_9;
+    remove<T_10>(this: T_10[], value: number | T_10): T_10[];
+    take<T_11>(this: T_11[], count: number): T_11[];
+    forceArray<T_12>(arrayable: import("../..").Arrayable<T_12>): T_12[];
+    unique<T_13>(this: T_13[]): T_13[];
+    splitBy<T_14>(this: T_14[], chunkSize: number): T_14[][];
+    splitBy<T_15>(this: T_15[], splitter: (value: T_15, index: number, array: T_15[]) => boolean): T_15[][];
+    groupBy<T_16, K>(this: T_16[], keySelector: (value: T_16, index: number, array: T_16[]) => K): Map<K, T_16[]>;
+};

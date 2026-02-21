@@ -1,3 +1,4 @@
+import { Autocomplete } from "../../Types";
 import { LongMonth } from "../../Types/Date";
 /** '2s' or 2000 */
 export type TimeUnit = 'ms' | 's' | 'm' | 'h' | 'd' | 'w' | 'M' | 'y';
@@ -5,11 +6,11 @@ export type TimeString = `${number}${TimeUnit}`;
 export type TimeDelay = number | TimeString;
 export declare const ValidTime: RegExp;
 /**
- * Converts input into milliseconds
+ * Converts input into milliseconds. Supports multiple time units in one string by space separation. E.g. 1h 30m
  * @param input Input to convert to ms. 1s | 2m | 3h | 1M | 60000
  * @returns Millisecond value of input
  */
-export declare function ms(input: TimeDelay): number;
+export declare function ms(input: Autocomplete<TimeDelay>): number;
 /**
  * Time utility class
  * @borrows TimeDelay
@@ -35,7 +36,7 @@ export declare class Time {
     static DoubleDigit(value: number): string;
     static th(value: number, includeValue?: boolean): string;
     /**
-     * Array of names of the months. 0 idnexed
+     * Array of names of the months. 0 indexed
      */
     static get MonthNames(): LongMonth[];
     /**
@@ -60,6 +61,6 @@ export declare class Time {
     static get year(): number;
     /** Average month in milliseconds */
     static get avgMonth(): number;
-    static ms(input: TimeDelay): number;
+    static ms(input: Autocomplete<TimeDelay>): number;
 }
 export default Time;
