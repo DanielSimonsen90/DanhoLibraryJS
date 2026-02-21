@@ -1,4 +1,4 @@
-export function wait<T>(time: number): Promise<never>;
+export function wait<T>(time: number): Promise<void>;
 export function wait<T>(callback: (...args: any[]) => T, time: number): Promise<T>;
 export function wait<T>(callbackOrTime: ((...args: any[]) => T) | number, time?: number) {
   const callback = typeof callbackOrTime === 'function' ? callbackOrTime : (() => undefined);
