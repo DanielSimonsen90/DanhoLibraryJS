@@ -24,6 +24,5 @@ import { ... } from 'DanhoLibraryJS';
 
 * [Classes](./Classes.md)
 * [Extensions](./Extensions.md)
-* [Functions](./Functions.md)
 * [Interfaces](./Interfaces.md)
 * [Types](./Types.md)

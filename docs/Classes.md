@@ -2,11 +2,86 @@
 
 ## Classes
 
+### DanhoLogger
+
 ```ts
 /**
- * EventEmitter, but it stores state and handles state change with reducers
+ * Enhanced console logger with prefixes, colors, and grouping
+ */
+class DanhoLogger {
+    /**
+     * @param options Logger configuration
+     * @param options.name Name to display in log prefix (default: 'DanhoLogger')
+     * @param options.color Color for the prefix (default: 'inherit')
+     * @param options.preferCollapsed Whether to use collapsed groups by default (default: false)
+     */
+    constructor(options?: { name?: string; color?: string; preferCollapsed?: boolean });
+
+    /**
+     * Name displayed in log prefix
+     */
+    public name: string;
+
+    /**
+     * Color for the prefix
+     */
+    public color?: string;
+
+    /**
+     * Logs a message
+     */
+    public log(...args: any[]): this;
+
+    /**
+     * Logs a warning message
+     */
+    public warn(...args: any[]): this;
+
+    /**
+     * Logs an error message
+     */
+    public error(...args: any[]): this;
+
+    /**
+     * Creates a log group
+     */
+    public group(...args: any[]): this;
+
+    /**
+     * Creates a collapsed log group
+     */
+    public groupCollapsed(...args: any[]): this;
+
+    /**
+     * Ends the current log group
+     */
+    public groupEnd(...args: any[]): this;
+
+    /**
+     * Starts a timer with a label
+     */
+    public time(label: string): this;
+
+    /**
+     * Ends a timer and logs the elapsed time
+     */
+    public timeEnd(label: string): this;
+
+    /**
+     * Logs data in a table format
+     */
+    public table(data: any, columns?: string[]): this;
+}
+```
+
+### Store
+
+```ts
+/**
+ * EventEmitter that stores state and handles state changes with reducers
  * 
- * @Initialization Actions & initial state must be defined in type parameters. InitialState must be provided in constructor, whereas reducer is optional.
+ * @Initialization Actions & initial state must be defined in type parameters. 
+ * InitialState must be provided in constructor, whereas reducer is optional.
  * The ActionType must have properties as strings and values as arrays.
  * 
  * @HandlingActions Reducers can be added through constructor or using Store.on('action', reducer) or Store.once('action', reducer).
@@ -26,7 +101,7 @@ class Store<
     { [Action in keyof ActionTypes]: Array<Reducer<State, ActionTypes, Action>> } = 
     { [Action in keyof ActionTypes]: Array<Reducer<State, ActionTypes, Action>> }
 > extends EventEmitter<Record<keyof Actions, ActionTypes[keyof ActionTypes]> & Record<'stateChange', [previous: State, current: State]>> {
-    constructor(state: State, actions: { [Action in keyof ActionTypes]?: Arrayable<Reducer<State, ActionTypes, Action>> } = {});
+    constructor(state: State, actions?: { [Action in keyof ActionTypes]?: Arrayable<Reducer<State, ActionTypes, Action>> });
 
     private _state: State;
     public get state(): State;

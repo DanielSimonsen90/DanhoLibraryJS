@@ -2,34 +2,11 @@
 
 ## Extensions
 
-### General
-
-```ts
-interface BooleanConstructor {
-    /**
-     * Parses string to boolean. Will only return true if value === "true" otherwise false
-     */
-    parseBoolean(value: string): boolean
-}
-
-interface Document {
-    /**
-     * Creates an element like Document#createElement, however with construction options to assign values in construction instead of after construction.
-     * @param tagName HTMLElement tag name
-     * @param options Construction options, instead of assigning values after construction
-     */
-    createProperElement<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementOptions): HTMLElementTagNameMap[K];
-}
-
-interface HTMLCollection {
-    /**
-     * Converts HTMLCollection to Element[]
-     */
-    array(): Element[];
-}
-```
+Extensions add new methods to native JavaScript types and interfaces.
 
 ### Array
+
+#### Instance Methods
 
 ```ts
 interface Array<T> {
@@ -37,35 +14,130 @@ interface Array<T> {
      * Pushes items to array and returns self with new items
      * @param items Items to add to array
      */
-    add(...items: Array<T>): this
+    add(...items: Array<T>): this;
+
     /**
      * Update an item in array
-     * @param old The old value or index to update
+     * @param old The old value, index, or finder function to locate item to update
      * @param updated Updated value
      */
-    update(old: T | number, updated: T): T
+    update(old: T | number | ((item: T, index: number, self: Array<T>) => boolean), updated: T): T;
+
     /**
      * Removes item from array and returns self without item
      * @param item Item or index to remove
      */
-    remove(item: T | number): this
+    remove(item: T | number): Array<T>;
+
     /**
      * Returns a random element from array
      */
-    random(): T
+    random(): T;
+
     /**
-     * Returns item matching index. If negative number, subtracts number from length
-     * @param i Index of item
+     * Shuffles array in random order
      */
-    index(i: number): T
+    shuffle(): Array<T>;
+
     /**
-     * For every number in array, do callback
-     * @param every For every x in array
-     * @param callback Do this for every x in array
-     * @returns Mapped array
+     * Returns the first `count` elements from the array
+     * @param count Number of elements to take
      */
-    nth<U>(every: number, callback: (collection: Array<T>, index: number, self: this) => U): Array<U>
+    take(count: number): Array<T>;
+
+    /**
+     * Returns a new array with only unique elements
+     */
+    unique(): Array<T>;
+
+    /**
+     * Splits the array into chunks of a specified size or by a splitter function
+     * @param chunkSizeOrSplitter The size of each chunk or a function that determines where to split
+     */
+    splitBy(chunkSizeOrSplitter: number | ((value: T, index: number, array: Array<T>) => boolean)): Array<Array<T>>;
+
+    /**
+     * Groups elements based on a key selector function
+     * @param keySelector A function that selects a key for each element
+     */
+    groupBy<K>(keySelector: (value: T, index: number, array: Array<T>) => K): Map<K, Array<T>>;
+
+    /**
+     * For every nth element in array, execute callback
+     * @param every Execute callback every nth element
+     * @param callback Function to execute
+     */
+    nth<U>(every: number, callback: (collection: Array<T>, index: number, self: this) => U): Array<U>;
+
+    /**
+     * Joins array elements with a separator, and a different separator before the last element
+     * @param separator Separator between elements (default: ',')
+     * @param endSeparator Separator before last element (default: '&')
+     */
+    join(separator?: string, endSeparator?: string): string;
+
+    /**
+     * Orders array by comparators in ascending order
+     * @param comparators Comparison functions
+     */
+    orderBy(...comparators: Array<(a: T, b: T) => number>): Array<T>;
+
+    /**
+     * Orders array by comparators in descending order
+     * @param comparators Comparison functions
+     */
+    orderByDescending(...comparators: Array<(a: T, b: T) => number>): Array<T>;
+
+    /**
+     * Sorts array by object properties
+     * @param properties Properties to sort by
+     */
+    sortByProperty(...properties: Array<keyof T>): Array<T>;
 }
+```
+
+#### Static Methods
+
+```ts
+interface ArrayConstructor {
+    /**
+     * Forces an arrayable object into an array
+     * @param arrayable The value or array to normalize
+     */
+    forceArray<T>(arrayable: T | Array<T>): Array<T>;
+}
+```
+
+#### Standalone Functions
+
+```ts
+/**
+ * Selects random item from weighted items
+ * @param items Array of [item, weight] tuples where weight is probability
+ */
+function randomWithPercentages<T>(items: [item: T, weight: number][]): T;
+```
+
+### Function
+
+```ts
+/**
+ * Checks if a value is a function
+ */
+function is(obj: any): obj is Function;
+
+/**
+ * Resolves a functionable value (value or function that returns value)
+ * @param functionable Value or function
+ * @param args Arguments to pass if functionable is a function
+ */
+function resolveFunctionable<T, TArgs extends any[] = any[]>(functionable: T | ((...args: TArgs) => T), ...args: TArgs): T;
+
+/**
+ * Converts a functionable value into a function
+ * @param functionable Value or function
+ */
+function forceFunction<T, TArgs extends any[] = any[]>(functionable: T | ((...args: TArgs) => T)): (...args: TArgs) => T;
 ```
 
 ### Map
@@ -75,54 +147,125 @@ interface Map<K, V> {
     /**
      * Converts map into Array<[Key, Value]>
      */
-    array(): Array<[K, V]>
+    array(): Array<[K, V]>;
+
     /**
-     * Maps values into new types of generics
-     * @param callback Callbacking function to map values
+     * Maps values into new types
+     * @param callback Mapping function
      */
-    map<EK, EV>(callback: (value: V, key: K, index: number, self: this) => [EK, EV]): Map<EK, EV>
+    map<EK, EV>(callback: (value: V, key: K, index: number, self: this) => [EK, EV]): Map<EK, EV>;
+
     /**
-     * Returns array of "accepted" values. Criteria defined in callback param
-     * @param callback Callbacking function to filter away unwanted values
+     * Filters map entries
+     * @param callback Filter function
      */
-    filter(callback: (value: V, key: K, index: number, self: this) => boolean): Map<K, V>
+    filter(callback: (value: V, key: K, index: number, self: this) => boolean): Map<K, V>;
+
     /**
      * Returns array of keys
      */
-    keyArr(): Array<K>
+    keyArr(): Array<K>;
+
     /**
      * Returns array of values
      */
-    valueArr(): Array<V>
+    valueArr(): Array<V>;
+
     /**
-     * Returns first [key, value] match to callback param. Returns undefined if nothing found
-     * @param callback Callbacking function to find KeyValuePair
+     * Finds first entry matching callback
+     * @param callback Find function
      */
-    find(callback: (value: V, key: K, index: number, self: this) => boolean): [K, V] | undefined
+    find(callback: (value: V, key: K, index: number, self: this) => boolean): [K, V] | undefined;
+
     /**
-     * Whether or not map includes a  value (value version of Map#has)
-     * @param value Value that may be includded in map
-     * @param fromIndex Start looking for value from specific index+. Default: 0
+     * Checks if map includes a value
+     * @param value Value to search for
+     * @param fromIndex Start looking from specific index
      */
     includes(value: V, fromIndex?: number): boolean;
 }
 ```
 
+### Number
+
+```ts
+interface Number {
+    /**
+     * Formats number with thousand and decimal separators
+     * @param separators Custom separators for thousand and decimal
+     */
+    toSeparationString(separators: Partial<{ thousand: string; decimal: string }>): string;
+
+    /**
+     * Converts number to Roman numeral (1-3999)
+     */
+    toRomanNumeral(): string;
+}
+```
+
 ### Object
+
+#### Static Methods
 
 ```ts
 interface ObjectConstructor {
     /**
-     * Destructures object into array of [property, value]
-     * @param from Object to destruct
+     * Converts object to array of [key, value] tuples
+     * @param from Object to convert
      */
-    array<From = {}>(from: From): Array<keyof From, ValueOf<From>>
+    array<From = {}>(from: From): Array<[keyof From, ValueOf<From>]>;
+
     /**
-     * Destructures object into array of property keys
-     * @param from Object to destruct
+     * Returns array of object keys with proper typing
+     * @param from Object to get keys from
      */
-    keysOf<From = {}>(from: From): Array<keyof From>
+    keysOf<From = {}>(from: From): Array<keyof From>;
 }
+```
+
+#### Standalone Functions
+
+```ts
+/**
+ * Creates new object omitting specified properties
+ * @param from Source object
+ * @param props Properties to omit
+ */
+function omit<From extends {}, Props extends keyof From>(from: From, ...props: Array<Props | Partial<From>>): Omit<From, Props>;
+
+/**
+ * Creates new object with only specified properties
+ * @param from Source object
+ * @param props Properties to pick
+ */
+function pick<From extends {}, Props extends keyof From>(from: From, ...props: Array<Props | Partial<From>>): Pick<From, Props>;
+
+/**
+ * Returns the difference between two objects
+ * @param source Source object
+ * @param target Target object
+ * @param exclude Properties to exclude from comparison
+ */
+function difference<T extends object>(source: T, target: T, ...exclude: Array<keyof T>): Partial<T>;
+
+/**
+ * Deeply combines multiple objects
+ * @param objects Objects to combine
+ */
+function combine<T extends Record<string, any | undefined>>(...objects: Array<T | undefined>): T;
+
+/**
+ * Deep equality check for objects
+ * @param a First object
+ * @param b Second object
+ */
+function areEqual<T extends object | null>(a?: T, b?: T): boolean;
+
+/**
+ * Type guard for null or undefined
+ * @param obj Value to check
+ */
+function isNullOrUndefined(obj: any): obj is null | undefined;
 ```
 
 ### String
@@ -130,24 +273,22 @@ interface ObjectConstructor {
 ```ts
 interface String {
     /**
-     * Uppercases first letter of string
+     * Converts string from one case to another
+     * @param from Case to convert from ('camel' | 'pascal' | 'snake' | 'kebab' | 'lower' | 'upper')
+     * @param to Cases to convert to, can chain multiple conversions
      */
-    toPascalCase(): string
-    /**
-     * Replaces "replacer" (default: ' ') with "replacement" (default: '_')
-     * @param replaceOptions This is practically your stereotypical String.replace, if you really want it to be
-     */
-    toSnakeCase(replaceOptions?: IReplacement): string
-    /**
-     * Replaces "replacer" (default: ' ') with "replacement" (default: '-')
-     * @param replaceOptions This is practically your stereotypical String.replace, if you really want it to be
-     */
-    toKebabCase(replaceOptions?: IReplacement): string
-    /**
-     * String.substring but accepting negative numbers to cut from length
-     * @param start Start of string. 0 indexed, if negative number, subtracts number from length
-     * @param end End of string. 0 indexed, if negative number, substracts number from length
-     */
-    clip(start: number, end?: number): string
+    convertCase(from: Case, ...to: Array<Case>): string;
 }
+```
+
+#### Standalone Function
+
+```ts
+/**
+ * Converts a string's case
+ * @param value String to convert
+ * @param from Source case format
+ * @param to Target case format(s)
+ */
+function convertCase(value: string, from: Case, ...to: Array<Case>): string;
 ```
