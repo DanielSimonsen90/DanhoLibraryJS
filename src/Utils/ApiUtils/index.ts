@@ -1,7 +1,7 @@
 import { ApiUtilOptions, RequestOptions } from "./ApiTypes";
 import { Request } from "./RequestUtil";
 
-export class ApiUtil<ApiEndpoints extends string> {
+export class ApiUtils<ApiEndpoints extends string> {
   protected __baseEndpointDev: string;
   protected __baseEndpoint?: string;
   protected __log: boolean;

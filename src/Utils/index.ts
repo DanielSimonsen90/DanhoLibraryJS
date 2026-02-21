@@ -1,8 +1,8 @@
-export * from './ApiUtil';
+export * from './ApiUtils';
 export * from './TimeUtils';
 
 export * from './ColorUtils';
-export * from './FormUtil';
+export * from './FormUtils';
 export * from './NumberUtils';
 export * from './PatcherUtils';
 export * from './StringUtils';
