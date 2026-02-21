@@ -11,10 +11,10 @@ declare global {
   }
 }
 
-export function join<T>(this: Array<T>, args: Array<string | undefined> = [], separator = ',', endSeparator = '&'): string {
-  const validArgs: string[] = args.filter((arg): arg is string => !Object.isNullOrUndefined(arg) && arg !== '');
+export function join<T>(this: Array<T>, separator = ',', endSeparator = '&'): string {
+  const validArgs = this.filter(arg => !Object.isNullOrUndefined(arg) && arg !== '');
   if (!validArgs.length) return '';
-  if (validArgs.length === 1) return validArgs.shift()!;
+  if (validArgs.length === 1) return validArgs.shift()!.toString();
 
   const lastArg = validArgs.pop()!;
   const combinedArgs = validArgs.join(separator);
