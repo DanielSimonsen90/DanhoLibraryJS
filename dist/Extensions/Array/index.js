@@ -10,31 +10,13 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ArrayExtensions = void 0;
-const Array = __importStar(require("./array.extension"));
-const CRUD = __importStar(require("./crud.extension"));
-const Loop = __importStar(require("./loop.extension"));
-const Random = __importStar(require("./random.extension"));
-const Sort = __importStar(require("./sort.extension"));
-const String = __importStar(require("./string.extension"));
-exports.ArrayExtensions = {
-    ...Array,
-    ...CRUD,
-    ...Loop,
-    ...Random,
-    ...Sort,
-    ...String,
-};
+__exportStar(require("./array.extension"), exports);
+__exportStar(require("./crud.extension"), exports);
+__exportStar(require("./loop.extension"), exports);
+__exportStar(require("./random.extension"), exports);
+__exportStar(require("./sort.extension"), exports);
+__exportStar(require("./string.extension"), exports);
