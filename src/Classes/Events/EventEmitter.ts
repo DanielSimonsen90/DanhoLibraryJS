@@ -86,7 +86,7 @@ export class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
    * @param event Event to emit
    * @param args Arguments for the event
    * @fires event
-   * @returns Array of listeners' reponses
+   * @returns Array of listeners' responses
    */
   public emit<Return extends any, Event extends keyof Events>(
     event: Event, ...args: Events[Event]
