@@ -1,3 +1,4 @@
+import { Autocomplete } from "../../Types";
 import { LongDay, LongMonth } from "../../Types/Date";
 
 /** '2s' or 2000 */
@@ -7,11 +8,15 @@ export type TimeDelay = number | TimeString;
 export const ValidTime = /^(\d+(?:\.|,)?\d*)(ms|s|m|h|d|w|M|y)$/;
 
 /**
- * Converts input into milliseconds
+ * Converts input into milliseconds. Supports multiple time units in one string by space separation. E.g. 1h 30m
  * @param input Input to convert to ms. 1s | 2m | 3h | 1M | 60000
  * @returns Millisecond value of input
  */
-export function ms(input: TimeDelay) {
+export function ms(input: Autocomplete<TimeDelay>) {
+  return input.toString().split(' ').reduce((result, unit) => result += msSingular(unit as TimeDelay), 0);
+}
+
+function msSingular(input: TimeDelay) {
   if (typeof input === 'number') return input;
 
   const match = input.match(ValidTime);
@@ -128,7 +133,7 @@ export class Time {
     return Math.round(this.daysInMonth.reduce((result, num) => result += num, 0) / 12);
   }
   public static ms(input: TimeDelay) {
-    return ms(input);
+    return msSingular(input);
   }
 }
 export default Time;
