@@ -10,13 +10,6 @@ declare global {
     take(count: number): Array<T>;
 
     /**
-     * Forces an arrayable object into an array
-     * @param arrayable The arrayable object to force into an array
-     * @returns An array containing the elements of the input or the single value.
-     */
-    forceArray(arrayable: Arrayable<T>): Array<T>;
-
-    /**
      * Returns a new array with only unique elements from the original array.
      * @returns An array containing only unique elements.
      */
@@ -36,6 +29,15 @@ declare global {
      */
     groupBy<K>(keySelector: (value: T, index: number, array: Array<T>) => K): Map<K, Array<T>>;
   }
+
+  interface ArrayConstructor {
+    /**
+     * Forces an arrayable object into an array
+     * @param arrayable The arrayable object to force into an array
+     * @returns An array containing the elements of the input or the single value.
+     */
+    forceArray<T>(arrayable: Arrayable<T>): Array<T>;
+  }
 }
 
 export function take<T>(this: Array<T>, count: number): Array<T> {
@@ -46,7 +48,7 @@ Array.prototype.take = take;
 export function forceArray<T>(arrayable: Arrayable<T>): Array<T> {
   return Array.isArray(arrayable) ? arrayable : [arrayable];
 }
-Array.prototype.forceArray = forceArray;
+Array.forceArray = forceArray;
 
 export function unique<T>(this: Array<T>): Array<T> {
   return [...new Set(this)];
