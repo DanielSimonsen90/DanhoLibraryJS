@@ -65,6 +65,8 @@ export function patch<
       return () => target[property] = original;
     } else {
       let currentValue = target[property];
+      const propertyDescriptor = Object.getOwnPropertyDescriptor(target, property);
+
       const valuePatch = (update?: TTarget[TProperty]) => {
         update ??= currentValue;
         const result = event !== 'after' ? (replacement as any)(currentValue, update) || currentValue : currentValue;
@@ -79,11 +81,7 @@ export function patch<
         set: valuePatch,
       });
   
-      return () => Object.defineProperty(target, property, {
-        value: currentValue,
-        writable: true,
-        configurable: true,
-      });
+      return () => Object.defineProperty(target, property, propertyDescriptor!);
     }
   })();
 
