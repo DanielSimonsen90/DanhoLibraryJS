@@ -12,7 +12,7 @@ export type Arrayable<T> = T | Array<T>;
 /**
  * Item is function or T
  */
-export type Functionable<T> = T | (() => T);
+export type Functionable<T, Args extends any[] = []> = T | ((...args: Args) => T);
 
 /**
  * Item is Promise<T> or T
