@@ -1,9 +1,9 @@
 import { Arrayable, TransformType } from "../Types";
 import { EventEmitter } from "./Events";
 
-export type Reducer<State, Types extends Record<string, any[]>, Action extends keyof Types> = (state: State, ...args: Types[Action]) => State
-export type Actions<State, ActionTypes extends Record<string, any[]>> = { 
-    [Action in keyof ActionTypes]?: Arrayable<Reducer<State, ActionTypes, Action>> 
+export type Reducer<State, Types extends Record<string, any[]>, Action extends keyof Types> = (state: State, ...args: Types[Action]) => State;
+export type Actions<State, ActionTypes extends Record<string, any[]>> = {
+  [Action in keyof ActionTypes]?: Arrayable<Reducer<State, ActionTypes, Action>>
 };
 
 /**
@@ -70,29 +70,29 @@ export type Actions<State, ActionTypes extends Record<string, any[]>> = {
  * ```
  */
 export class Store<
-    State extends object,
-    ActionTypes extends Record<string, any[]>,
-    StoreActions extends Actions<State, ActionTypes> = Actions<State, ActionTypes>
+  State extends object,
+  ActionTypes extends Record<string, any[]>,
+  StoreActions extends Actions<State, ActionTypes> = Actions<State, ActionTypes>
 > extends EventEmitter<
-    Record<keyof StoreActions, ActionTypes[keyof ActionTypes]> 
-    & Record<'stateChange', [previous: State, current: State]>
+  Record<keyof StoreActions, ActionTypes[keyof ActionTypes]>
+  & Record<'stateChange', [previous: State, current: State]>
 > {
-    constructor(state: State, actions: StoreActions = {} as StoreActions) {
-        super(new Map(...Object.entries(actions).map(([action, reducers]) => [action, reducers as any])));
+  constructor(state: State, actions: StoreActions = {} as StoreActions) {
+    super(new Map(...Object.entries(actions).map(([action, reducers]) => [action, reducers as any])));
 
-        this._state = state;
-    }
+    this._state = state;
+  }
 
-    private _state: State;
-    public get state(): State {
-        return this._state;
-    }
+  private _state: State;
+  public get state(): State {
+    return this._state;
+  }
 
-    public dispatch<Action extends keyof ActionTypes>(action: Action, ...args: ActionTypes[Action]): State {
-        const previous = { ...this._state };
-        this._state = super.emit<State, Action>(action, ...args as any).reduce((state, returned) => ({ ...state, ...returned }), this.state);
+  public dispatch<Action extends keyof ActionTypes>(action: Action, ...args: ActionTypes[Action]): State {
+    const previous = { ...this._state };
+    this._state = super.emit<State, Action>(action, ...args as any).reduce((state, returned) => ({ ...state, ...returned }), this.state);
 
-        super.emit<void, 'stateChange'>('stateChange', ...[previous, this.state] as any);
-        return this.state;
-    }
+    super.emit<void, 'stateChange'>('stateChange', ...[previous, this.state] as any);
+    return this.state;
+  }
 }
