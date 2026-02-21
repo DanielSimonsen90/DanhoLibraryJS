@@ -1,9 +1,9 @@
-import { Arrayable, IElement } from "../Types"
+import { Arrayable, IElement } from "../Types";
 
 type Events = Record<
-    `on${Capitalize<keyof HTMLElementEventMap>}`,
-    (event: Event) => void
->
+  `on${Capitalize<keyof HTMLElementEventMap>}`,
+  (event: Event) => void
+>;
 
 /**
  * Construction options when creating an HTML element using:
@@ -12,10 +12,10 @@ type Events = Record<
  * @borrows Arrayable
  */
 export type ElementOptions = Partial<
-    Events & Record<string, any> & {
+  Events & Record<string, any> & {
     id: string,
     className: Arrayable<string>;
     children: Arrayable<IElement>;
-    dataset: Record<string, string>
-}>
+    dataset: Record<string, string>;
+  }>;
 export default ElementOptions;
