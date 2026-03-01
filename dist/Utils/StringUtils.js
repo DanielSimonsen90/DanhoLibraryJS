@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pluralize = exports.randomId = exports.classNames = void 0;
+exports.StringUtils = exports.pluralize = exports.randomId = exports.classNames = void 0;
 function classNames(...args) {
     return args.reduce((acc, arg) => {
         if (!arg)
@@ -45,3 +45,8 @@ function pluralize(countable, singular, plural) {
     return `${singular}s`;
 }
 exports.pluralize = pluralize;
+exports.StringUtils = {
+    classNames,
+    randomId,
+    pluralize
+};

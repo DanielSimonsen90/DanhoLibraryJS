@@ -1,4 +1,7 @@
 export declare const TimeUtils: {
+    ensureStartZero(num: number): string;
+    get12HourFormat(hour: number): string;
+    get24HourFormat(hour: number): string;
     throttle<T>(throttleId: string, callback: () => T, cooldown: number): T;
     wrapInThrottle<T_1>(callback: (...args: T_1[]) => void, cooldown: number): (...args: T_1[]) => void;
     isThrottleOnCooldown(throttleId: string): boolean;

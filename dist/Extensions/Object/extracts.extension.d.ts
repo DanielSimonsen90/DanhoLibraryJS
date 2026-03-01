@@ -13,24 +13,24 @@ declare global {
          */
         pick<From extends {}, Props extends keyof From>(from: From, ...props: Array<Props | Partial<From>>): Pick<From, Props>;
         /**
-         * Receive an object with properties that are not in union of source and target objects
+         * Returns the difference between two objects (properties where values differ)
          * @param source Source object
          * @param target Target object
-         * @param exclude Properties to exclude from difference
-         * @returns Object with properties that are not in union of source and target objects, excluding specified properties
+         * @param exclude Properties to exclude from comparison
+         * @returns Object with properties where values differ between source and target, excluding specified properties
          */
-        difference<T extends object>(source: T, target: T, ...exclude: Array<keyof T>): Omit<T, keyof T>;
+        difference<T extends object>(source: T, target: T, ...exclude: Array<keyof T>): Partial<T>;
         /**
          * Deeply combines objects, with later objects in parameters taking precedence over earlier ones. Does not combine arrays.
          * @param objects Objects to combine
          * @returns Combined object
          */
-        combine<T extends Record<string, any | undefined>>(...objects: Array<Partial<T> | undefined>): T;
+        combine<T extends Record<string, any | undefined>>(...objects: Array<Combinable<T> | undefined>): T;
     }
 }
 export declare function omit<From extends {}, Props extends keyof From>(from: From, ...props: Array<Props | Partial<From>>): Omit<From, Props>;
 export declare function pick<From extends {}, Props extends keyof From>(from: From, ...props: Array<Props | Partial<From>>): Pick<From, Props>;
-export declare function difference<T extends object>(source: T, target: T, ...exclude: Array<keyof T>): Omit<T, keyof T>;
+export declare function difference<T extends object>(source: T, target: T, ...exclude: Array<keyof T>): Partial<T>;
 type Combinable<T extends Record<string, any>> = {
     [key in keyof T]?: T[key] extends Record<string, any> ? Combinable<T[key]> : T[key];
 };

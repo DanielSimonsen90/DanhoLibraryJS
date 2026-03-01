@@ -15,20 +15,20 @@ declare global {
     pick<From extends {}, Props extends keyof From>(from: From, ...props: Array<Props | Partial<From>>): Pick<From, Props>;
 
     /**
-     * Receive an object with properties that are not in union of source and target objects
+     * Returns the difference between two objects (properties where values differ)
      * @param source Source object 
      * @param target Target object 
-     * @param exclude Properties to exclude from difference
-     * @returns Object with properties that are not in union of source and target objects, excluding specified properties
+     * @param exclude Properties to exclude from comparison
+     * @returns Object with properties where values differ between source and target, excluding specified properties
      */
-    difference<T extends object>(source: T, target: T, ...exclude: Array<keyof T>): Omit<T, keyof T>;
+    difference<T extends object>(source: T, target: T, ...exclude: Array<keyof T>): Partial<T>;
 
     /**
      * Deeply combines objects, with later objects in parameters taking precedence over earlier ones. Does not combine arrays.
      * @param objects Objects to combine
      * @returns Combined object
      */
-    combine<T extends Record<string, any | undefined>>(...objects: Array<Partial<T> | undefined>): T;
+    combine<T extends Record<string, any | undefined>>(...objects: Array<Combinable<T> | undefined>): T;
   }
 }
 
@@ -60,16 +60,21 @@ export function pick<From extends {}, Props extends keyof From>(from: From, ...p
 }
 Object.pick = pick;
 
-export function difference<T extends object>(source: T, target: T, ...exclude: Array<keyof T>): Omit<T, keyof T> {
-  const diffKeys = new Set([...Object.keysOf(source), ...Object.keysOf(target)]);
-  exclude?.forEach(key => diffKeys.delete(key));
+export function difference<T extends object>(source: T, target: T, ...exclude: Array<keyof T>): Partial<T> {
+  const excludeSet = new Set(exclude);
+  const allKeys = new Set([...Object.keysOf(source), ...Object.keysOf(target)]);
 
-  return [...diffKeys.values()].reduce((acc, key, i, arr) => {
-    const sourceValue = JSON.stringify(source[key]);
-    const targetValue = JSON.stringify(target[key]);
-    if (sourceValue !== targetValue) acc[key] = target[key];
+  return [...allKeys].reduce((acc, key) => {
+    if (excludeSet.has(key)) return acc;
+    
+    const sourceValue = (source as any)[key];
+    const targetValue = (target as any)[key];
+    
+    if (JSON.stringify(sourceValue) !== JSON.stringify(targetValue)) {
+      acc[key] = targetValue;
+    }
     return acc;
-  }, {} as T);
+  }, {} as any) as Partial<T>;
 }
 Object.difference = difference;
 

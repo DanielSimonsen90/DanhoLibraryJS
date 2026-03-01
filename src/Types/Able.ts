@@ -6,7 +6,7 @@ export type Functionable<T, Args extends any[] = []> = T | ((...args: Args) => T
 /**
  * Item is Promise<T> or T
  */
-export type Promisable<T> = T | Promise<T>;
+export type Promiseable<T> = T | Promise<T>;
 
 /**
  * Item is T or null

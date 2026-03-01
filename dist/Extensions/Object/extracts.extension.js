@@ -30,13 +30,16 @@ function pick(from, ...props) {
 exports.pick = pick;
 Object.pick = pick;
 function difference(source, target, ...exclude) {
-    const diffKeys = new Set([...Object.keysOf(source), ...Object.keysOf(target)]);
-    exclude?.forEach(key => diffKeys.delete(key));
-    return [...diffKeys.values()].reduce((acc, key, i, arr) => {
-        const sourceValue = JSON.stringify(source[key]);
-        const targetValue = JSON.stringify(target[key]);
-        if (sourceValue !== targetValue)
-            acc[key] = target[key];
+    const excludeSet = new Set(exclude);
+    const allKeys = new Set([...Object.keysOf(source), ...Object.keysOf(target)]);
+    return [...allKeys].reduce((acc, key) => {
+        if (excludeSet.has(key))
+            return acc;
+        const sourceValue = source[key];
+        const targetValue = target[key];
+        if (JSON.stringify(sourceValue) !== JSON.stringify(targetValue)) {
+            acc[key] = targetValue;
+        }
         return acc;
     }, {});
 }

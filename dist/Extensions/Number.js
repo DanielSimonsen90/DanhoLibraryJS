@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toRomanNumeral = exports.toSeparationString = void 0;
 function toSeparationString(separators) {
-    const { thousand = '.', decimal = '.' } = separators;
+    const { thousand = '.', decimal = '.' } = separators || {};
     const [integerPart, decimalPart] = this.toString().split('.');
     const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousand);
     return decimalPart ? `${formattedInteger}${decimal}${decimalPart}` : formattedInteger;

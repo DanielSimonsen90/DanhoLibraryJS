@@ -127,6 +127,22 @@ function serializeForm<T extends object>(form: HTMLFormElement, log?: boolean): 
  * @returns Random number between min and max
  */
 function between(min: number, max: number): number;
+
+/**
+ * Select a random item from weighted items
+ * @param items Array of [item, weight] tuples where weight determines probability
+ * @returns Randomly selected item based on weights
+ * @throws Error if items array is empty or total weight is zero
+ */
+function randomWithPercentages<T>(items: [item: T, weight: number][]): T;
+
+/**
+ * Number utilities object
+ */
+const NumberUtils = {
+    between,
+    randomWithPercentages,
+};
 ```
 
 ### PatcherUtils
@@ -281,6 +297,27 @@ function wrapInThrottle<T>(
 function isThrottleOnCooldown(throttleId: string): boolean;
 
 /**
+ * Ensure a number is formatted with a leading zero if less than 10
+ * @param num Number to format
+ * @returns String with leading zero if needed
+ */
+function ensureStartZero(num: number): string;
+
+/**
+ * Convert 24-hour format to 12-hour format with am/pm
+ * @param hour Hour in 24-hour format (0-23)
+ * @returns Hour in 12-hour format with am/pm suffix
+ */
+function get12HourFormat(hour: number): string;
+
+/**
+ * Format hour in 24-hour format with leading zero
+ * @param hour Hour to format
+ * @returns Hour as two-digit string
+ */
+function get24HourFormat(hour: number): string;
+
+/**
  * Time utilities object containing all time-related functions
  */
 const TimeUtils = {
@@ -290,6 +327,9 @@ const TimeUtils = {
     wrapInDebounce,
     throttle,
     wrapInThrottle,
-    isThrottleOnCooldown
+    isThrottleOnCooldown,
+    ensureStartZero,
+    get12HourFormat,
+    get24HourFormat
 };
 ```

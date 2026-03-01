@@ -42,3 +42,9 @@ export function pluralize(countable: number | ArrayLike<any> | Map<any, any>, si
   if (plural) return plural;
   return `${singular}s`;
 }
+
+export const StringUtils = {
+  classNames,
+  randomId,
+  pluralize
+};

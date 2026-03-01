@@ -27,8 +27,10 @@ exports.TimeUtils = void 0;
 const Debounce = __importStar(require("./debounce.util"));
 const Functions = __importStar(require("./functions.util"));
 const Throttle = __importStar(require("./throttle.util"));
+const StringUtils = __importStar(require("./string.util"));
 exports.TimeUtils = {
     ...Functions,
     ...Debounce,
     ...Throttle,
+    ...StringUtils,
 };

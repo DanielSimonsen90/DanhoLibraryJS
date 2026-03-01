@@ -5,13 +5,13 @@ type Separators = {
 
 declare global {
   interface Number {
-    toSeparationString(separators: Partial<Separators>): string;
+    toSeparationString(separators?: Partial<Separators>): string;
     toRomanNumeral(): string;
   }
 }
 
-export function toSeparationString(this: number, separators: Partial<Separators>): string {
-  const { thousand = '.', decimal = '.' } = separators;
+export function toSeparationString(this: number, separators?: Partial<Separators>): string {
+  const { thousand = '.', decimal = '.' } = separators || {};
   const [integerPart, decimalPart] = this.toString().split('.');
   const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousand);
   return decimalPart ? `${formattedInteger}${decimal}${decimalPart}` : formattedInteger;

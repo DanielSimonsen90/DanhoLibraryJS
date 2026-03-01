@@ -108,16 +108,6 @@ interface ArrayConstructor {
 }
 ```
 
-#### Standalone Functions
-
-```ts
-/**
- * Selects random item from weighted items
- * @param items Array of [item, weight] tuples where weight is probability
- */
-function randomWithPercentages<T>(items: [item: T, weight: number][]): T;
-```
-
 ### Function
 
 ```ts
@@ -192,9 +182,9 @@ interface Map<K, V> {
 interface Number {
     /**
      * Formats number with thousand and decimal separators
-     * @param separators Custom separators for thousand and decimal
+     * @param separators Custom separators for thousand and decimal (optional)
      */
-    toSeparationString(separators: Partial<{ thousand: string; decimal: string }>): string;
+    toSeparationString(separators?: Partial<{ thousand: string; decimal: string }>): string;
 
     /**
      * Converts number to Roman numeral (1-3999)
@@ -232,6 +222,30 @@ interface ObjectConstructor {
      * @param from Object to get keys from
      */
     keysOf<From = {}>(from: From): Array<keyof From>;
+
+    /**
+     * Object with property filter methods by type
+     * Methods: getStrings, getNumbers, getBooleans, getUndefineds, getNulls,
+     *          getObjects, getFunctions, getAnys, getDates, getRegExps,
+     *          getPromises, getArrays, getMaps, getSets
+     * @example Object.properties.getStrings(obj) // Returns object with only string properties
+     */
+    properties: {
+        getStrings<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getNumbers<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getBooleans<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getUndefineds<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getNulls<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getObjects<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getFunctions<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getAnys<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getDates<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getRegExps<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getPromises<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getArrays<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getMaps<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+        getSets<Source extends {}, AllowFunctions extends boolean = false>(source: Source, withFunctions?: AllowFunctions): Partial<Source>;
+    };
 }
 ```
 
@@ -290,6 +304,13 @@ interface String {
      * @param to Cases to convert to, can chain multiple conversions
      */
     convertCase(from: Case, ...to: Array<Case>): string;
+
+    /**
+     * Truncates string to specified length with optional ellipsis
+     * @param length Maximum length of string
+     * @param ellipsis String to append if truncated (default: '...')
+     */
+    truncate(length: number, ellipsis?: string): string;
 }
 ```
 

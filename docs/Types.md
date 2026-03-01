@@ -38,7 +38,7 @@ type Functionable<T, Args extends any[] = []> = T | ((...args: Args) => T);
 /**
  * Value can be either T or a Promise that resolves to T
  */
-type Promisable<T> = T | Promise<T>;
+type Promiseable<T> = T | Promise<T>;
 
 /**
  * Value can be T or null
