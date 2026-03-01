@@ -26,3 +26,4 @@ import { ... } from 'DanhoLibraryJS';
 * [Extensions](/docs/Extensions.md)
 * [Interfaces](/docs/Interfaces.md)
 * [Types](/docs/Types.md)
+* [Utils](/docs/Utils.md)
