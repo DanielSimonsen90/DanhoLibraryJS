@@ -210,10 +210,22 @@ interface Number {
 ```ts
 interface ObjectConstructor {
     /**
-     * Converts object to array of [key, value] tuples
-     * @param from Object to convert
+     * Destructures object into array of [property, value]
+     * @param from Object to destruct
      */
-    array<From = {}>(from: From): Array<[keyof From, ValueOf<From>]>;
+    array<From extends {} = {}>(from: From): Array<[keyof From, ValueOf<From>]>;
+    /**
+     * Destructures object into array of property keys or values depending on selector
+     * @param from Object to destruct
+     * @param selector Selects whether to return keys or values
+     */
+    array<From extends {} = {}>(from: From, selector: 'keys'): Array<keyof From>;
+    /**
+     * Destructures object into array of property keys or values depending on selector
+     * @param from Object to destruct
+     * @param selector Selects whether to return keys or values
+     */
+    array<From extends {} = {}>(from: From, selector: 'values'): Array<ValueOf<From>>;
 
     /**
      * Returns array of object keys with proper typing

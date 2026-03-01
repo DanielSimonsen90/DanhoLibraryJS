@@ -7,6 +7,18 @@ declare global {
          */
         array<From extends {} = {}>(from: From): Array<[keyof From, ValueOf<From>]>;
         /**
+         * Destructures object into array of property keys or values depending on selector
+         * @param from Object to destruct
+         * @param selector Selects whether to return keys or values
+         */
+        array<From extends {} = {}>(from: From, selector: 'keys'): Array<keyof From>;
+        /**
+         * Destructures object into array of property keys or values depending on selector
+         * @param from Object to destruct
+         * @param selector Selects whether to return keys or values
+         */
+        array<From extends {} = {}>(from: From, selector: 'values'): Array<ValueOf<From>>;
+        /**
          * Destructures object into array of property keys
          * @param from Object to destruct
          */
@@ -14,4 +26,6 @@ declare global {
     }
 }
 export declare function array<From extends {} = {}>(this: object, from: From): Array<[keyof From, ValueOf<From>]>;
+export declare function array<From extends {} = {}>(this: object, from: From, selector: 'keys'): Array<keyof From>;
+export declare function array<From extends {} = {}>(this: object, from: From, selector: 'values'): Array<ValueOf<From>>;
 export declare function keysOf<From extends {} = {}>(this: object, from: From): Array<keyof From>;
