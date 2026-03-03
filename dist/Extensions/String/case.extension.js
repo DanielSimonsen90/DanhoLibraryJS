@@ -51,5 +51,8 @@ const caseMap = {
         lower: (str) => str.toLowerCase(),
     }
 };
-const convertCase = (value, from, ...to) => to.reduce((str, toCase) => caseMap[from][toCase](str), value);
+function convertCase(from, ...to) {
+    return to.reduce((str, toCase) => caseMap[from][toCase](str), this);
+}
 exports.convertCase = convertCase;
+String.prototype.convertCase = convertCase;

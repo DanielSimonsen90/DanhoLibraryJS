@@ -164,9 +164,9 @@ type BaseEvent<Keys extends string, Types extends Array<any>> = Record<Keys, Typ
  * Event handler type
  */
 type EventHandler<
-    Events extends BaseEvent<string, Array<any>> = BaseEvent<string, Array<any>>,
-    Event extends keyof Events = keyof Events,
-    ReturnType = any
+  Events extends BaseEvent<string, Array<any>> = BaseEvent<string, Array<any>>,
+  Event extends keyof Events = keyof Events,
+  ReturnType = any
 > = (...args: Events[Event]) => ReturnType;
 ```
 
@@ -177,13 +177,13 @@ type EventHandler<
  * Changes return type of a function
  */
 type NewReturnType<Func extends (...args: any[]) => any, NewReturn> = 
-    Func extends (...args: infer Args) => any ? (...args: Args) => NewReturn : never;
+  Func extends (...args: infer Args) => any ? (...args: Args) => NewReturn : never;
 
 /**
  * Wraps function return type in Promise
  */
 type PromisedReturn<Func extends (...args: any[]) => any> = 
-    Func extends (...args: infer Args) => infer Return ? (...args: Args) => Promise<Return> : never;
+  Func extends (...args: infer Args) => infer Return ? (...args: Args) => Promise<Return> : never;
 
 /**
  * Removes all function properties from type
@@ -198,7 +198,7 @@ type NoFunctions<T> = { [K in keyof T]: T[K] extends Function ? never : T[K] };
  * Type's properties are all ReturnType
  */
 type AllPropsAre<ReturnType> = {
-    [key: string]: ReturnType;
+  [key: string]: ReturnType;
 };
 ```
 
@@ -209,25 +209,25 @@ type AllPropsAre<ReturnType> = {
  * Filters all properties from From that have the return type of Type
  */
 type PropertiesWith<Type, From> = {
-    [Key in keyof From as From[Key] extends Type ? Key : never]: From[Key];
+  [Key in keyof From as From[Key] extends Type ? Key : never]: From[Key];
 };
 
 /**
  * Filters all properties from From that don't have the return type of Type
  */
 type PropertiesWithout<Type, From> = {
-    [Key in keyof From as From[Key] extends Type ? never : Key]: From[Key];
+  [Key in keyof From as From[Key] extends Type ? never : Key]: From[Key];
 };
 
 /**
  * Gets keys that appear in all types in the array
  */
 type GetRepeatedKeys<Types extends Array<any>> = 
-    Types extends [infer First, ...infer Rest]
-        ? Rest extends Array<any>
-            ? keyof First & GetRepeatedKeys<Rest>
-            : keyof First
-        : never;
+  Types extends [infer First, ...infer Rest]
+      ? Rest extends Array<any>
+          ? keyof First & GetRepeatedKeys<Rest>
+          : keyof First
+      : never;
 
 /**
  * Filters types that have specific properties
@@ -251,27 +251,27 @@ type Autocomplete<T> = T | (string & {});
  * Converts Start types to Switch types in From type
  */
 type TransformType<From, Start, Switch> = {
-    [Key in keyof From]: From[Key] extends Start ? Switch : From[Key];
+  [Key in keyof From]: From[Key] extends Start ? Switch : From[Key];
 };
 
 /**
  * Returns object with properties matching BaseType with types of NewType
  */
 type TransformTypes<From, BaseType, NewType> = Record<keyof {
-    [Key in keyof From as From[Key] extends BaseType ? Key : never]: Key;
+  [Key in keyof From as From[Key] extends BaseType ? Key : never]: Key;
 }, NewType>;
 
 /**
  * Converts object to JSON-serializable type (removes functions, Date -> string, etc.)
  */
 type Json<T> = {
-    [K in keyof T]: T[K] extends Function
-        ? never
-        : T[K] extends Date
-        ? string
-        : T[K] extends object
-        ? Json<T[K]>
-        : T[K];
+  [K in keyof T]: T[K] extends Function
+      ? never
+      : T[K] extends Date
+      ? string
+      : T[K] extends object
+      ? Json<T[K]>
+      : T[K];
 };
 ```
 
@@ -282,5 +282,5 @@ type Json<T> = {
  * Reducer function for Store state updates
  */
 type Reducer<State, Types extends Record<string, any[]>, Action extends keyof Types> = 
-    (state: State, ...args: Types[Action]) => State;
+  (state: State, ...args: Types[Action]) => State;
 ```

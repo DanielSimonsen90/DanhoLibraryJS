@@ -11,12 +11,12 @@ declare global {
       from: Case,
       ...to: To
     ): (
-      Return extends 'upper' ? Uppercase<string>
-      : Return extends 'lower' ? Lowercase<string>
-      : Return extends 'pascal' ? Capitalize<string>
-      : Return extends 'camel' ? Uncapitalize<string>
-      : string
-    );
+        Return extends 'upper' ? Uppercase<string>
+        : Return extends 'lower' ? Lowercase<string>
+        : Return extends 'pascal' ? Capitalize<string>
+        : Return extends 'camel' ? Uncapitalize<string>
+        : string
+      );
   }
 }
 
@@ -78,12 +78,12 @@ const caseMap: Record<Case, Record<Case, (str: string) => string>> = {
   }
 };
 
-export const convertCase = <
+export function convertCase<
   TValue extends string,
   To extends Array<Case>,
   Return extends To extends [...Array<Case>, infer To] ? To : Case
 >(
-  value: TValue,
+  this: TValue,
   from: Case,
   ...to: To
 ): (
@@ -92,4 +92,8 @@ export const convertCase = <
     : Return extends 'pascal' ? Capitalize<TValue>
     : Return extends 'camel' ? Uncapitalize<TValue>
     : string
-  ) => to.reduce((str, toCase) => caseMap[from][toCase](str), value as string) as any;
+  ) {
+  return to.reduce((str, toCase) => caseMap[from][toCase](str), this as string) as any;
+}
+
+String.prototype.convertCase = convertCase;

@@ -51,8 +51,12 @@ export function pick<From extends {}, Props extends keyof From>(from: From, ...p
   return props.reduce((result, prop) => {
     if (typeof prop === "object") {
       const keys = Object.keysOf(prop);
-      keys.forEach(key => (result as Partial<From>)[key] = from[key]);
-    } else {
+      keys.forEach(key => {
+        if (key in from) {
+          (result as Partial<From>)[key] = from[key];
+        }
+      });
+    } else if (prop in from) {
       (result as Partial<From>)[prop] = from[prop];
     }
     return result;

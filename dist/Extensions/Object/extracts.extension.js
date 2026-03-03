@@ -19,9 +19,13 @@ function pick(from, ...props) {
     return props.reduce((result, prop) => {
         if (typeof prop === "object") {
             const keys = Object.keysOf(prop);
-            keys.forEach(key => result[key] = from[key]);
+            keys.forEach(key => {
+                if (key in from) {
+                    result[key] = from[key];
+                }
+            });
         }
-        else {
+        else if (prop in from) {
             result[prop] = from[prop];
         }
         return result;

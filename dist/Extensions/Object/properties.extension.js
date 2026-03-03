@@ -7,7 +7,7 @@ exports.properties = [
     'object', 'function', 'any',
     'Date', 'RegExp', 'Promise', 'Array', 'Map', 'Set'
 ].reduce((result, primitive) => {
-    result[`get${(0, case_extension_1.convertCase)('camel', 'pascal')}s`] = function (source, withFunctions = false) {
+    result[`get${case_extension_1.convertCase.call(primitive, 'camel', 'pascal')}s`] = function (source, withFunctions = false) {
         return Object.keysOf(source).reduce((result, key) => {
             if (source[key].constructor.name === primitive ||
                 (withFunctions && typeof source[key] === 'function' && source[key]).constructor.name === primitive) {

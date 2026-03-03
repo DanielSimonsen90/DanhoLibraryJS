@@ -11,55 +11,55 @@ Utility functions and classes for common tasks.
  * API utility class for making HTTP requests
  */
 class ApiUtils<ApiEndpoints extends string> {
-    /**
-     * @param options Configuration options
-     * @param options.baseEndpointDev Base URL for development environment
-     * @param options.baseEndpoint Base URL for production environment (optional)
-     * @param options.log Enable request logging (default: false)
-     */
-    constructor(options: {
-        baseEndpointDev: string;
-        baseEndpoint?: string;
-        log?: boolean;
-    });
+  /**
+   * @param options Configuration options
+   * @param options.baseEndpointDev Base URL for development environment
+   * @param options.baseEndpoint Base URL for production environment (optional)
+   * @param options.log Enable request logging (default: false)
+   */
+  constructor(options: {
+      baseEndpointDev: string;
+      baseEndpoint?: string;
+      log?: boolean;
+  });
 
-    /**
-     * Make a request to the API
-     * @param path The path to the endpoint
-     * @param options Request options (method, body, headers, etc.)
-     * @returns The response from the API
-     */
-    public async request<TData>(
-        path: ApiEndpoints,
-        options?: RequestOptions
-    ): Promise<TData>;
+  /**
+   * Make a request to the API
+   * @param path The path to the endpoint
+   * @param options Request options (method, body, headers, etc.)
+   * @returns The response from the API
+   */
+  public async request<TData>(
+      path: ApiEndpoints,
+      options?: RequestOptions
+  ): Promise<TData>;
 
-    /**
-     * Get the base endpoint URL based on environment
-     */
-    public get baseEndpoint(): string;
+  /**
+   * Get the base endpoint URL based on environment
+   */
+  public get baseEndpoint(): string;
 }
 
 /**
  * Request options type
  */
 type RequestOptions<TBody = any> = Omit<RequestInit, 'method' | 'body'> & {
-    method?: HttpMethods;
-    body?: TBody;
-    params?: Record<string, string | number | boolean>;
+  method?: HttpMethods;
+  body?: TBody;
+  params?: Record<string, string | number | boolean>;
 };
 
 /**
  * HTTP methods
  */
 type HttpMethods =
-    | 'GET'
-    | 'POST'
-    | 'PUT'
-    | 'PATCH'
-    | 'DELETE'
-    | 'HEAD'
-    | 'OPTIONS';
+  | 'GET'
+  | 'POST'
+  | 'PUT'
+  | 'PATCH'
+  | 'DELETE'
+  | 'HEAD'
+  | 'OPTIONS';
 ```
 
 ### ColorUtils
@@ -100,8 +100,8 @@ function generateRandomColor(): Hex;
  * Color utilities object
  */
 const ColorUtils = {
-    convert,
-    generateRandomColor
+  convert,
+  generateRandomColor
 };
 ```
 
@@ -140,8 +140,8 @@ function randomWithPercentages<T>(items: [item: T, weight: number][]): T;
  * Number utilities object
  */
 const NumberUtils = {
-    between,
-    randomWithPercentages,
+  between,
+  randomWithPercentages,
 };
 ```
 
@@ -162,15 +162,15 @@ type PatchEvent = 'before' | 'instead' | 'after';
  * @returns Function to unpatch
  */
 function patch<
-    TTarget extends object,
-    TProperty extends keyof TTarget,
-    TPatchEvent extends PatchEvent,
-    TPatchReplacement extends PatcherReplacement<TTarget, TProperty, TPatchEvent>
+  TTarget extends object,
+  TProperty extends keyof TTarget,
+  TPatchEvent extends PatchEvent,
+  TPatchReplacement extends PatcherReplacement<TTarget, TProperty, TPatchEvent>
 >(
-    target: TTarget,
-    property: TProperty,
-    event: TPatchEvent,
-    replacement: TPatchReplacement
+  target: TTarget,
+  property: TProperty,
+  event: TPatchEvent,
+  replacement: TPatchReplacement
 ): (() => void) | undefined;
 
 /**
@@ -179,8 +179,8 @@ function patch<
  * @param property Property to unpatch
  */
 function unpatch<TTarget extends object, TProperty extends keyof TTarget>(
-    target: TTarget,
-    property: TProperty
+  target: TTarget,
+  property: TProperty
 ): void;
 
 /**
@@ -216,9 +216,9 @@ function randomId(length?: number): string;
  * @returns Singular or plural form based on count
  */
 function pluralize(
-    countable: number | ArrayLike<any> | Map<any, any>,
-    singular: string,
-    plural?: string
+  countable: number | ArrayLike<any> | Map<any, any>,
+  singular: string,
+  plural?: string
 ): string;
 ```
 
@@ -248,10 +248,10 @@ function getUnixTime(timestamp: number): number;
  * @returns Promise that resolves with callback result or rejects if cancelled
  */
 function debounce<T>(
-    debounceId: string,
-    callback: () => T,
-    delay: number,
-    signal?: AbortSignal
+  debounceId: string,
+  callback: () => T,
+  delay: number,
+  signal?: AbortSignal
 ): Promise<T>;
 
 /**
@@ -261,8 +261,8 @@ function debounce<T>(
  * @returns Debounced function
  */
 function wrapInDebounce<T>(
-    callback: (...args: T[]) => void,
-    delay: number
+  callback: (...args: T[]) => void,
+  delay: number
 ): (...args: T[]) => void;
 
 /**
@@ -273,9 +273,9 @@ function wrapInDebounce<T>(
  * @returns Callback result or undefined if on cooldown
  */
 function throttle<T>(
-    throttleId: string,
-    callback: () => T,
-    cooldown: number
+  throttleId: string,
+  callback: () => T,
+  cooldown: number
 ): T | undefined;
 
 /**
@@ -285,8 +285,8 @@ function throttle<T>(
  * @returns Throttled function
  */
 function wrapInThrottle<T>(
-    callback: (...args: T[]) => void,
-    cooldown: number
+  callback: (...args: T[]) => void,
+  cooldown: number
 ): (...args: T[]) => void;
 
 /**
@@ -321,15 +321,15 @@ function get24HourFormat(hour: number): string;
  * Time utilities object containing all time-related functions
  */
 const TimeUtils = {
-    wait,
-    getUnixTime,
-    debounce,
-    wrapInDebounce,
-    throttle,
-    wrapInThrottle,
-    isThrottleOnCooldown,
-    ensureStartZero,
-    get12HourFormat,
-    get24HourFormat
+  wait,
+  getUnixTime,
+  debounce,
+  wrapInDebounce,
+  throttle,
+  wrapInThrottle,
+  isThrottleOnCooldown,
+  ensureStartZero,
+  get12HourFormat,
+  get24HourFormat
 };
 ```

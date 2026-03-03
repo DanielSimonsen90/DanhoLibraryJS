@@ -9,68 +9,68 @@
  * Enhanced console logger with prefixes, colors, and grouping
  */
 class DanhoLogger {
-    /**
-     * @param options Logger configuration
-     * @param options.name Name to display in log prefix (default: 'DanhoLogger')
-     * @param options.color Color for the prefix (default: 'inherit')
-     * @param options.preferCollapsed Whether to use collapsed groups by default (default: false)
-     */
-    constructor(options?: { name?: string; color?: string; preferCollapsed?: boolean });
+  /**
+   * @param options Logger configuration
+   * @param options.name Name to display in log prefix (default: 'DanhoLogger')
+   * @param options.color Color for the prefix (default: 'inherit')
+   * @param options.preferCollapsed Whether to use collapsed groups by default (default: false)
+   */
+  constructor(options?: { name?: string; color?: string; preferCollapsed?: boolean });
 
-    /**
-     * Name displayed in log prefix
-     */
-    public name: string;
+  /**
+   * Name displayed in log prefix
+   */
+  public name: string;
 
-    /**
-     * Color for the prefix
-     */
-    public color?: string;
+  /**
+   * Color for the prefix
+   */
+  public color?: string;
 
-    /**
-     * Logs a message
-     */
-    public log(...args: any[]): this;
+  /**
+   * Logs a message
+   */
+  public log(...args: any[]): this;
 
-    /**
-     * Logs a warning message
-     */
-    public warn(...args: any[]): this;
+  /**
+   * Logs a warning message
+   */
+  public warn(...args: any[]): this;
 
-    /**
-     * Logs an error message
-     */
-    public error(...args: any[]): this;
+  /**
+   * Logs an error message
+   */
+  public error(...args: any[]): this;
 
-    /**
-     * Creates a log group
-     */
-    public group(...args: any[]): this;
+  /**
+   * Creates a log group
+   */
+  public group(...args: any[]): this;
 
-    /**
-     * Creates a collapsed log group
-     */
-    public groupCollapsed(...args: any[]): this;
+  /**
+   * Creates a collapsed log group
+   */
+  public groupCollapsed(...args: any[]): this;
 
-    /**
-     * Ends the current log group
-     */
-    public groupEnd(...args: any[]): this;
+  /**
+   * Ends the current log group
+   */
+  public groupEnd(...args: any[]): this;
 
-    /**
-     * Starts a timer with a label
-     */
-    public time(label: string): this;
+  /**
+   * Starts a timer with a label
+   */
+  public time(label: string): this;
 
-    /**
-     * Ends a timer and logs the elapsed time
-     */
-    public timeEnd(label: string): this;
+  /**
+   * Ends a timer and logs the elapsed time
+   */
+  public timeEnd(label: string): this;
 
-    /**
-     * Logs data in a table format
-     */
-    public table(data: any, columns?: string[]): this;
+  /**
+   * Logs data in a table format
+   */
+  public table(data: any, columns?: string[]): this;
 }
 ```
 
@@ -95,18 +95,18 @@ class DanhoLogger {
  * @borrows Arrayable
  */
 class Store<
-    State extends object,
-    ActionTypes extends Record<string, any[]>,
-    Actions extends 
-    { [Action in keyof ActionTypes]: Array<Reducer<State, ActionTypes, Action>> } = 
-    { [Action in keyof ActionTypes]: Array<Reducer<State, ActionTypes, Action>> }
+  State extends object,
+  ActionTypes extends Record<string, any[]>,
+  Actions extends 
+  { [Action in keyof ActionTypes]: Array<Reducer<State, ActionTypes, Action>> } = 
+  { [Action in keyof ActionTypes]: Array<Reducer<State, ActionTypes, Action>> }
 > extends EventEmitter<Record<keyof Actions, ActionTypes[keyof ActionTypes]> & Record<'stateChange', [previous: State, current: State]>> {
-    constructor(state: State, actions?: { [Action in keyof ActionTypes]?: Arrayable<Reducer<State, ActionTypes, Action>> });
+  constructor(state: State, actions?: { [Action in keyof ActionTypes]?: Arrayable<Reducer<State, ActionTypes, Action>> });
 
-    private _state: State;
-    public get state(): State;
+  private _state: State;
+  public get state(): State;
 
-    public dispatch<Action extends keyof ActionTypes>(action: Action, ...args: ActionTypes[Action]): State;
+  public dispatch<Action extends keyof ActionTypes>(action: Action, ...args: ActionTypes[Action]): State;
 }
 ```
 
@@ -119,64 +119,64 @@ class Store<
  * @borrows BaseEvent
  */
 class Event<
-    Event extends BaseEvent<string, Array<any>>,
-    Name extends keyof Events = keyof Events
+  Event extends BaseEvent<string, Array<any>>,
+  Name extends keyof Events = keyof Events
 > {
-    /**
-     * Base event for @see EventEmitter, @borrows EventHandler
-     * @param name Name of event
-     * @param listeners Listeners/Handlers to execute when emitted
-     */
-    constructor(name: Name, ...listeners: Array<EventHandler<Events, Name>>);
+  /**
+   * Base event for @see EventEmitter, @borrows EventHandler
+   * @param name Name of event
+   * @param listeners Listeners/Handlers to execute when emitted
+   */
+  constructor(name: Name, ...listeners: Array<EventHandler<Events, Name>>);
 
-    /**Name of event*/
-    public name: Name;
-    /**Listener limit - default: 0 */
-    public limit = 0;
-    /**Number of times event was emitted - default: 0*/
-    public get runs: number;
-    /**Timestamp of last emit - default: null*/
-    public get lastEmitted: Date;
+  /**Name of event*/
+  public name: Name;
+  /**Listener limit - default: 0 */
+  public limit = 0;
+  /**Number of times event was emitted - default: 0*/
+  public get runs: number;
+  /**Timestamp of last emit - default: null*/
+  public get lastEmitted: Date;
 
-    /**
-     * Emits event and returns array of responses
-     * @param args Arguments required for event listeners
-     * @returns Return values of listeners' returns
-     */
-    public emit(...args: Events[Name]): any[];
-    /**
-     * Adds listener to listeners array and returns self with new listener added
-     * @param listener Listener to add
-     * @param prepend Add first (true) or last (false) - default: false
-     * @returns this with listener added
-     * 
-     * @throws Limit error, if limit was reached
-     */
-    public on(listener: EventHandler<Events, Name>, prepend = false): this
-    /**
-     * Like Event#on, adds listener to listeners array and returns self with new listener added, however removes listener once emitted
-     * @param listener Listener to add
-     * @param prepend Add first (true) or last (false) - default: false
-     * @returns this with listener added
-     * 
-     * @throws Limit error, if limit was reached
-     */
-    public once(listener: EventHandler<Events, Name>, prepend = false): this;
-    /**
-     * Returns true or false, depending if event includes listener
-     * @param listener Listener to test
-     * @returns True of false, depending if event includes listener
-     */
-    public includes(listener: EventHandler<Events, Name>): boolean;
-    /**
-     * Removes listener from internal listeners array
-     * @param listener Listener to remove. If none specified, all will be removed
-     * @param throwNotFoundError Throw error if listener isn't in listeners array - default: false
-     * @returns this, without listener
-     * 
-     * @throws NotFound, if throwNotFoundError is true, and internal listeners array doesn't include listener provided
-     */
-    public off(listener?: EventHandler<Events, Name>, throwNotFoundError = false): this;
+  /**
+   * Emits event and returns array of responses
+   * @param args Arguments required for event listeners
+   * @returns Return values of listeners' returns
+   */
+  public emit(...args: Events[Name]): any[];
+  /**
+   * Adds listener to listeners array and returns self with new listener added
+   * @param listener Listener to add
+   * @param prepend Add first (true) or last (false) - default: false
+   * @returns this with listener added
+   * 
+   * @throws Limit error, if limit was reached
+   */
+  public on(listener: EventHandler<Events, Name>, prepend = false): this
+  /**
+   * Like Event#on, adds listener to listeners array and returns self with new listener added, however removes listener once emitted
+   * @param listener Listener to add
+   * @param prepend Add first (true) or last (false) - default: false
+   * @returns this with listener added
+   * 
+   * @throws Limit error, if limit was reached
+   */
+  public once(listener: EventHandler<Events, Name>, prepend = false): this;
+  /**
+   * Returns true or false, depending if event includes listener
+   * @param listener Listener to test
+   * @returns True of false, depending if event includes listener
+   */
+  public includes(listener: EventHandler<Events, Name>): boolean;
+  /**
+   * Removes listener from internal listeners array
+   * @param listener Listener to remove. If none specified, all will be removed
+   * @param throwNotFoundError Throw error if listener isn't in listeners array - default: false
+   * @returns this, without listener
+   * 
+   * @throws NotFound, if throwNotFoundError is true, and internal listeners array doesn't include listener provided
+   */
+  public off(listener?: EventHandler<Events, Name>, throwNotFoundError = false): this;
 }
 
 /**
@@ -186,58 +186,58 @@ class Event<
  * @borrows BaseEvent
  */
 class EventCollection<Events extends BaseEvent<string, Array<any>>> {
-    /**Events to add in construction - Map<eventName, eventHandlers>*/
-    constructor(events?: Map<keyof Events, EventHandler<Events>>);
-    
-    /**Amount of events stored*/
-    public get size: number
+  /**Events to add in construction - Map<eventName, eventHandlers>*/
+  constructor(events?: Map<keyof Events, EventHandler<Events>>);
+  
+  /**Amount of events stored*/
+  public get size: number
 
-    /**
-     * Returns true if event is in collection
-     * @param event Event name
-     * @returns true if event is in collection
-     */
-    public has<EventName extends keyof Events>(event: EventName): boolean
-    /**
-     * Returns all event handlers for event name. T is return type for event
-     * @param event Event name
-     * @returns Event object stored
-     */
-    public get<EventName extends keyof Events>(event: EventName): Event<Events, EventName> 
-    /**
-     * Adds handler to event collection with name as key
-     * @param name Event name
-     * @param handler Handler for event
-     * @param once Whether or not handler only should run once or all times
-     * @returns this
-     */
-    public add<EventName extends keyof Events>(name: EventName, handler: EventHandler<Events, keyof Events>, once = false): this
-    /**
-     * @summary clear(): Clears all events
-     * @summary clear("all", myEventHandler): Removes myEventHandler from all events that have it
-     * @summary clear("myEvent"): Clears all handlers tied to "myEvent"
-     * @summary clear("myEvent", myEventHandler): Removes myEventHandler from "myEvent"
-     * 
-     * @param name Event name | "all"
-     * @param handler Specific handler to remove. If left blank, all handlers in name will be removed
-     * @returns this
-     */
-    public clear<EventName extends keyof Events>(name: EventName | 'all' = 'all', handler?: EventHandler): this
-    /**
-     * Emits event matching name, and provides args param to saved handers. Returns result from all handlers
-     * @param name Event name
-     * @param args Arguments for event handlers
-     * @returns Result from all handlers
-     */
-    public emit<Event extends keyof Events>(name: Event, ...args: Events[Event]): any[];
-    /**
-     * Limits how many events to accept using EventEmitter#on or EventEmitter#once
-     * @param limit Limit of events to keep
-     * @returns this with the new limit
-     * 
-     * @throws Unknown event, if event name isn't recognized
-     */
-    public limit<Event extends keyof Events>(eventName: 'all' | Event, limit: number): this
+  /**
+   * Returns true if event is in collection
+   * @param event Event name
+   * @returns true if event is in collection
+   */
+  public has<EventName extends keyof Events>(event: EventName): boolean
+  /**
+   * Returns all event handlers for event name. T is return type for event
+   * @param event Event name
+   * @returns Event object stored
+   */
+  public get<EventName extends keyof Events>(event: EventName): Event<Events, EventName> 
+  /**
+   * Adds handler to event collection with name as key
+   * @param name Event name
+   * @param handler Handler for event
+   * @param once Whether or not handler only should run once or all times
+   * @returns this
+   */
+  public add<EventName extends keyof Events>(name: EventName, handler: EventHandler<Events, keyof Events>, once = false): this
+  /**
+   * @summary clear(): Clears all events
+   * @summary clear("all", myEventHandler): Removes myEventHandler from all events that have it
+   * @summary clear("myEvent"): Clears all handlers tied to "myEvent"
+   * @summary clear("myEvent", myEventHandler): Removes myEventHandler from "myEvent"
+   * 
+   * @param name Event name | "all"
+   * @param handler Specific handler to remove. If left blank, all handlers in name will be removed
+   * @returns this
+   */
+  public clear<EventName extends keyof Events>(name: EventName | 'all' = 'all', handler?: EventHandler): this
+  /**
+   * Emits event matching name, and provides args param to saved handers. Returns result from all handlers
+   * @param name Event name
+   * @param args Arguments for event handlers
+   * @returns Result from all handlers
+   */
+  public emit<Event extends keyof Events>(name: Event, ...args: Events[Event]): any[];
+  /**
+   * Limits how many events to accept using EventEmitter#on or EventEmitter#once
+   * @param limit Limit of events to keep
+   * @returns this with the new limit
+   * 
+   * @throws Unknown event, if event name isn't recognized
+   */
+  public limit<Event extends keyof Events>(eventName: 'all' | Event, limit: number): this
 }
 
 /**
@@ -247,45 +247,45 @@ class EventCollection<Events extends BaseEvent<string, Array<any>>> {
  * @borrows EventHandler
  */
 class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
-    /**@param events Map<name: string, handlers: EventHandler[]>*/
-    constructor(events?: Map<keyof Events, EventHandler<Events>>);
+  /**@param events Map<name: string, handlers: EventHandler[]>*/
+  constructor(events?: Map<keyof Events, EventHandler<Events>>);
 
-    /**
-     * Adds listener to event collection, and runs listener when event is emitted
-     * @param event Event to handle
-     * @param listener Callback function to run, when event occurs
-     * @returns this
-     */
-    on<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
-    /**
-     * Adds listener to event collection, and runs listener once when event is emitted
-     * @param event Event to handle
-     * @param listener Callback function to run, when event occurs
-     * @returns this
-     */
-    once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
-    /**
-     * Removes listener(s) from event
-     * @param event Event to get collection of listeners | "all"
-     * @param listener If left null, removes all listeners tied to event, else only removes listener from event
-     * @returns this
-     */
-    off<Return extends any, Event extends keyof Events>(event: Event | 'all' = 'all', listener?: EventHandler<Events, Event, Return>): this;
-    /**
-     * Emits event and runs all listeners tied to event
-     * @param event Event to emit
-     * @param args Arguments for the event
-     * @fires event
-     * @returns Array of listeners' reponses
-     */
-    emit<Return extends any, Event extends keyof Events>(event: Event, ...args: Events[Event]): Array<Return>;
-    /**
-     * Limits how many events to accept using EventEmitter#on or EventEmitter#once
-     * @param event: Specific event to limit, or by default, 'all'
-     * @param limit Limit of events to keep. If you want to limit amount of events saved, use 'all'.
-     * @returns this with the new limit
-     */
-    public limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this;
+  /**
+   * Adds listener to event collection, and runs listener when event is emitted
+   * @param event Event to handle
+   * @param listener Callback function to run, when event occurs
+   * @returns this
+   */
+  on<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
+  /**
+   * Adds listener to event collection, and runs listener once when event is emitted
+   * @param event Event to handle
+   * @param listener Callback function to run, when event occurs
+   * @returns this
+   */
+  once<Return extends any, Event extends keyof Events>(event: Event, listener: EventHandler<Events, Event, Return>): this;
+  /**
+   * Removes listener(s) from event
+   * @param event Event to get collection of listeners | "all"
+   * @param listener If left null, removes all listeners tied to event, else only removes listener from event
+   * @returns this
+   */
+  off<Return extends any, Event extends keyof Events>(event: Event | 'all' = 'all', listener?: EventHandler<Events, Event, Return>): this;
+  /**
+   * Emits event and runs all listeners tied to event
+   * @param event Event to emit
+   * @param args Arguments for the event
+   * @fires event
+   * @returns Array of listeners' reponses
+   */
+  emit<Return extends any, Event extends keyof Events>(event: Event, ...args: Events[Event]): Array<Return>;
+  /**
+   * Limits how many events to accept using EventEmitter#on or EventEmitter#once
+   * @param event: Specific event to limit, or by default, 'all'
+   * @param limit Limit of events to keep. If you want to limit amount of events saved, use 'all'.
+   * @returns this with the new limit
+   */
+  public limit<Event extends keyof Events>(event: 'all' | Event, limit: number): this;
 }
 
 ```
@@ -294,97 +294,97 @@ class EventEmitter<Events extends BaseEvent<string, Array<any>>> {
 
 ```ts
 class DanhoDate {
-    constructor(data: Constructor)
+  constructor(data: Constructor)
 
-    protected _date: Date;
+  protected _date: Date;
 
-    /**
-     * Year of the date
-     */
-    public year: number
+  /**
+   * Year of the date
+   */
+  public year: number
 
-    /**
-     * Month of the date
-     */
-    public month: number
+  /**
+   * Month of the date
+   */
+  public month: number
 
-    /**
-     * Days in the month of the date
-     */
-    public daysInMonth: number
+  /**
+   * Days in the month of the date
+   */
+  public daysInMonth: number
 
-    /**
-     * Week of the year the day is in
-     */
-    public week: number
+  /**
+   * Week of the year the day is in
+   */
+  public week: number
 
-    /**
-     * Week of the month the day is in
-     */
-    public weekOfMonth: number
+  /**
+   * Week of the month the day is in
+   */
+  public weekOfMonth: number
 
-    /**
-     * Day of the date
-     */
-    public day: number
+  /**
+   * Day of the date
+   */
+  public day: number
 
-    /**
-     * Hours of the date
-     */
-    public hours: number
-    
-    /**
-     * Minutes of the date
-     */
-    public minutes: number
-    
-    /**
-     * Seconds of the date
-     */
-    public seconds: number
-    
-    /**
-     * Milliseconds of the date
-     */
-    public milliseconds: number
+  /**
+   * Hours of the date
+   */
+  public hours: number
+  
+  /**
+   * Minutes of the date
+   */
+  public minutes: number
+  
+  /**
+   * Seconds of the date
+   */
+  public seconds: number
+  
+  /**
+   * Milliseconds of the date
+   */
+  public milliseconds: number
 
-    /**
-     * Week day i.e. Monday
-     */
-    public get weekDay: LongDay
-    
-    /**
-     * Short week day i.e. Mon
-     */
-    public get weekDayShort: ShortDay
-    
-    /**
-     * Month name i.e. February
-     */
-    public get monthName: LongMonth
+  /**
+   * Week day i.e. Monday
+   */
+  public get weekDay: LongDay
+  
+  /**
+   * Short week day i.e. Mon
+   */
+  public get weekDayShort: ShortDay
+  
+  /**
+   * Month name i.e. February
+   */
+  public get monthName: LongMonth
 
-    /**
-     * Short month name i.e. Feb
-     */
-    public get monthNameShort: ShortMonth
+  /**
+   * Short month name i.e. Feb
+   */
+  public get monthNameShort: ShortMonth
 
-    /**
-     * Sets internal date property
-     * @param data Time properties to set - replacement of i.e. Date.setHours(value: number): number
-     * @returns This, with updated properties
-     */
-    public set(data: Partial<Data>): this
+  /**
+   * Sets internal date property
+   * @param data Time properties to set - replacement of i.e. Date.setHours(value: number): number
+   * @returns This, with updated properties
+   */
+  public set(data: Partial<Data>): this
 
-    /**
-     * Calculates the time between this date and provided date
-     * @returns TimeSpan between dates
-     */
-    public between(date: DanhoDate | Constructor): TimeSpan
+  /**
+   * Calculates the time between this date and provided date
+   * @returns TimeSpan between dates
+   */
+  public between(date: DanhoDate | Constructor): TimeSpan
 
-    /**
-     * String representation of Date. Use internal comment for formatting
-     */
-    public toString(format = "$dd/$MM/$year", relativeFormat?: TimeSpanFormat): string
+  /**
+   * String representation of Date. Use internal comment for formatting
+   */
+  public toString(format = "$dd/$MM/$year", relativeFormat?: TimeSpanFormat): string
 }
 
 /**
@@ -393,78 +393,78 @@ class DanhoDate {
  * @borrows ms
  */
 class Time {
-    /**
-     * Array of amount of days in the months. 0 indexed
-     */
-    public static get daysInMonth: Array<number>
+  /**
+   * Array of amount of days in the months. 0 indexed
+   */
+  public static get daysInMonth: Array<number>
 
-    /**
-     * Amount of weeks per year
-     */
-    public static get weeksInYear: number
+  /**
+   * Amount of weeks per year
+   */
+  public static get weeksInYear: number
 
-    /**
-     * Amount of days per year
-     */
-    public static get daysInYear: number
+  /**
+   * Amount of days per year
+   */
+  public static get daysInYear: number
 
-    /**
-     * Returns function that converts value into double digit string
-     * @returns (value: number): string
-     */
-    public static get DoubleDigit(): string
+  /**
+   * Returns function that converts value into double digit string
+   * @returns (value: number): string
+   */
+  public static get DoubleDigit(): string
 
-    /**
-     * Array of names of the months. 0 idnexed
-     */
-    public static get MonthNames: Array<LongMonth>
+  /**
+   * Array of names of the months. 0 idnexed
+   */
+  public static get MonthNames: Array<LongMonth>
 
-    /**
-     * Array of names of the days of the week. 0 indexed
-     */
-    public static get DayNames: Array<LongDay>
+  /**
+   * Array of names of the days of the week. 0 indexed
+   */
+  public static get DayNames: Array<LongDay>
 
-    /*
-     * Millisecond in milliseconds (I know that sounds silly but it makes sense later on?)
-     */
-    public static get millisecond: number;
-    /*
-     * Second in milliseconds
-     */
-    public static get second: number;
-    /*
-     * Minute in milliseconds
-     */
-    public static get minute: number;
-    /*
-     * Hour in milliseconds
-     */
-    public static get hour: number;
-    /*
-     * Day in milliseconds
-     */
-    public static get day: number;
-    /*
-     * Week in milliseconds
-     */
-    public static get week: number;
-    /*
-     * Month in milliseconds
-     */
-    public static get month: number;
-    /*
-     * Year in milliseconds
-     */
-    public static get year: number;
-    /*
-     * Average month in milliseconds
-     */
-    public static get avgMonth: number;
+  /*
+    * Millisecond in milliseconds (I know that sounds silly but it makes sense later on?)
+    */
+  public static get millisecond: number;
+  /*
+    * Second in milliseconds
+    */
+  public static get second: number;
+  /*
+    * Minute in milliseconds
+    */
+  public static get minute: number;
+  /*
+    * Hour in milliseconds
+    */
+  public static get hour: number;
+  /*
+    * Day in milliseconds
+    */
+  public static get day: number;
+  /*
+    * Week in milliseconds
+    */
+  public static get week: number;
+  /*
+    * Month in milliseconds
+    */
+  public static get month: number;
+  /*
+    * Year in milliseconds
+    */
+  public static get year: number;
+  /*
+    * Average month in milliseconds
+    */
+  public static get avgMonth: number;
 
-    /*
-     * Converts TimeDelay input into milliseconds
-     */
-    public static ms(input: TimeDelay): number
+  /*
+    * Converts TimeDelay input into milliseconds
+    */
+  public static ms(input: TimeDelay): number
 }
 
 /**
@@ -474,90 +474,90 @@ class Time {
  * @borrows TimeProperties
  */
 class TimeSpan implements TimeProperties<true> {
-    constructor(from: TimeSpanValue, to: TimeSpanValue = Date.now());
+  constructor(from: TimeSpanValue, to: TimeSpanValue = Date.now());
 
-    /*
-     * Total x between dates
-     */
-    public years: number;
-    /*
-     * Total x between dates
-     */
-    public months: number;
-    /*
-     * Total x between dates
-     */
-    public weeks: number;
-    /*
-     * Total x between dates
-     */
-    public days: number;
-    /*
-     * Total x between dates
-     */
-    public hours: number;
-    /*
-     * Total x between dates
-     */
-    public minutes: number;
-    /*
-     * Total x between dates
-     */
-    public seconds: number;
-    /*
-     * Total x between dates
-     */
-    public milliseconds: number;
+  /*
+    * Total x between dates
+    */
+  public years: number;
+  /*
+    * Total x between dates
+    */
+  public months: number;
+  /*
+    * Total x between dates
+    */
+  public weeks: number;
+  /*
+    * Total x between dates
+    */
+  public days: number;
+  /*
+    * Total x between dates
+    */
+  public hours: number;
+  /*
+    * Total x between dates
+    */
+  public minutes: number;
+  /*
+    * Total x between dates
+    */
+  public seconds: number;
+  /*
+    * Total x between dates
+    */
+  public milliseconds: number;
 
-    /**
-     * Get the maximum amount of months between the two dates
-     * @returns Number of max amount of months that are between the two dates
-     */
-    public getTotalMonths(): number;
-    /**
-     * Get the maximum amount of weeks between the two dates
-     * @returns Number of max amount of weeks that are between the two dates
-     */
-    public getTotalWeeks(): number;
-    /**
-     * Get the maximum amount of days between the two dates
-     * @returns Number of max amount of days that are between the two dates
-     */
-    public getTotalDays(): number;
-    /**
-     * Get the maximum amount of hours between the two dates
-     * @returns Number of max amount of hours that are between the two dates
-     */
-    public getTotalHours(): number;
-    /**
-     * Get the maximum amount of minutes between the two dates
-     * @returns Number of max amount of minutes that are between the two dates
-     */
-    public getTotalMinutes(): number;
-    /**
-     * Get the maximum amount of seconds between the two dates
-     * @returns Number of max amount of seconds that are between the two dates
-     */
-    public getTotalSeconds(): number;
-    /**
-     * Get the maximum amount of milliseconds between the two dates
-     * @returns Number of max amount of milliseconds that are between the two dates
-     */
-    public getTotalMilliseconds(): number;
-    
-    /**
-     * Start date of timespan
-     */
-    public from: DanhoDate;
-    /**
-     * End date of timespan
-     */
-    public to: DanhoDate;
-    /**
-     * Timespan is in the past
-     */
-    public pastTense: boolean;
+  /**
+   * Get the maximum amount of months between the two dates
+   * @returns Number of max amount of months that are between the two dates
+   */
+  public getTotalMonths(): number;
+  /**
+   * Get the maximum amount of weeks between the two dates
+   * @returns Number of max amount of weeks that are between the two dates
+   */
+  public getTotalWeeks(): number;
+  /**
+   * Get the maximum amount of days between the two dates
+   * @returns Number of max amount of days that are between the two dates
+   */
+  public getTotalDays(): number;
+  /**
+   * Get the maximum amount of hours between the two dates
+   * @returns Number of max amount of hours that are between the two dates
+   */
+  public getTotalHours(): number;
+  /**
+   * Get the maximum amount of minutes between the two dates
+   * @returns Number of max amount of minutes that are between the two dates
+   */
+  public getTotalMinutes(): number;
+  /**
+   * Get the maximum amount of seconds between the two dates
+   * @returns Number of max amount of seconds that are between the two dates
+   */
+  public getTotalSeconds(): number;
+  /**
+   * Get the maximum amount of milliseconds between the two dates
+   * @returns Number of max amount of milliseconds that are between the two dates
+   */
+  public getTotalMilliseconds(): number;
+  
+  /**
+   * Start date of timespan
+   */
+  public from: DanhoDate;
+  /**
+   * End date of timespan
+   */
+  public to: DanhoDate;
+  /**
+   * Timespan is in the past
+   */
+  public pastTense: boolean;
 
-    public toString(includeMs: boolean = false): string
+  public toString(includeMs: boolean = false): string
 }
 ```
